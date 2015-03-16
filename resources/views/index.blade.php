@@ -7,7 +7,6 @@ header("Access-Control-Allow-Headers: X-Requested-With");
 <html>
 <head>
     <title>Swagger UI</title>
-    <link href='//fonts.googleapis.com/css?family=Droid+Sans:400,700' media='screen' rel='stylesheet' type='text/css'/>
     <link href='/vendor/l5-swagger/css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
     <link href='/vendor/l5-swagger/css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
     <link href='/vendor/l5-swagger/css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
