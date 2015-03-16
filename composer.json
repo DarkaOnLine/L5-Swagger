@@ -1,0 +1,22 @@
+{
+  "name": "darkaonline/l5-swagger",
+  "description": "Swagger integration to Laravel 5",
+  "keywords": ["laravel", "swagger"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Darius Matulionis",
+      "email": "darius@matulionis.lt"
+    }
+  ],
+  "require": {
+    "php": ">=5.4.0",
+    "zircote/swagger-php": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Darkaonline\\L5Swagger\\": "src"
+    }
+  },
+  "minimum-stability": "dev"
+}
