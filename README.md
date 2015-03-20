@@ -8,7 +8,24 @@ This package is a copy of [Swaggervel](https://github.com/slampenny/Swaggervel) 
 Installation
 ============
 
-- Add `Darkaonline\L5Swagger\L5SwaggerServiceProvider` to your providers array in `config/app.php`
+- Open your `AppServiceProvider` (located in `app/Providers`) and add this line in `register` function
+```php
+    $this->app->register('Darkaonline\L5Swagger\L5SwaggerServiceProvider');
+```
+the final function should similar to this:
+```php
+    public function register()
+    {
+        $this->app->bind(
+            'Illuminate\Contracts\Auth\Registrar',
+            'App\Services\Registrar'
+        );
+
+        //Register Swagger Provider
+        $this->app->register('Darkaonline\L5Swagger\L5SwaggerServiceProvider');
+    }
+```
+
 - Run `php artisan l5-swagger:publish-assets` to publish swagger-ui your public folder (`public/vendos/l5-swagger`)
 
 Configuration
