@@ -1,3 +1,5 @@
+[![Total Downloads](https://poser.pugx.org/DarkaOnLine/L5-Swagger/downloads.svg)](https://packagist.org/packages/DarkaOnLine/L5-Swagger)
+
 L5 Swagger
 ==========
 
