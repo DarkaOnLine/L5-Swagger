@@ -3,12 +3,22 @@
 L5 Swagger
 ==========
 
-Swagger for Laravel 5
+Swagger 2.0 for Laravel 5
 
 This package is a copy of [Swaggervel](https://github.com/slampenny/Swaggervel) adapted to work with Laravel 5 with several tweaks.
 
 Installation
 ============
+
+For Swagger 2.0
+```php
+    composer require darkaonline/l5-swagger ~2.0
+```
+
+For Swagger 1.0
+```php
+    composer require darkaonline/l5-swagger ~0.1
+```
 
 - Open your `AppServiceProvider` (located in `app/Providers`) and add this line in `register` function
 ```php
