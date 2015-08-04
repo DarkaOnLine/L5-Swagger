@@ -29,7 +29,7 @@ class PublishAssetsCommand extends Command
         $this->info("Publishing assets files");
         $this->call('vendor:publish', array(
             '--provider' => 'Darkaonline\L5Swagger\L5SwaggerServiceProvider',
-            '--tag' => 'assets'
+            '--tag' => ['assets']
         ));
     }
 
