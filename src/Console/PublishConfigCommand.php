@@ -29,7 +29,7 @@ class PublishConfigCommand extends Command
         $this->info("Publish config files");
         $this->call('vendor:publish', array(
             '--provider' => 'Darkaonline\L5Swagger\L5SwaggerServiceProvider',
-            '--tag' => 'config'
+            '--tag' => ['config']
         ));
     }
 
