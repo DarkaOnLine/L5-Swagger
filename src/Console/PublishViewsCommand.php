@@ -29,7 +29,7 @@ class PublishViewsCommand extends Command
         $this->info("Publishing view files");
         $this->call('vendor:publish', array(
             '--provider' => 'Darkaonline\L5Swagger\L5SwaggerServiceProvider',
-            '--tag' => 'views'
+            '--tag' => ['views']
         ));
     }
 

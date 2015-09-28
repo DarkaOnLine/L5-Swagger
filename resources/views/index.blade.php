@@ -7,26 +7,27 @@ header("Access-Control-Allow-Headers: X-Requested-With");
 <html>
 <head>
     <title>Swagger UI</title>
-    <link href='/vendor/l5-swagger/css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='/vendor/l5-swagger/css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='/vendor/l5-swagger/css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
-    <link href='/vendor/l5-swagger/css/reset.css' media='print' rel='stylesheet' type='text/css'/>
-    <link href='/vendor/l5-swagger/css/screen.css' media='print' rel='stylesheet' type='text/css'/>
-    <script type="text/javascript" src="/vendor/l5-swagger/lib/shred.bundle.js"></script>
-    <script src='/vendor/l5-swagger/lib/jquery-1.8.0.min.js' type='text/javascript'></script>
-    <script src='/vendor/l5-swagger/lib/jquery.slideto.min.js' type='text/javascript'></script>
-    <script src='/vendor/l5-swagger/lib/jquery.wiggle.min.js' type='text/javascript'></script>
-    <script src='/vendor/l5-swagger/lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
-    <script src='/vendor/l5-swagger/lib/handlebars-2.0.0.js' type='text/javascript'></script>
-    <script src='/vendor/l5-swagger/lib/underscore-min.js' type='text/javascript'></script>
-    <script src='/vendor/l5-swagger/lib/backbone-min.js' type='text/javascript'></script>
-    <script src='/vendor/l5-swagger/lib/swagger-client.js' type='text/javascript'></script>
-    <script src='/vendor/l5-swagger/swagger-ui.js' type='text/javascript'></script>
-    <script src='/vendor/l5-swagger/lib/highlight.7.3.pack.js' type='text/javascript'></script>
-    <script src='/vendor/l5-swagger/lib/marked.js' type='text/javascript'></script>
+    <link href={{URL::asset('/vendor/l5-swagger/css/typography.css')}} media='screen' rel='stylesheet'
+          type='text/css'/>
+    <link href={{URL::asset('/vendor/l5-swagger/css/reset.css')}} media='screen' rel='stylesheet' type='text/css'/>
+    <link href={{URL::asset('/vendor/l5-swagger/css/screen.css')}} media='screen' rel='stylesheet' type='text/css'/>
+    <link href={{URL::asset('/vendor/l5-swagger/css/reset.css')}} media='print' rel='stylesheet' type='text/css'/>
+    <link href={{URL::asset('/vendor/l5-swagger/css/screen.css')}} media='print' rel='stylesheet' type='text/css'/>
+    <script type="text/javascript" src={{URL::asset("/vendor/l5-swagger/lib/shred.bundle.js")}}></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/jquery-1.8.0.min.js')}} type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/jquery.slideto.min.js')}} type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/jquery.wiggle.min.js')}} type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/jquery.ba-bbq.min.js')}} type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/handlebars-2.0.0.js')}} type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/underscore-min.js')}} type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/backbone-min.js')}} type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/swagger-client.js')}} type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/swagger-ui.js')}} type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/highlight.7.3.pack.js')}} type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/marked.js')}} type='text/javascript'></script>
 
     <!-- enabling this will enable oauth2 implicit scope support -->
-    <script src='/vendor/l5-swagger/lib/swagger-oauth.js' type='text/javascript'></script>
+    <script src={{URL::asset('/vendor/l5-swagger/lib/swagger-oauth.js')}} type='text/javascript'></script>
     <script type="text/javascript">
         $(function () {
             var url = window.location.search.match(/url=([^&]+)/);

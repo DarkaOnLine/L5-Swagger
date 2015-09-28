@@ -3,7 +3,7 @@
 L5 Swagger
 ==========
 
-Swagger 2.0 for Laravel 5
+Swagger 2.0 for Laravel 5.1
 
 This package is a copy of [Swaggervel](https://github.com/slampenny/Swaggervel) adapted to work with Laravel 5 with several tweaks.
 
