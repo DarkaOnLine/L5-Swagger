@@ -31,10 +31,11 @@ Route::get('api-docs', function() {
     //need the / at the end to avoid CORS errors on Homestead systems.
     $response = Response::make(
         view('l5-swagger::index', array(
-                'secure'         => Request::secure(),
-                'urlToDocs'      => url(Config::get('l5-swagger.doc-route')),
-                'requestHeaders' => Config::get('l5-swagger.requestHeaders') )
-        ),
+            'apiKey'         => Config::get('l5-swagger.api-key'),
+            'secure'         => Request::secure(),
+            'urlToDocs'      => url(Config::get('l5-swagger.doc-route')),
+            'requestHeaders' => Config::get('l5-swagger.requestHeaders')
+        )),
         200
     );
 

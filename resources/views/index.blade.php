@@ -68,9 +68,7 @@ header("Access-Control-Allow-Headers: X-Requested-With");
 
             function addApiKeyAuthorization() {
                 var key = $('#input_apiKey')[0].value;
-                log("key: " + key);
                 if(key && key.trim() != "") {
-                    log("added key " + key);
                     window.authorizations.add("api_key", new ApiKeyAuthorization("api_key", key, "query"));
                 }
             }
@@ -79,12 +77,12 @@ header("Access-Control-Allow-Headers: X-Requested-With");
                 addApiKeyAuthorization();
             });
 
-            // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
-            /*
-             var apiKey = "myApiKeyXXXX123456789";
-             $('#input_apiKey').val(apiKey);
-             addApiKeyAuthorization();
-             */
+            // if you have an apiKey you would like to pre-populate on the page for demonstration purposes
+            // just put it in the .env file, API_AUTH_TOKEN variable
+            @if($apiKey)
+                $('#input_apiKey').val("{{$apiKey}}");
+                addApiKeyAuthorization();
+            @endif
 
             window.swaggerUi.load();
         });

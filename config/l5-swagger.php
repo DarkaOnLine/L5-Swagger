@@ -41,7 +41,7 @@ return [
     | Edit to set the api's Auth token
     |--------------------------------------------------------------------------
     */
-    "api-key" => env('API_AUTH_TOKEN', 'SomeRandomString'),
+    "api-key" => env('API_AUTH_TOKEN', false),
 
     /*
     |--------------------------------------------------------------------------
