@@ -2,7 +2,7 @@
 
 use Swagger\Swagger;
 
-Route::any(Config::get('l5-swagger.doc-route').'/{page?}', function($page='api-docs.json') {
+Route::any(Config::get('l5-swagger.doc-route') . '/{page?}', function ($page = 'api-docs.json') {
     $filePath = Config::get('l5-swagger.doc-dir') . "/{$page}";
 
     if (File::extension($filePath) === "") {
@@ -18,7 +18,7 @@ Route::any(Config::get('l5-swagger.doc-route').'/{page?}', function($page='api-d
     ));
 });
 
-Route::get('api-docs', function() {
+Route::get('api-docs', function () {
     if (Config::get('l5-swagger.generateAlways')) {
         \Darkaonline\L5Swagger\Generator::generateDocs();
     }
@@ -31,9 +31,10 @@ Route::get('api-docs', function() {
     //need the / at the end to avoid CORS errors on Homestead systems.
     $response = Response::make(
         view('l5-swagger::index', array(
-            'apiKey'         => Config::get('l5-swagger.api-key'),
-            'secure'         => Request::secure(),
-            'urlToDocs'      => url(Config::get('l5-swagger.doc-route')),
+            'apiKey' => Config::get('l5-swagger.api-key'),
+            'apiKeyVar' => Config::get('l5-swagger.api-key-var'),
+            'secure' => Request::secure(),
+            'urlToDocs' => url(Config::get('l5-swagger.doc-route')),
             'requestHeaders' => Config::get('l5-swagger.requestHeaders')
         )),
         200
