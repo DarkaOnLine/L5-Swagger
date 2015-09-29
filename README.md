@@ -5,7 +5,7 @@ L5 Swagger
 
 Swagger 2.0 for Laravel 5.1
 
-This package is a copy of [Swaggervel](https://github.com/slampenny/Swaggervel) adapted to work with Laravel 5 with several tweaks.
+This package is a wrapper of [Swagger-php](https://github.com/zircote/swagger-php) and [swagger-ui](https://github.com/swagger-api/swagger-ui) adapted to work with Laravel 5.
 
 Installation
 ============
