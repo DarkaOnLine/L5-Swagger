@@ -33,6 +33,7 @@ Route::get('api-docs', function () {
         view('l5-swagger::index', array(
             'apiKey' => Config::get('l5-swagger.api-key'),
             'apiKeyVar' => Config::get('l5-swagger.api-key-var'),
+            'apiKeyInject' => Config::get('l5-swagger.api-key-inject'),
             'secure' => Request::secure(),
             'urlToDocs' => url(Config::get('l5-swagger.doc-route')),
             'requestHeaders' => Config::get('l5-swagger.requestHeaders')
