@@ -69,7 +69,7 @@ header("Access-Control-Allow-Headers: X-Requested-With");
             function addApiKeyAuthorization() {
                 var key = $('#input_apiKey')[0].value;
                 if(key && key.trim() != "") {
-                    window.authorizations.add("api_key", new ApiKeyAuthorization("api_key", key, "query"));
+                    window.authorizations.add('{{$apiKeyVar}}', new ApiKeyAuthorization('{{$apiKeyVar}}', key, "query"));
                 }
             }
 
