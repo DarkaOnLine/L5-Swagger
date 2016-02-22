@@ -17,7 +17,6 @@
     "php": ">=5.5.9",
     "laravel/framework": "5.2.*",
     "zircote/swagger-php": "~2.0",
-    "swagger-api/swagger-ui": "2.1.4",
     "koala-framework/composer-extra-assets": "~1.1"
   },
   "autoload": {
