@@ -12,8 +12,6 @@ use L5Swagger\Console\PublishAssetsCommand;
 class L5SwaggerServiceProvider extends ServiceProvider
 {
 
-    protected $defer = true;
-
     /**
      * Bootstrap the application events.
      *

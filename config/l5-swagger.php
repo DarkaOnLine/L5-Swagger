@@ -87,7 +87,7 @@ return [
         | Absolute path to directory where to export assets
         |--------------------------------------------------------------------------
          */
-        'assets' => base_path('public/vendor/l5-swagger'),
+        'assets' => public_path('vendor/l5-swagger'),
 
         /*
         |--------------------------------------------------------------------------

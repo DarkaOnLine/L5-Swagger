@@ -16,13 +16,21 @@
   "require": {
     "php": ">=5.5.9",
     "laravel/framework": "5.2.*",
-    "zircote/swagger-php": "~2.0",
-    "koala-framework/composer-extra-assets": "~2.0"
+    "zircote/swagger-php": "~2.0"
+  },
+  "require-dev": {
+    "koala-framework/composer-extra-assets": "~2.0",
+    "orchestra/testbench": "~3.0"
   },
   "autoload": {
     "psr-4": {
       "L5Swagger\\": "src"
     }
+  },
+  "autoload-dev": {
+    "classmap": [
+      "tests/TestCase.php"
+    ]
   },
   "extra": {
     "require-bower": {
