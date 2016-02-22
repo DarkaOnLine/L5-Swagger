@@ -1,8 +1,9 @@
-<?php namespace Darkaonline\L5Swagger\Console;
+<?php
 
-use Darkaonline\L5Swagger\Generator;
+namespace L5Swagger\Console;
+
+use L5Swagger\Generator;
 use Illuminate\Console\Command;
-
 
 class GenerateDocsCommand extends Command
 {

@@ -1,0 +1,23 @@
+language: php
+
+php:
+  - 5.5.9
+  - 5.5
+  - 5.6
+  - 7.0
+  - hhvm
+
+sudo: false
+
+before_script:
+  - composer self-update
+  - composer install --prefer-source --no-interaction
+
+script: phpunit
+
+after_script:
+  - vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml
+
+addons:
+  code_climate:
+    repo_token: CODECLIMATE_REPO_TOKEN

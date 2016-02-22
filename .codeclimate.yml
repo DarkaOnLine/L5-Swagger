@@ -1,0 +1,15 @@
+languages:
+  PHP: true
+engines:
+  phpcodesniffer:
+    enabled: true
+  phpmd:
+    enabled: true
+ratings:
+  paths:
+    - src/**
+exclude_paths:
+  - test/**/*
+  - vendor/**/*
+  - resoufces/**/*
+  - config/**/*

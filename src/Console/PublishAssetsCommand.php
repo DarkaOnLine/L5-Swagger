@@ -1,4 +1,6 @@
-<?php namespace Darkaonline\L5Swagger\Console;
+<?php
+
+namespace L5Swagger\Console;
 
 use Illuminate\Console\Command;
 
@@ -28,7 +30,7 @@ class PublishAssetsCommand extends Command
     {
         $this->info("Publishing assets files");
         $this->call('vendor:publish', array(
-            '--provider' => 'Darkaonline\L5Swagger\L5SwaggerServiceProvider',
+            '--provider' => 'L5Swagger\L5SwaggerServiceProvider',
             '--tag' => ['assets']
         ));
     }

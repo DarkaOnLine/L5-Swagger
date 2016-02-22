@@ -1,4 +1,6 @@
-<?php namespace Darkaonline\L5Swagger\Console;
+<?php
+
+namespace L5Swagger\Console;
 
 use Illuminate\Console\Command;
 
@@ -28,7 +30,7 @@ class PublishViewsCommand extends Command
     {
         $this->info("Publishing view files");
         $this->call('vendor:publish', array(
-            '--provider' => 'Darkaonline\L5Swagger\L5SwaggerServiceProvider',
+            '--provider' => 'L5Swagger\L5SwaggerServiceProvider',
             '--tag' => ['views']
         ));
     }

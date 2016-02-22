@@ -2,14 +2,14 @@
 
 use Swagger\Swagger;
 
-Route::any(Config::get('l5-swagger.doc-route') . '/{page?}', function ($page = 'api-docs.json') {
-    $filePath = Config::get('l5-swagger.doc-dir') . "/{$page}";
+$router->any(config('l5-swagger.routes.docs') . '/{page?}', function ($page = 'api-docs.json') {
+    $filePath = config('l5-swagger.paths.docs') . "/{$page}";
 
     if (File::extension($filePath) === "") {
         $filePath .= ".json";
     }
     if (!File::Exists($filePath)) {
-        App::abort(404, "Cannot find {$filePath}");
+        abort(404, "Cannot find {$filePath}");
     }
 
     $content = File::get($filePath);
@@ -18,31 +18,40 @@ Route::any(Config::get('l5-swagger.doc-route') . '/{page?}', function ($page = '
     ));
 });
 
-Route::get('api-docs', function () {
-    if (Config::get('l5-swagger.generateAlways')) {
-        \Darkaonline\L5Swagger\Generator::generateDocs();
+$router->get(config('l5-swagger.routes.api'), function () {
+    if (config('l5-swagger.generate_always')) {
+        \L5Swagger\Generator::generateDocs();
     }
 
-    if (Config::get('l5-swagger.behind-reverse-proxy')) {
+    if (config('l5-swagger.proxy')) {
         $proxy = Request::server('REMOTE_ADDR');
         Request::setTrustedProxies(array($proxy));
     }
 
+    $extras = [];
+    if (array_key_exists('validatorUrl', config('l5-swagger'))) {
+        // This allows for a null value, since this has potentially
+        // desirable side effects for swagger.  See the view for more
+        // details.
+        $extras['validatorUrl'] = $conf['validatorUrl'];
+    }
+
     //need the / at the end to avoid CORS errors on Homestead systems.
-    $response = Response::make(
-        view('l5-swagger::index', array(
-            'apiKey' => Config::get('l5-swagger.api-key'),
-            'apiKeyVar' => Config::get('l5-swagger.api-key-var'),
-            'apiKeyInject' => Config::get('l5-swagger.api-key-inject'),
+    $response = \Response::make(
+        view('l5-swagger::index', [
+            'apiKey' => config('l5-swagger.api.auth_token'),
+            'apiKeyVar' => config('l5-swagger.api.key_var'),
+            'securityDefinition' => config('l5-swagger.api.security_definition'),
+            'apiKeyInject' => config('l5-swagger.api.key_inject'),
             'secure' => Request::secure(),
-            'urlToDocs' => url(Config::get('l5-swagger.doc-route')),
-            'requestHeaders' => Config::get('l5-swagger.requestHeaders')
-        )),
+            'urlToDocs' => url(config('l5-swagger.routes.docs')),
+            'requestHeaders' => config('l5-swagger.headers.request'),
+        ], $extras),
         200
     );
 
-    if (Config::has('l5-swagger.viewHeaders')) {
-        foreach (Config::get('l5-swagger.viewHeaders') as $key => $value) {
+    if (is_array(config('l5-swagger.headers.view')) && ! empty(config('l5-swagger.headers.view'))) {
+        foreach (config('l5-swagger.headers.view') as $key => $value) {
             $response->header($key, $value);
         }
     }

@@ -3,73 +3,100 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST');
 header("Access-Control-Allow-Headers: X-Requested-With");
 ?>
+
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Swagger UI</title>
-    <link href={{URL::asset('/vendor/l5-swagger/css/typography.css')}} media='screen' rel='stylesheet'
-          type='text/css'/>
-    <link href={{URL::asset('/vendor/l5-swagger/css/reset.css')}} media='screen' rel='stylesheet' type='text/css'/>
-    <link href={{URL::asset('/vendor/l5-swagger/css/screen.css')}} media='screen' rel='stylesheet' type='text/css'/>
-    <link href={{URL::asset('/vendor/l5-swagger/css/reset.css')}} media='print' rel='stylesheet' type='text/css'/>
-    <link href={{URL::asset('/vendor/l5-swagger/css/screen.css')}} media='print' rel='stylesheet' type='text/css'/>
-    <script type="text/javascript" src={{URL::asset("/vendor/l5-swagger/lib/shred.bundle.js")}}></script>
-    <script src={{URL::asset('/vendor/l5-swagger/lib/jquery-1.8.0.min.js')}} type='text/javascript'></script>
-    <script src={{URL::asset('/vendor/l5-swagger/lib/jquery.slideto.min.js')}} type='text/javascript'></script>
-    <script src={{URL::asset('/vendor/l5-swagger/lib/jquery.wiggle.min.js')}} type='text/javascript'></script>
-    <script src={{URL::asset('/vendor/l5-swagger/lib/jquery.ba-bbq.min.js')}} type='text/javascript'></script>
-    <script src={{URL::asset('/vendor/l5-swagger/lib/handlebars-2.0.0.js')}} type='text/javascript'></script>
-    <script src={{URL::asset('/vendor/l5-swagger/lib/underscore-min.js')}} type='text/javascript'></script>
-    <script src={{URL::asset('/vendor/l5-swagger/lib/backbone-min.js')}} type='text/javascript'></script>
-    <script src={{URL::asset('/vendor/l5-swagger/lib/swagger-client.js')}} type='text/javascript'></script>
-    <script src={{URL::asset('/vendor/l5-swagger/swagger-ui.js')}} type='text/javascript'></script>
-    <script src={{URL::asset('/vendor/l5-swagger/lib/highlight.7.3.pack.js')}} type='text/javascript'></script>
-    <script src={{URL::asset('/vendor/l5-swagger/lib/marked.js')}} type='text/javascript'></script>
+    <meta charset="UTF-8">
+    <title>{{config('swagger-lume.api.title')}}</title>
+    <link rel="icon" type="image/png" href="{{config('swagger-lume.paths.assets_public')}}/images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{{config('swagger-lume.paths.assets_public')}}/images/favicon-16x16.png" sizes="16x16" />
+    <link href='{{config('swagger-lume.paths.assets_public')}}/css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
+    <link href='{{config('swagger-lume.paths.assets_public')}}/css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
+    <link href='{{config('swagger-lume.paths.assets_public')}}/css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
+    <link href='{{config('swagger-lume.paths.assets_public')}}/css/reset.css' media='print' rel='stylesheet' type='text/css'/>
+    <link href='{{config('swagger-lume.paths.assets_public')}}/css/print.css' media='print' rel='stylesheet' type='text/css'/>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/jquery-1.8.0.min.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/jquery.slideto.min.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/jquery.wiggle.min.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/handlebars-2.0.0.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/underscore-min.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/backbone-min.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/swagger-ui.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/highlight.7.3.pack.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/jsoneditor.min.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/marked.js' type='text/javascript'></script>
+    <script src='{{config('swagger-lume.paths.assets_public')}}/lib/swagger-oauth.js' type='text/javascript'></script>
 
-    <!-- enabling this will enable oauth2 implicit scope support -->
-    <script src={{URL::asset('/vendor/l5-swagger/lib/swagger-oauth.js')}} type='text/javascript'></script>
+    <!-- Some basic translations -->
+    <!-- <script src='lang/translator.js' type='text/javascript'></script> -->
+    <!-- <script src='lang/ru.js' type='text/javascript'></script> -->
+    <!-- <script src='lang/en.js' type='text/javascript'></script> -->
+
     <script type="text/javascript">
         $(function () {
             var url = window.location.search.match(/url=([^&]+)/);
             if (url && url.length > 1) {
                 url = decodeURIComponent(url[1]);
             } else {
-                url = "{{{ $urlToDocs }}}";
+                url = "{!! $urlToDocs !!}";
+            }
+
+            // Pre load translate...
+            if(window.SwaggerTranslator) {
+                window.SwaggerTranslator.translate();
             }
             window.swaggerUi = new SwaggerUi({
                 url: url,
                 dom_id: "swagger-ui-container",
+                @if(array_key_exists('validatorUrl', get_defined_vars()))
+                // This differentiates between a null value and an undefined variable
+                validatorUrl: {!! isset($validatorUrl) ? '"' . $validatorUrl . '"' : 'null' !!},
+                @endif
                 supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
                 onComplete: function(swaggerApi, swaggerUi){
                     @if(isset($requestHeaders))
                     @foreach($requestHeaders as $requestKey => $requestValue)
-                    window.authorizations.add("{{$requestKey}}", new ApiKeyAuthorization("{{$requestKey}}", "{{$requestValue}}", "header"));
+                    window.swaggerUi.api.clientAuthorizations.add("{{$requestKey}}", new SwaggerClient.ApiKeyAuthorization("{{$requestKey}}", "{{$requestValue}}", "header"));
                     @endforeach
-                    @endif
+                            @endif
+
                     if(typeof initOAuth == "function") {
-                        /*
-                         initOAuth({
-                         clientId: "your-client-id",
-                         realm: "your-realms",
-                         appName: "your-app-name"
-                         });
-                         */
+                        initOAuth({
+                            clientId: "your-client-id",
+                            clientSecret: "your-client-secret-if-required",
+                            realm: "your-realms",
+                            appName: "your-app-name",
+                            scopeSeparator: ",",
+                            additionalQueryStringParams: {}
+                        });
                     }
+
+                    if(window.SwaggerTranslator) {
+                        window.SwaggerTranslator.translate();
+                    }
+
                     $('pre code').each(function(i, e) {
                         hljs.highlightBlock(e)
                     });
                 },
+
                 onFailure: function(data) {
-                    log("Unable to Load SwaggerUI");
+                    console.log("Unable to Load SwaggerUI");
                 },
                 docExpansion: "none",
-                sorter : "alpha"
+                jsonEditor: false,
+                apisSorter: "alpha",
+                defaultModelRendering: 'schema',
+                showRequestHeaders: false
             });
 
-            function addApiKeyAuthorization() {
-                var key = $('#input_apiKey')[0].value;
+            function addApiKeyAuthorization(){
+                var key = encodeURIComponent($('#input_apiKey')[0].value);
                 if(key && key.trim() != "") {
-                    window.authorizations.add('{{$apiKeyVar}}', new ApiKeyAuthorization('{{$apiKeyVar}}', key, "{{$apiKeyInject}}"));
+                    var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("{{$apiKeyVar}}", key, "{{$apiKeyInject}}");
+                    window.swaggerUi.api.clientAuthorizations.add("{{$securityDefinition}}", apiKeyAuth);
                 }
             }
 
@@ -80,8 +107,8 @@ header("Access-Control-Allow-Headers: X-Requested-With");
             // if you have an apiKey you would like to pre-populate on the page for demonstration purposes
             // just put it in the .env file, API_AUTH_TOKEN variable
             @if($apiKey)
-                $('#input_apiKey').val("{{$apiKey}}");
-                addApiKeyAuthorization();
+            $('#input_apiKey').val("{{$apiKey}}");
+            addApiKeyAuthorization();
             @endif
 
             window.swaggerUi.load();
@@ -96,12 +123,12 @@ header("Access-Control-Allow-Headers: X-Requested-With");
         <form id='api_selector'>
             <div class='input'><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
             <div class='input'><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"/></div>
-            <div class='input'><a id="explore" href="#">Explore</a></div>
+            <div class='input'><a id="explore" href="#" data-sw-translate>Explore</a></div>
         </form>
     </div>
 </div>
 
-<div id="message-bar" class="swagger-ui-wrap">&nbsp;</div>
+<div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
 <div id="swagger-ui-container" class="swagger-ui-wrap"></div>
 </body>
 </html>

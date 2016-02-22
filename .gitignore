@@ -5,3 +5,5 @@ composer.lock
 .DS_Store
 .idea
 .env
+/tests/storage/api-docs/*
+/tests/storage/logs/*

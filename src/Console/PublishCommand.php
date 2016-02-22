@@ -1,7 +1,8 @@
-<?php namespace Darkaonline\L5Swagger\Console;
+<?php
+
+namespace L5Swagger\Console;
 
 use Illuminate\Console\Command;
-
 
 class PublishCommand extends Command
 {
@@ -29,7 +30,7 @@ class PublishCommand extends Command
     {
         $this->info("Publishing all files");
         $this->call('vendor:publish', array(
-            '--provider' => 'Darkaonline\L5Swagger\L5SwaggerServiceProvider'
+            '--provider' => 'L5Swagger\L5SwaggerServiceProvider'
         ));
     }
 

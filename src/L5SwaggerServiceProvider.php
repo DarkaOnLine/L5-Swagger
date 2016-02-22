@@ -1,11 +1,14 @@
-<?php namespace Darkaonline\L5Swagger;
+<?php
 
-use Darkaonline\L5Swagger\Console\GenerateDocsCommand;
-use Darkaonline\L5Swagger\Console\PublishAssetsCommand;
-use Darkaonline\L5Swagger\Console\PublishCommand;
-use Darkaonline\L5Swagger\Console\PublishConfigCommand;
-use Darkaonline\L5Swagger\Console\PublishViewsCommand;
+namespace L5Swagger;
+
+use Route;
+use L5Swagger\Console\PublishCommand;
 use Illuminate\Support\ServiceProvider;
+use L5Swagger\Console\GenerateDocsCommand;
+use L5Swagger\Console\PublishViewsCommand;
+use L5Swagger\Console\PublishConfigCommand;
+use L5Swagger\Console\PublishAssetsCommand;
 
 class L5SwaggerServiceProvider extends ServiceProvider
 {
@@ -36,16 +39,19 @@ class L5SwaggerServiceProvider extends ServiceProvider
 
         //Publish views
         $this->publishes([
-            __DIR__.'/../resources/views' => base_path('resources/views/vendor/l5-swagger'),
+            __DIR__.'/../resources/views' => config('l5-swagger.paths.views'),
         ],'views');
 
         //Publish assets
         $this->publishes([
-            __DIR__.'/../resources/assets' => base_path('public/vendor/l5-swagger'),
+            base_path('vendor/swagger-api/swagger-ui/dist') => config('l5-swagger.paths.assets'),
         ],'assets');
 
         //Include routes
-        include __DIR__.'/routes.php';
+
+        Route::group(['namespace' => 'L5Swagger'], function ($router) {
+            require __DIR__.'/routes.php';
+        });
     }
 
     /**
