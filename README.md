@@ -3,7 +3,7 @@
 L5 Swagger
 ==========
 
-Swagger 2.0 for Laravel 5.1
+Swagger 2.0 for Laravel >=5.1
 
 This package is a wrapper of [Swagger-php](https://github.com/zircote/swagger-php) and [swagger-ui](https://github.com/swagger-api/swagger-ui) adapted to work with Laravel 5.
 
@@ -12,7 +12,7 @@ Installation
 
 For Swagger 2.0
 ```php
-    composer require darkaonline/l5-swagger ~2.0
+    composer require darkaonline/l5-swagger:~3.0
 ```
 
 For Swagger 1.0
@@ -22,19 +22,14 @@ For Swagger 1.0
 
 - Open your `AppServiceProvider` (located in `app/Providers`) and add this line in `register` function
 ```php
-    $this->app->register('Darkaonline\L5Swagger\L5SwaggerServiceProvider');
+    $this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
 ```
 the final function should similar to this:
 ```php
     public function register()
     {
-        $this->app->bind(
-            'Illuminate\Contracts\Auth\Registrar',
-            'App\Services\Registrar'
-        );
-
         //Register Swagger Provider
-        $this->app->register('Darkaonline\L5Swagger\L5SwaggerServiceProvider');
+        $this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
     }
 ```
 

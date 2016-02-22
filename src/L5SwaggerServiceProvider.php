@@ -2,7 +2,6 @@
 
 namespace L5Swagger;
 
-use Route;
 use L5Swagger\Console\PublishCommand;
 use Illuminate\Support\ServiceProvider;
 use L5Swagger\Console\GenerateDocsCommand;
@@ -13,13 +12,7 @@ use L5Swagger\Console\PublishAssetsCommand;
 class L5SwaggerServiceProvider extends ServiceProvider
 {
 
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
     protected $defer = true;
-
 
     /**
      * Bootstrap the application events.
@@ -49,7 +42,7 @@ class L5SwaggerServiceProvider extends ServiceProvider
 
         //Include routes
 
-        Route::group(['namespace' => 'L5Swagger'], function ($router) {
+        \Route::group(['namespace' => 'L5Swagger'], function ($router) {
             require __DIR__.'/routes.php';
         });
     }
