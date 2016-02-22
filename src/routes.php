@@ -33,7 +33,7 @@ $router->get(config('l5-swagger.routes.api'), function () {
         // This allows for a null value, since this has potentially
         // desirable side effects for swagger.  See the view for more
         // details.
-        $extras['validatorUrl'] = $conf['validatorUrl'];
+        $extras['validatorUrl'] = config('l5-swagger.validatorUrl');
     }
 
     //need the / at the end to avoid CORS errors on Homestead systems.
