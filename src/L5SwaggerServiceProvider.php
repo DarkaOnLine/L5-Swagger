@@ -2,16 +2,15 @@
 
 namespace L5Swagger;
 
-use L5Swagger\Console\PublishCommand;
 use Illuminate\Support\ServiceProvider;
 use L5Swagger\Console\GenerateDocsCommand;
-use L5Swagger\Console\PublishViewsCommand;
-use L5Swagger\Console\PublishConfigCommand;
 use L5Swagger\Console\PublishAssetsCommand;
+use L5Swagger\Console\PublishCommand;
+use L5Swagger\Console\PublishConfigCommand;
+use L5Swagger\Console\PublishViewsCommand;
 
 class L5SwaggerServiceProvider extends ServiceProvider
 {
-
     /**
      * Bootstrap the application events.
      *
@@ -23,20 +22,20 @@ class L5SwaggerServiceProvider extends ServiceProvider
         $this->loadViewsFrom($viewPath, 'l5-swagger');
 
         // Publish a config file
-        $configPath = __DIR__ . '/../config/l5-swagger.php';
+        $configPath = __DIR__.'/../config/l5-swagger.php';
         $this->publishes([
-            $configPath => config_path('l5-swagger.php')
+            $configPath => config_path('l5-swagger.php'),
         ], 'config');
 
         //Publish views
         $this->publishes([
             __DIR__.'/../resources/views' => config('l5-swagger.paths.views'),
-        ],'views');
+        ], 'views');
 
         //Publish assets
         $this->publishes([
             base_path('vendor/bower_components/swagger-ui/dist') => config('l5-swagger.paths.assets'),
-        ],'assets');
+        ], 'assets');
 
         //Include routes
 
@@ -52,7 +51,7 @@ class L5SwaggerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $configPath = __DIR__ . '/../config/l5-swagger.php';
+        $configPath = __DIR__.'/../config/l5-swagger.php';
         $this->mergeConfigFrom($configPath, 'l5-swagger');
 
         $this->app['command.l5-swagger.publish'] = $this->app->share(
@@ -106,8 +105,7 @@ class L5SwaggerServiceProvider extends ServiceProvider
             'command.l5-swagger.publish-config',
             'command.l5-swagger.publish-views',
             'command.l5-swagger.publish-assets',
-            'command.l5-swagger.generate'
+            'command.l5-swagger.generate',
         ];
     }
-
 }

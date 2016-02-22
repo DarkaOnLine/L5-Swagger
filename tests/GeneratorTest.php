@@ -14,6 +14,5 @@ class GeneratorTest extends \TestCase
         $this->visit(config('l5-swagger.routes.docs'))
             ->see('L5 Swagger API')
             ->assertResponseOk();
-        
     }
 }

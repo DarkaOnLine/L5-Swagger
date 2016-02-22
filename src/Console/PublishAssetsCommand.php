@@ -6,7 +6,6 @@ use Illuminate\Console\Command;
 
 class PublishAssetsCommand extends Command
 {
-
     /**
      * The console command name.
      *
@@ -19,7 +18,7 @@ class PublishAssetsCommand extends Command
      *
      * @var string
      */
-    protected $description = "Publish assets to public";
+    protected $description = 'Publish assets to public';
 
     /**
      * Execute the console command.
@@ -28,11 +27,10 @@ class PublishAssetsCommand extends Command
      */
     public function fire()
     {
-        $this->info("Publishing assets files");
-        $this->call('vendor:publish', array(
+        $this->info('Publishing assets files');
+        $this->call('vendor:publish', [
             '--provider' => 'L5Swagger\L5SwaggerServiceProvider',
-            '--tag' => ['assets']
-        ));
+            '--tag'      => ['assets'],
+        ]);
     }
-
 }

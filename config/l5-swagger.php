@@ -28,7 +28,7 @@ return [
         | Edit to set the securityDefinition that is used in requests
         |--------------------------------------------------------------------------
         */
-        "security_definition" => env('L5_SWAGGER_API_SECURITY_DEFINITION', 'api_key'),
+        'security_definition' => env('L5_SWAGGER_API_SECURITY_DEFINITION', 'api_key'),
 
         /*
         |--------------------------------------------------------------------------
@@ -42,7 +42,7 @@ return [
         | Edit to set the api's version number
         |--------------------------------------------------------------------------
         */
-        "version" => env('L5_SWAGGER_API_VERSION', '1'),
+        'version' => env('L5_SWAGGER_API_VERSION', '1'),
 
         /*
         |--------------------------------------------------------------------------
@@ -108,7 +108,7 @@ return [
         | Edit to set the api's base path
         |--------------------------------------------------------------------------
         */
-        "base" => "",
+        'base' => '',
 
         /*
         |--------------------------------------------------------------------------

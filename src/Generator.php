@@ -2,8 +2,8 @@
 
 namespace L5Swagger;
 
-use File;
 use Config;
+use File;
 
 class Generator
 {
@@ -11,7 +11,7 @@ class Generator
     {
         $appDir = config('l5-swagger.paths.annotations');
         $docDir = config('l5-swagger.paths.docs');
-        if (! File::exists($docDir) || is_writable($docDir)) {
+        if (!File::exists($docDir) || is_writable($docDir)) {
             // delete all existing documentation
             if (File::exists($docDir)) {
                 File::deleteDirectory($docDir);
