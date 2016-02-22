@@ -17,7 +17,7 @@ For Swagger 2.0
 
 For Swagger 1.0
 ```php
-    composer require darkaonline/l5-swagger ~0.1
+    composer require darkaonline/l5-swagger:~0.1
 ```
 
 - Open your `AppServiceProvider` (located in `app/Providers`) and add this line in `register` function
