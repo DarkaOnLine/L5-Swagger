@@ -2,12 +2,11 @@
 
 namespace L5Swagger\Console;
 
-use L5Swagger\Generator;
 use Illuminate\Console\Command;
+use L5Swagger\Generator;
 
 class GenerateDocsCommand extends Command
 {
-
     /**
      * The console command name.
      *
@@ -20,7 +19,7 @@ class GenerateDocsCommand extends Command
      *
      * @var string
      */
-    protected $description = "Regenerate docs";
+    protected $description = 'Regenerate docs';
 
     /**
      * Execute the console command.
@@ -29,8 +28,7 @@ class GenerateDocsCommand extends Command
      */
     public function fire()
     {
-        $this->info("Regenerating docs");
+        $this->info('Regenerating docs');
         Generator::generateDocs();
     }
-
 }

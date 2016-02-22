@@ -5,7 +5,7 @@ class TestCase extends Orchestra\Testbench\TestCase
     protected function getPackageProviders($app)
     {
         return [
-            L5Swagger\L5SwaggerServiceProvider::class
+            L5Swagger\L5SwaggerServiceProvider::class,
         ];
     }
 
@@ -35,7 +35,7 @@ class TestCase extends Orchestra\Testbench\TestCase
     protected function setAnnotationsPath()
     {
         $cfg = config('l5-swagger');
-        $cfg['paths']['annotations'] = __DIR__ . '/storage/annotations';
+        $cfg['paths']['annotations'] = __DIR__.'/storage/annotations';
         $cfg['generate_always'] = true;
         config(['l5-swagger' => $cfg]);
     }
