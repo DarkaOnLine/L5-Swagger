@@ -7,3 +7,6 @@ composer.lock
 .env
 /tests/storage/api-docs/*
 /tests/storage/logs/*
+.bowerrc
+bower.json
+package.json
