@@ -13,13 +13,26 @@
       "email": "darius@matulionis.lt"
     }
   ],
+  "repositories": [
+    {
+      "type": "package",
+      "package": {
+        "name": "swagger-api/swagger-ui",
+        "version": "2.1.4",
+        "dist": {
+          "url": "https://github.com/swagger-api/swagger-ui/archive/v2.1.4.zip",
+          "type": "zip",
+          "reference": "v2.1.4"
+        }
+      }
+    }
+  ],
   "require": {
     "php": ">=5.5.9",
     "laravel/framework": "5.2.*",
-    "zircote/swagger-php": "~2.0"
+    "swagger-api/swagger-ui": "2.1.4"
   },
   "require-dev": {
-    "koala-framework/composer-extra-assets": "~2.0",
     "orchestra/testbench": "~3.0"
   },
   "autoload": {
@@ -31,11 +44,6 @@
     "classmap": [
       "tests/TestCase.php"
     ]
-  },
-  "extra": {
-    "require-bower": {
-      "swagger-ui": "2.*"
-    }
   },
   "minimum-stability": "dev",
   "prefer-stable": true
