@@ -21,7 +21,11 @@
         "version": "2.1.4",
         "dist": {
           "url": "https://github.com/swagger-api/swagger-ui/archive/v2.1.4.zip",
-          "type": "zip",
+          "type": "zip"
+        },
+        "source": {
+          "url": "https://github.com/swagger-api/swagger-ui",
+          "type": "git",
           "reference": "v2.1.4"
         }
       }

@@ -34,7 +34,7 @@ class L5SwaggerServiceProvider extends ServiceProvider
 
         //Publish assets
         $this->publishes([
-            base_path('vendor/bower_components/swagger-ui/dist') => config('l5-swagger.paths.assets'),
+            base_path('vendor/swagger-api/swagger-ui/dist') => config('l5-swagger.paths.assets'),
         ], 'assets');
 
         //Include routes
