@@ -1,5 +1,7 @@
 [![Total Downloads](https://poser.pugx.org/DarkaOnLine/L5-Swagger/downloads.svg)](https://packagist.org/packages/DarkaOnLine/L5-Swagger)
 [![Build Status](https://travis-ci.org/DarkaOnLine/L5-Swagger.svg?branch=master)](https://travis-ci.org/DarkaOnLine/L5-Swagger)
+[![Code Climate](https://codeclimate.com/github/DarkaOnLine/L5-Swagger/badges/gpa.svg)](https://codeclimate.com/github/DarkaOnLine/L5-Swagger)
+[![Test Coverage](https://codeclimate.com/github/DarkaOnLine/L5-Swagger/badges/coverage.svg)](https://codeclimate.com/github/DarkaOnLine/L5-Swagger/coverage)
 [![StyleCI](https://styleci.io/repos/32315619/shield)](https://styleci.io/repos/32315619)
 
 L5 Swagger
