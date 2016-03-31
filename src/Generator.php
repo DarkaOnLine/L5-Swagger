@@ -18,7 +18,7 @@ class Generator
             }
             File::makeDirectory($docDir);
             $excludeDirs = config('l5-swagger.paths.excludes');
-            $swagger = \Swagger\scan($appDir, $excludeDirs);
+            $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
 
             $filename = $docDir.'/api-docs.json';
             $swagger->saveAs($filename);
