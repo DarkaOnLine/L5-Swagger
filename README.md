@@ -32,6 +32,10 @@ or open your `config/app.php` and add this line in `providers` section
 ```php
     \L5Swagger\L5SwaggerServiceProvider::class
 ```
+Changes in 3.1
+============
+- Closure routes moved to controller and got names (fanks to @bbs-smuller [#19](https://github.com/DarkaOnLine/L5-Swagger/pull/19))
+- Added option to rename generated API .json file name
 
 Changes in 3.0
 ============
