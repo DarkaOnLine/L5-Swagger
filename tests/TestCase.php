@@ -2,6 +2,7 @@
 
 class TestCase extends Orchestra\Testbench\TestCase
 {
+
     protected function getPackageProviders($app)
     {
         return [
@@ -29,7 +30,7 @@ class TestCase extends Orchestra\Testbench\TestCase
             mkdir(config('l5-swagger.paths.docs'));
         }
 
-        return config('l5-swagger.paths.docs').'/api-docs.json';
+        return config('l5-swagger.paths.docs') . '/' . config('l5-swagger.paths.docs_json');
     }
 
     protected function setAnnotationsPath()
@@ -37,6 +38,13 @@ class TestCase extends Orchestra\Testbench\TestCase
         $cfg = config('l5-swagger');
         $cfg['paths']['annotations'] = __DIR__.'/storage/annotations';
         $cfg['generate_always'] = true;
+        config(['l5-swagger' => $cfg]);
+    }
+
+    protected function setCustomDocsFileName($fileName)
+    {
+        $cfg = config('l5-swagger');
+        $cfg['paths']['docs_json'] = $fileName;
         config(['l5-swagger' => $cfg]);
     }
 }

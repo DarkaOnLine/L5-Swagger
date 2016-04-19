@@ -13,12 +13,14 @@ class SwaggerController extends BaseController
     /**
      * Dump api-docs.json content endpoint.
      *
-     * @param string $page
+     * @param string $jsonFile
+     *
      * @return \Response
      */
-    public function docs($page = 'api-docs.json')
+    public function docs($jsonFile = null)
     {
-        $filePath = config('l5-swagger.paths.docs') . '/' . $page;
+        $filePath = config('l5-swagger.paths.docs') . '/' .
+            (!is_null($jsonFile) ? $jsonFile : config('l5-swagger.paths.docs_json', 'api-docs.json'));
 
         if (File::extension($filePath) === '') {
             $filePath .= '.json';
@@ -66,7 +68,7 @@ class SwaggerController extends BaseController
                 'securityDefinition' => config('l5-swagger.api.security_definition'),
                 'apiKeyInject'       => config('l5-swagger.api.key_inject'),
                 'secure'             => Request::secure(),
-                'urlToDocs'          => url(config('l5-swagger.routes.docs')),
+                'urlToDocs'          => route('l5-swagger.docs', config('l5-swagger.paths.docs_json', 'api-docs.json')),
                 'requestHeaders'     => config('l5-swagger.headers.request'),
             ], $extras),
             200

@@ -11,7 +11,7 @@ class GeneratorTest extends \TestCase
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
-        $this->visit(config('l5-swagger.routes.docs'))
+        $this->visit(route('l5-swagger.docs'))
             ->see('L5 Swagger API')
             ->assertResponseOk();
     }
