@@ -26,7 +26,7 @@ class RoutesTest extends \TestCase
     public function user_can_access_and_generate_custom_json_file()
     {
         $customJsonFileName = 'docs.v1.json';
-        
+
         $jsonUrl = route('l5-swagger.docs', $customJsonFileName);
 
         $this->setCustomDocsFileName($customJsonFileName);
