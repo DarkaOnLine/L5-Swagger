@@ -2,7 +2,6 @@
 
 class TestCase extends Orchestra\Testbench\TestCase
 {
-
     protected function getPackageProviders($app)
     {
         return [
@@ -26,11 +25,11 @@ class TestCase extends Orchestra\Testbench\TestCase
 
     protected function jsonDocsFile()
     {
-        if (!is_dir(config('l5-swagger.paths.docs'))) {
+        if (! is_dir(config('l5-swagger.paths.docs'))) {
             mkdir(config('l5-swagger.paths.docs'));
         }
 
-        return config('l5-swagger.paths.docs') . '/' . config('l5-swagger.paths.docs_json');
+        return config('l5-swagger.paths.docs').'/'.config('l5-swagger.paths.docs_json');
     }
 
     protected function setAnnotationsPath()
