@@ -3,10 +3,10 @@
 namespace L5Swagger\Http\Controllers;
 
 use File;
+use Illuminate\Routing\Controller as BaseController;
+use L5Swagger\Generator;
 use Request;
 use Response;
-use L5Swagger\Generator;
-use Illuminate\Routing\Controller as BaseController;
 
 class SwaggerController extends BaseController
 {
@@ -14,17 +14,18 @@ class SwaggerController extends BaseController
      * Dump api-docs.json content endpoint.
      *
      * @param string $page
+     *
      * @return \Response
      */
     public function docs($page = 'api-docs.json')
     {
-        $filePath = config('l5-swagger.paths.docs') . '/' . $page;
+        $filePath = config('l5-swagger.paths.docs').'/'.$page;
 
         if (File::extension($filePath) === '') {
             $filePath .= '.json';
         }
-        if (! File::exists($filePath)) {
-            abort(404, 'Cannot find ' . $filePath);
+        if (!File::exists($filePath)) {
+            abort(404, 'Cannot find '.$filePath);
         }
 
         $content = File::get($filePath);
@@ -73,7 +74,7 @@ class SwaggerController extends BaseController
         );
 
         $headersView = config('l5-swagger.headers.view');
-        if (is_array($headersView) and ! empty($headersView)) {
+        if (is_array($headersView) and !empty($headersView)) {
             foreach ($headersView as $key => $value) {
                 $response->header($key, $value);
             }
