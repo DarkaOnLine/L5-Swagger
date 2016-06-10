@@ -108,14 +108,14 @@ if (app()->environment() != 'testing') {
                 addApiKeyAuthorization();
             });
 
+            window.swaggerUi.load();
+            
             // if you have an apiKey you would like to pre-populate on the page for demonstration purposes
             // just put it in the .env file, API_AUTH_TOKEN variable
             @if($apiKey)
             $('#input_apiKey').val("{{$apiKey}}");
             addApiKeyAuthorization();
             @endif
-
-            window.swaggerUi.load();
         });
     </script>
 </head>
