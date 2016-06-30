@@ -97,7 +97,12 @@ if (app()->environment() != 'testing') {
             });
 
             function addApiKeyAuthorization(){
-                var key = encodeURIComponent($('#input_apiKey')[0].value);
+                var key = $('#input_apiKey')[0].value;
+
+                if ("{{$apiKeyInject}}" === "query") {
+                    key = encodeURIComponent(key);
+                }
+
                 if(key && key.trim() != "") {
                     var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("{{$apiKeyVar}}", key, "{{$apiKeyInject}}");
                     window.swaggerUi.api.clientAuthorizations.add("{{$securityDefinition}}", apiKeyAuth);
@@ -109,7 +114,7 @@ if (app()->environment() != 'testing') {
             });
 
             window.swaggerUi.load();
-            
+
             // if you have an apiKey you would like to pre-populate on the page for demonstration purposes
             // just put it in the .env file, API_AUTH_TOKEN variable
             @if($apiKey)
