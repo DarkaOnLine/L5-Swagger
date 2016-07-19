@@ -89,7 +89,7 @@ if (app()->environment() != 'testing') {
                 onFailure: function(data) {
                     console.log("Unable to Load SwaggerUI");
                 },
-                docExpansion: "none",
+                docExpansion: {!! isset($docExpansion) ? '"' . $docExpansion . '"' : '"none"' !!},
                 jsonEditor: false,
                 apisSorter: "alpha",
                 defaultModelRendering: 'schema',
