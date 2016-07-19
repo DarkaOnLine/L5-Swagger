@@ -70,7 +70,7 @@ class SwaggerController extends BaseController
                 'secure'             => Request::secure(),
                 'urlToDocs'          => route('l5-swagger.docs', config('l5-swagger.paths.docs_json', 'api-docs.json')),
                 'requestHeaders'     => config('l5-swagger.headers.request'),
-                'docExpansion'       => config('l5-swagger.docExpansion')
+                'docExpansion'       => config('l5-swagger.docExpansion'),
             ], $extras),
             200
         );
