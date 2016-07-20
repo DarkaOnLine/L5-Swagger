@@ -176,6 +176,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Edit to change layout of GUI ( 'none', 'list' or 'full')
+    |--------------------------------------------------------------------------
+    */
+
+    'docExpansion' => env('L5_SWAGGER_DOC_EXPANSION', 'none'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Uncomment to pass the validatorUrl parameter to SwaggerUi init on the JS
     | side.  A null value here disables validation.  A string will override
     | the default url.  If not specified, behavior is default and validation
