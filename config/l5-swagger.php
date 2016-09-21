@@ -152,6 +152,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Edit to change the maximum number of characters to highlight code.
+    |--------------------------------------------------------------------------
+    */
+
+    'highlightThreshold' => env('L5_SWAGGER_HIGHLIGHT_THRESHOLD', 5000),
+
+    /*
+    |--------------------------------------------------------------------------
     | Uncomment to pass the validatorUrl parameter to SwaggerUi init on the JS
     | side.  A null value here disables validation.  A string will override
     | the default url.  If not specified, behavior is default and validation

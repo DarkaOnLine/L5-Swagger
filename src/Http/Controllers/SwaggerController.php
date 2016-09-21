@@ -64,6 +64,7 @@ class SwaggerController extends BaseController
         $response = Response::make(
             view('l5-swagger::index', [
                 'secure'             => Request::secure(),
+                'highlightThreshold' => config('l5-swagger.highlightThreshold'),
                 'urlToDocs'          => route('l5-swagger.docs', config('l5-swagger.paths.docs_json', 'api-docs.json')),
                 'requestHeaders'     => config('l5-swagger.headers.request'),
                 'docExpansion'       => config('l5-swagger.docExpansion'),

@@ -51,7 +51,7 @@ if (app()->environment() != 'testing') {
             }
     
             hljs.configure({
-                highlightSizeThreshold: 5000
+                highlightSizeThreshold: {{ $highlightThreshold }}
             });
 
             // Pre load translate...
