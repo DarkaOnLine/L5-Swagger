@@ -63,11 +63,8 @@ class SwaggerController extends BaseController
         // Need the / at the end to avoid CORS errors on Homestead systems.
         $response = Response::make(
             view('l5-swagger::index', [
-                'apiKey'             => config('l5-swagger.api.auth_token'),
-                'apiKeyVar'          => config('l5-swagger.api.key_var'),
-                'securityDefinition' => config('l5-swagger.api.security_definition'),
-                'apiKeyInject'       => config('l5-swagger.api.key_inject'),
                 'secure'             => Request::secure(),
+                'highlightThreshold' => config('l5-swagger.highlightThreshold'),
                 'urlToDocs'          => route('l5-swagger.docs', config('l5-swagger.paths.docs_json', 'api-docs.json')),
                 'requestHeaders'     => config('l5-swagger.headers.request'),
                 'docExpansion'       => config('l5-swagger.docExpansion'),

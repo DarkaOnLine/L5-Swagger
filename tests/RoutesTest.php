@@ -6,7 +6,14 @@ class RoutesTest extends \TestCase
     public function user_cant_access_json_file_if_it_is_not_generated()
     {
         $jsonUrl = route('l5-swagger.docs');
-        $this->setExpectedException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+
+        //If PHP >= 5.6, laravel 5.3 will throw an Illuminate\Foundation\Testing\HttpException.
+        if (version_compare(PHP_VERSION, '5.6', '>=')) {
+            $this->setExpectedException(Illuminate\Foundation\Testing\HttpException::class);
+        } else {
+            $this->setExpectedException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        }
+
         $this->visit($jsonUrl);
     }
 
