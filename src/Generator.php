@@ -19,6 +19,7 @@ class Generator
             File::makeDirectory($docDir);
             $excludeDirs = config('l5-swagger.paths.excludes');
             $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
+            $swagger->basePath = config('l5-swagger.paths.base');
 
             $filename = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
             $swagger->saveAs($filename);
