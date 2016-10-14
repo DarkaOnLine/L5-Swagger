@@ -32,6 +32,12 @@ or open your `config/app.php` and add this line in `providers` section
 ```php
     \L5Swagger\L5SwaggerServiceProvider::class
 ```
+Changes in 3.2
+============
+- Allow to change swagger base path in generation process
+- Allow to define constants in config which can be used later in annotations
+- Tests fix form L5.3 and PHP >= 5.6
+
 Changes in 3.1
 ============
 - Closure routes moved to controller and got names (fanks to @bbs-smuller [#19](https://github.com/DarkaOnLine/L5-Swagger/pull/19))

@@ -27,7 +27,7 @@ if (app()->environment() != 'testing') {
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/handlebars-2.0.0.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/underscore-min.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/backbone-min.js' type='text/javascript'></script>
-    <script src='{{config('l5-swagger.paths.assets_public')}}/swagger-ui.js' type='text/javascript'></script>
+    <script src='{{config('l5-swagger.paths.assets_public')}}/swagger-ui.min.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/highlight.7.3.pack.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/jsoneditor.min.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/marked.js' type='text/javascript'></script>
