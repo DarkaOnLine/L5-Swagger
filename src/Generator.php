@@ -23,7 +23,7 @@ class Generator
             $excludeDirs = config('l5-swagger.paths.excludes');
             $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
 
-            if(config('l5-swagger.paths.base') !== null) {
+            if (config('l5-swagger.paths.base') !== null) {
                 $swagger->basePath = config('l5-swagger.paths.base');
             }
 
@@ -34,7 +34,7 @@ class Generator
 
     protected static function defineConstants(array $constants)
     {
-        if (!empty($constants)) {
+        if (! empty($constants)) {
             foreach ($constants as $key => $value) {
                 defined($key) || define($key, $value);
             }
