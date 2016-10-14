@@ -20,6 +20,10 @@ class Generator
             $excludeDirs = config('l5-swagger.paths.excludes');
             $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
 
+            if(config('l5-swagger.paths.base') !== null) {
+                $swagger->basePath = config('l5-swagger.paths.base');
+            }
+
             $filename = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
             $swagger->saveAs($filename);
         }
