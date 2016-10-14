@@ -20,15 +20,17 @@ if (app()->environment() != 'testing') {
     <link href='{{config('l5-swagger.paths.assets_public')}}/css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
     <link href='{{config('l5-swagger.paths.assets_public')}}/css/reset.css' media='print' rel='stylesheet' type='text/css'/>
     <link href='{{config('l5-swagger.paths.assets_public')}}/css/print.css' media='print' rel='stylesheet' type='text/css'/>
+    <script src='{{config('l5-swagger.paths.assets_public')}}/lib/object-assign-pollyfill.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/jquery-1.8.0.min.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/jquery.slideto.min.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/jquery.wiggle.min.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/handlebars-2.0.0.js' type='text/javascript'></script>
-    <script src='{{config('l5-swagger.paths.assets_public')}}/lib/underscore-min.js' type='text/javascript'></script>
+    <script src='{{config('l5-swagger.paths.assets_public')}}/lib/lodash.min.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/backbone-min.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/swagger-ui.min.js' type='text/javascript'></script>
-    <script src='{{config('l5-swagger.paths.assets_public')}}/lib/highlight.7.3.pack.js' type='text/javascript'></script>
+    <script src='{{config('l5-swagger.paths.assets_public')}}/lib/highlight.9.1.0.pack.js' type='text/javascript'></script>
+    <script src='{{config('l5-swagger.paths.assets_public')}}/lib/highlight.9.1.0.pack_extended.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/jsoneditor.min.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/marked.js' type='text/javascript'></script>
     <script src='{{config('l5-swagger.paths.assets_public')}}/lib/swagger-oauth.js' type='text/javascript'></script>
@@ -46,6 +48,10 @@ if (app()->environment() != 'testing') {
             } else {
                 url = "{!! $urlToDocs !!}";
             }
+
+            hljs.configure({
+                highlightSizeThreshold: {{ $highlightThreshold }}
+            });
 
             // Pre load translate...
             if(window.SwaggerTranslator) {
@@ -80,10 +86,6 @@ if (app()->environment() != 'testing') {
                     if(window.SwaggerTranslator) {
                         window.SwaggerTranslator.translate();
                     }
-
-                    $('pre code').each(function(i, e) {
-                        hljs.highlightBlock(e)
-                    });
                 },
 
                 onFailure: function(data) {
