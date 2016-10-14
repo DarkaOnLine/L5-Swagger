@@ -37,6 +37,7 @@ Changes in 3.2
 - Allow to change swagger base path in generation process
 - Allow to define constants in config which can be used later in annotations
 - Tests fix form L5.3 and PHP >= 5.6
+- Update swagger UI to 2.1.5
 
 Changes in 3.1
 ============
