@@ -16,6 +16,9 @@ class Generator
             if (File::exists($docDir)) {
                 File::deleteDirectory($docDir);
             }
+
+            self::defineConstants(config('l5-swagger.constants') ?: []);
+
             File::makeDirectory($docDir);
             $excludeDirs = config('l5-swagger.paths.excludes');
             $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
@@ -26,6 +29,15 @@ class Generator
 
             $filename = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
             $swagger->saveAs($filename);
+        }
+    }
+
+    protected static function defineConstants(array $constants)
+    {
+        if (!empty($constants)) {
+            foreach ($constants as $key => $value) {
+                defined($key) || define($key, $value);
+            }
         }
     }
 }

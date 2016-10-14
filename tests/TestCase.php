@@ -37,6 +37,10 @@ class TestCase extends Orchestra\Testbench\TestCase
         $cfg = config('l5-swagger');
         $cfg['paths']['annotations'] = __DIR__.'/storage/annotations';
         $cfg['generate_always'] = true;
+
+        //Adding constants which will be replaced in generated json file
+        $cfg['constants']['L5_SWAGGER_CONST_HOST'] = 'http://my-default-host.com';
+
         config(['l5-swagger' => $cfg]);
     }
 

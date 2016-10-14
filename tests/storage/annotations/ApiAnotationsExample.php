@@ -4,6 +4,7 @@
  * @SWG\Swagger(
  *     basePath="/api/v1",
  *     schemes={"http"},
+ *     host=L5_SWAGGER_CONST_HOST,
  *     @SWG\Info(
  *         version="1.0.0",
  *         title="L5 Swagger API",

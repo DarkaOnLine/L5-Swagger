@@ -13,6 +13,7 @@ class GeneratorTest extends \TestCase
 
         $this->visit(route('l5-swagger.docs'))
             ->see('L5 Swagger API')
+            ->see('http://my-default-host.com')
             ->assertResponseOk();
     }
 
