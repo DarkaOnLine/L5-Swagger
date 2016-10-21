@@ -41,7 +41,7 @@ Changes in 3.2
 
 Changes in 3.1
 ============
-- Closure routes moved to controller and got names (fanks to @bbs-smuller [#19](https://github.com/DarkaOnLine/L5-Swagger/pull/19))
+- Closure routes moved to controller and got names (thanks to @bbs-smuller [#19](https://github.com/DarkaOnLine/L5-Swagger/pull/19))
 - Added option to rename generated API .json file name
 
 Changes in 3.0
