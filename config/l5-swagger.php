@@ -80,16 +80,16 @@ return [
 
         'docs' => 'docs',
 
-    ],
+        /*
+        |--------------------------------------------------------------------------
+        | Middleware allows to prevent unexpected access to API documentation
+        |--------------------------------------------------------------------------
+         */
+        'middleware' => [
+            'api' => ['web'],
+            'docs' => [],
+        ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Middleware allows to prevent unexpected access to API documentation
-    |--------------------------------------------------------------------------
-     */
-    'middleware' => [
-        'api' => ['web'],
-        'docs' => [],
     ],
 
     'paths' => [
