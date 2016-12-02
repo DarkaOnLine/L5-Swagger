@@ -32,6 +32,10 @@ or open your `config/app.php` and add this line in `providers` section
 ```php
     \L5Swagger\L5SwaggerServiceProvider::class
 ```
+Changes in 3.2.1
+============
+- Middleware support for routes (#43) (@tantam)
+
 Changes in 3.2
 ============
 - Allow to change swagger base path in generation process
