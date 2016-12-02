@@ -1,6 +1,6 @@
 <?php
 
-$router->any(config('l5-swagger.routes.docs') . '/{jsonFile?}', [
+$router->any(config('l5-swagger.routes.docs').'/{jsonFile?}', [
     'as' => 'l5-swagger.docs',
     'middleware' => config('l5-swagger.middleware.docs', []),
     'uses' => '\L5Swagger\Http\Controllers\SwaggerController@docs',
