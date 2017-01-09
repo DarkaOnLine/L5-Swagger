@@ -2,8 +2,8 @@
 
 namespace L5Swagger;
 
-use Config;
 use File;
+use Config;
 
 class Generator
 {

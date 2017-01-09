@@ -2,12 +2,12 @@
 
 namespace L5Swagger;
 
+use L5Swagger\Console\PublishCommand;
 use Illuminate\Support\ServiceProvider;
 use L5Swagger\Console\GenerateDocsCommand;
-use L5Swagger\Console\PublishAssetsCommand;
-use L5Swagger\Console\PublishCommand;
-use L5Swagger\Console\PublishConfigCommand;
 use L5Swagger\Console\PublishViewsCommand;
+use L5Swagger\Console\PublishAssetsCommand;
+use L5Swagger\Console\PublishConfigCommand;
 
 class L5SwaggerServiceProvider extends ServiceProvider
 {
