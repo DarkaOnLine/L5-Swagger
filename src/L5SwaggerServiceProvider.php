@@ -54,31 +54,31 @@ class L5SwaggerServiceProvider extends ServiceProvider
         $configPath = __DIR__.'/../config/l5-swagger.php';
         $this->mergeConfigFrom($configPath, 'l5-swagger');
 
-        $this->app['command.l5-swagger.publish'] = $this->app->share(
+        $this->app['command.l5-swagger.publish'] = $this->app->singleton(
             function () {
                 return new PublishCommand();
             }
         );
 
-        $this->app['command.l5-swagger.publish-config'] = $this->app->share(
+        $this->app['command.l5-swagger.publish-config'] = $this->app->singleton(
             function () {
                 return new PublishConfigCommand();
             }
         );
 
-        $this->app['command.l5-swagger.publish-views'] = $this->app->share(
+        $this->app['command.l5-swagger.publish-views'] = $this->app->singleton(
             function () {
                 return new PublishViewsCommand();
             }
         );
 
-        $this->app['command.l5-swagger.publish-assets'] = $this->app->share(
+        $this->app['command.l5-swagger.publish-assets'] = $this->app->singleton(
             function () {
                 return new PublishAssetsCommand();
             }
         );
 
-        $this->app['command.l5-swagger.generate'] = $this->app->share(
+        $this->app['command.l5-swagger.generate'] = $this->app->singleton(
             function () {
                 return new GenerateDocsCommand();
             }
