@@ -15,7 +15,7 @@
   ],
   "require": {
     "php": ">=5.5.9",
-    "laravel/framework": "5.1.*|5.2.*|5.3.*",
+    "laravel/framework": "5.1.*|5.2.*|5.3.*|5.4.*",
     "zircote/swagger-php": "~2.0"
   },
   "require-dev": {
