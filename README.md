@@ -15,9 +15,14 @@ Installation
 ============
 
 For Swagger 2.0
-```php
-    composer require "darkaonline/l5-swagger:~3.0"
-```
+
+ Laravel  | L5-Swagger
+:---------|:----------
+ 5.1.x    | ```php composer require "darkaonline/l5-swagger:~3.0" ```
+ 5.2.x    | ```php composer require "darkaonline/l5-swagger:~3.0" ```
+ 5.3.x    | ```php composer require "darkaonline/l5-swagger:~3.0" ```
+ 5.4.x    | ```php composer require "darkaonline/l5-swagger:~4.0" ```
+
 
 For Swagger 1.0
 ```php
@@ -32,6 +37,10 @@ or open your `config/app.php` and add this line in `providers` section
 ```php
     \L5Swagger\L5SwaggerServiceProvider::class
 ```
+Changes in 4.0
+============
+- Laravel 5.4 support
+
 Changes in 3.2.1
 ============
 - Middleware support for routes (#43) (@tantam)
