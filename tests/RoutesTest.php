@@ -7,14 +7,8 @@ class RoutesTest extends \TestCase
     {
         $jsonUrl = route('l5-swagger.docs');
 
-        //If PHP >= 5.6, laravel 5.3 will throw an Illuminate\Foundation\Testing\HttpException.
-        if (version_compare(PHP_VERSION, '5.6', '>=')) {
-            $this->setExpectedException(Illuminate\Foundation\Testing\HttpException::class);
-        } else {
-            $this->setExpectedException(\Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
-        }
-
-        $this->visit($jsonUrl);
+        $this->get($jsonUrl)
+            ->isNotFound();
     }
 
     /** @test */
@@ -24,9 +18,9 @@ class RoutesTest extends \TestCase
 
         $this->crateJsonDocumentationFile();
 
-        $this->visit($jsonUrl)
-            ->see('{}')
-            ->assertResponseOk();
+        $this->get($jsonUrl)
+            ->assertSee('{}')
+            ->isOk();
     }
 
     /** @test */
@@ -39,16 +33,16 @@ class RoutesTest extends \TestCase
         $this->setCustomDocsFileName($customJsonFileName);
         $this->crateJsonDocumentationFile();
 
-        $this->visit($jsonUrl)
-            ->see('{}')
-            ->assertResponseOk();
+        $this->get($jsonUrl)
+            ->assertSee('{}')
+            ->isOk();
     }
 
     /** @test */
     public function user_can_access_documentation_interface()
     {
-        $this->visit(config('l5-swagger.routes.api'))
-            ->see(route('l5-swagger.docs', config('l5-swagger.paths.docs_json', 'api-docs.json')))
-            ->assertResponseOk();
+        $this->get(config('l5-swagger.routes.api'))
+            ->assertSee(route('l5-swagger.docs', config('l5-swagger.paths.docs_json', 'api-docs.json')))
+            ->isOk();
     }
 }

@@ -11,10 +11,10 @@ class GeneratorTest extends \TestCase
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
-        $this->visit(route('l5-swagger.docs'))
-            ->see('L5 Swagger API')
-            ->see('http://my-default-host.com')
-            ->assertResponseOk();
+        $this->get(route('l5-swagger.docs'))
+            ->assertSee('L5 Swagger API')
+            ->assertSee('http://my-default-host.com')
+            ->isOk();
     }
 
     /** @test */
@@ -30,9 +30,60 @@ class GeneratorTest extends \TestCase
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
-        $this->visit(route('l5-swagger.docs'))
-            ->see('L5 Swagger API')
-            ->see('/new/api/base/path')
-            ->assertResponseOk();
+        $this->get(route('l5-swagger.docs'))
+            ->assertSee('L5 Swagger API')
+            ->assertSee('/new/api/base/path')
+            ->isOk();
+    }
+
+    /** @test */
+    public function can_set_proxy()
+    {
+        $this->setAnnotationsPath();
+
+        $cfg = config('l5-swagger');
+        $cfg['proxy'] = 'http://proxy.dev';
+        config(['l5-swagger' => $cfg]);
+
+        $this->get(route('l5-swagger.api'))
+            ->isOk();
+
+        $this->assertTrue(file_exists($this->jsonDocsFile()));
+    }
+
+    /** @test */
+    public function can_set_validator_url()
+    {
+        $this->setAnnotationsPath();
+
+        $cfg = config('l5-swagger');
+        $cfg['validatorUrl'] = 'http://validator-url.dev';
+        config(['l5-swagger' => $cfg]);
+
+        $this->get(route('l5-swagger.api'))
+            ->assertSee('http://validator-url.dev')
+            ->isOk();
+
+        $this->assertTrue(file_exists($this->jsonDocsFile()));
+    }
+
+    /** @test */
+    public function can_set_custom_response_header()
+    {
+        $this->setAnnotationsPath();
+
+        $cfg = config('l5-swagger');
+        $cfg['headers']['view'] = [
+            'header1' => 'param1',
+            'header2' => 'param2',
+        ];
+        config(['l5-swagger' => $cfg]);
+
+        $this->get(route('l5-swagger.api'))
+            ->assertHeader('header1', 'param1')
+            ->assertHeader('header2', 'param2')
+            ->isOk();
+
+        $this->assertTrue(file_exists($this->jsonDocsFile()));
     }
 }
