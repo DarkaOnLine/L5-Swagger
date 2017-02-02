@@ -1,11 +1,13 @@
 <?php
 
+namespace Tests;
+
 use Illuminate\Support\Facades\Artisan;
 
-class ConsoleTest extends \TestCase
+class ConsoleTest extends TestCase
 {
     /** @test */
-    public function can_generate()
+    public function canGenerate()
     {
         $this->setAnnotationsPath();
 
@@ -20,7 +22,7 @@ class ConsoleTest extends \TestCase
     }
 
     /** @test */
-    public function can_publish()
+    public function canPublish()
     {
         $this->setAnnotationsPath();
 

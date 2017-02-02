@@ -1,13 +1,17 @@
 <?php
 
-class GeneratorTest extends \TestCase
+namespace Tests;
+
+use L5Swagger\Generator;
+
+class GeneratorTest extends TestCase
 {
     /** @test */
-    public function can_generate_api_json_file()
+    public function canGenerateApiJsonFile()
     {
         $this->setAnnotationsPath();
 
-        \L5Swagger\Generator::generateDocs();
+        Generator::generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
@@ -18,7 +22,7 @@ class GeneratorTest extends \TestCase
     }
 
     /** @test */
-    public function can_generate_api_json_file_with_changed_base_path()
+    public function canGenerateApiJsonFileWithChangedBasePath()
     {
         $this->setAnnotationsPath();
 
@@ -26,7 +30,7 @@ class GeneratorTest extends \TestCase
         $cfg['paths']['base'] = '/new/api/base/path';
         config(['l5-swagger' => $cfg]);
 
-        \L5Swagger\Generator::generateDocs();
+        Generator::generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
@@ -37,7 +41,7 @@ class GeneratorTest extends \TestCase
     }
 
     /** @test */
-    public function can_set_proxy()
+    public function canSetProxy()
     {
         $this->setAnnotationsPath();
 
@@ -52,7 +56,7 @@ class GeneratorTest extends \TestCase
     }
 
     /** @test */
-    public function can_set_validator_url()
+    public function canSetValidatorUrl()
     {
         $this->setAnnotationsPath();
 
@@ -68,7 +72,7 @@ class GeneratorTest extends \TestCase
     }
 
     /** @test */
-    public function can_set_custom_response_header()
+    public function canSetCustomResponseHeader()
     {
         $this->setAnnotationsPath();
 

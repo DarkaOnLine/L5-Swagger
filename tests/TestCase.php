@@ -1,11 +1,16 @@
 <?php
 
-class TestCase extends Orchestra\Testbench\TestCase
+namespace Tests;
+
+use L5Swagger\L5SwaggerServiceProvider;
+use Orchestra\Testbench\TestCase as OrchestraTestCase;
+
+class TestCase extends OrchestraTestCase
 {
     protected function getPackageProviders($app)
     {
         return [
-            L5Swagger\L5SwaggerServiceProvider::class,
+            L5SwaggerServiceProvider::class,
         ];
     }
 

@@ -22,9 +22,6 @@ class SwaggerController extends BaseController
         $filePath = config('l5-swagger.paths.docs').'/'.
             (! is_null($jsonFile) ? $jsonFile : config('l5-swagger.paths.docs_json', 'api-docs.json'));
 
-        if (File::extension($filePath) === '') {
-            $filePath .= '.json';
-        }
         if (! File::exists($filePath)) {
             abort(404, 'Cannot find '.$filePath);
         }

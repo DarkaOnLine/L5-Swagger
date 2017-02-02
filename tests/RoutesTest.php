@@ -1,9 +1,11 @@
 <?php
 
-class RoutesTest extends \TestCase
+namespace Tests;
+
+class RoutesTest extends TestCase
 {
     /** @test */
-    public function user_cant_access_json_file_if_it_is_not_generated()
+    public function userCantAccessJsonFileIfItIsNotGenerated()
     {
         $jsonUrl = route('l5-swagger.docs');
 
@@ -12,7 +14,7 @@ class RoutesTest extends \TestCase
     }
 
     /** @test */
-    public function user_can_access_json_file_if_it_is_generated()
+    public function userCanAccessJsonFileIfItIsGenerated()
     {
         $jsonUrl = route('l5-swagger.docs');
 
@@ -24,7 +26,7 @@ class RoutesTest extends \TestCase
     }
 
     /** @test */
-    public function user_can_access_and_generate_custom_json_file()
+    public function userCanAccessAndGenerateCustomJsonFile()
     {
         $customJsonFileName = 'docs.v1.json';
 
@@ -39,7 +41,7 @@ class RoutesTest extends \TestCase
     }
 
     /** @test */
-    public function user_can_access_documentation_interface()
+    public function userCanAccessDocumentationInterface()
     {
         $this->get(config('l5-swagger.routes.api'))
             ->assertSee(route('l5-swagger.docs', config('l5-swagger.paths.docs_json', 'api-docs.json')))
