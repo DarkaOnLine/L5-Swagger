@@ -18,7 +18,6 @@ matrix:
         - php: 7.0
         - php: 7.1
           env: REPORT_TESTS_COVERAGE=1
-        - php: hhvm
 
 
 cache:
