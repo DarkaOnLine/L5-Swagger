@@ -7,14 +7,28 @@ php:
 
 sudo: false
 
-before_script:
-  - composer self-update
-  - composer install --dev --no-interaction
+git:
+  depth: 1
+
+env:
+  global:
+    - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-progress --optimize-autoloader"
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+before_install:
+  - travis_retry composer global require $DEFAULT_COMPOSER_FLAGS hirak/prestissimo
+
+install:
+  - travis_retry composer update $DEFAULT_COMPOSER_FLAGS
+  - composer info -D | sort
 
 script:
   - vendor/bin/phpunit
 
-after_script:
+after_success:
   - vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml
 
 addons:
