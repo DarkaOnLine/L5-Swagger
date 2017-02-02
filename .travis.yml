@@ -1,10 +1,5 @@
 language: php
 
-php:
-  - 5.6
-  - 7.0
-  - 7.1
-
 sudo: false
 
 git:
@@ -13,6 +8,18 @@ git:
 env:
   global:
     - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-progress --optimize-autoloader"
+    - REPORT_TESTS_COVERAGE=0
+
+
+matrix:
+    fast_finish: true
+    include:
+        - php: 5.6
+        - php: 7.0
+        - php: 7.1
+          env: REPORT_TESTS_COVERAGE=1
+        - php: hhvm
+
 
 cache:
   directories:
@@ -29,7 +36,7 @@ script:
   - vendor/bin/phpunit
 
 after_success:
-  - vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml
+  - if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml; fi
 
 addons:
   code_climate:
