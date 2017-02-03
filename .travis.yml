@@ -17,18 +17,19 @@ cache:
   directories:
   - "$HOME/.composer/cache"
 before_install:
-- travis_retry composer global require $DEFAULT_COMPOSER_FLAGS hirak/prestissimo
+  - travis_retry composer global require $DEFAULT_COMPOSER_FLAGS hirak/prestissimo
 install:
-- travis_retry composer update $DEFAULT_COMPOSER_FLAGS
-- composer info -D | sort
+  - travis_retry composer update $DEFAULT_COMPOSER_FLAGS
+  - composer info -D | sort
 script:
-- vendor/bin/phpunit
+  - vendor/bin/phpunit
 after_success:
-- if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml;
-  fi
-addons:
-  code_climate:
-    repo_token: CODECLIMATE_REPO_TOKEN
+  #- if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml; fi
+  - if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/coveralls -v; fi
+
+#addons:
+#  code_climate:
+#    repo_token: CODECLIMATE_REPO_TOKEN
 notifications:
   email: false
   slack:
