@@ -21,4 +21,7 @@
         <log type="coverage-clover" target="./tests/storage/logs/test-reports/clover.xml"/>
         <log type="junit" target="./tests/storage/logs/test-reports/junit.xml" logIncompleteSkipped="false"/>
     </logging>
+    <php>
+        <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
+    </php>
 </phpunit>
