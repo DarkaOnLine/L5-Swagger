@@ -1,42 +1,35 @@
 language: php
-
 sudo: false
-
 git:
   depth: 1
-
 env:
   global:
-    - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-progress --optimize-autoloader"
-    - REPORT_TESTS_COVERAGE=0
-
-
+  - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-progress --optimize-autoloader"
+  - REPORT_TESTS_COVERAGE=0
 matrix:
-    fast_finish: true
-    include:
-        - php: 5.6
-        - php: 7.0
-        - php: 7.1
-          env: REPORT_TESTS_COVERAGE=1
-
-
+  fast_finish: true
+  include:
+  - php: 5.6
+  - php: 7.0
+  - php: 7.1
+    env: REPORT_TESTS_COVERAGE=1
 cache:
   directories:
-    - $HOME/.composer/cache
-
+  - "$HOME/.composer/cache"
 before_install:
-  - travis_retry composer global require $DEFAULT_COMPOSER_FLAGS hirak/prestissimo
-
+- travis_retry composer global require $DEFAULT_COMPOSER_FLAGS hirak/prestissimo
 install:
-  - travis_retry composer update $DEFAULT_COMPOSER_FLAGS
-  - composer info -D | sort
-
+- travis_retry composer update $DEFAULT_COMPOSER_FLAGS
+- composer info -D | sort
 script:
-  - vendor/bin/phpunit
-
+- vendor/bin/phpunit
 after_success:
-  - if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml; fi
-
+- if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml;
+  fi
 addons:
   code_climate:
     repo_token: CODECLIMATE_REPO_TOKEN
+notifications:
+  email: false
+  slack:
+    secure: ZymO41QYmcBtaqIcjKagifif5bH+vpUdZe9eN2Q27G2HF7ID0ZP2X6sCCUCVqdJfM3DhmEsNo8h/HiY86u/5zhf5YpZr7vt+CuYinIJ+nydGXWO5CU6nSotmafFgo3u+Yyjz6qIBhnOVZL8prYcbZsn0SIRvvTwT0qOCBGWIEohdxnu6DpC1BRKQ2RNgsGnO88N5+8FYGor1M4+UT38d/JMrgx8MGkW305ioCmW888NmVuNMheEh19wyFqp9FCQED2DsLxU3pi7A5w4knA5eIy89ULPOrNFUMq5LIBA5OdERrnNS6Yk5/kMmepH2A0tj9pFqBzxdFtThQtYYZ1UnxrotfE+YvU587FW3iXowpHAsaGeoLA3XkakCuZ6jpZhKwOWvslBcBt/6Irs0MPmj5EyaIOb8kAACij8nIfWQkQu/2Ik/AZ0L4lw36RRYNMdel8fMZAwcmK1bfh51dJqhTsf2e4iLa9xHCx7/Mib8EriDwRdYeO0GWSRk4cwTyIY2JjpkidgbDy2BHpiFxp9v/mNf6nJYYVG1Arnv/tK0t3WeILkOHy7tkWtGwFrjiRVQ7B2Hq+iBgda0reZSncK56GhmrMiHwO95QPe6hh3oz3lwcl7MoKGCyLASTeXTKNGhR5fds/6fG25bov8DDOaWXbQyeidJwO4UvLY6ksS3onc=
