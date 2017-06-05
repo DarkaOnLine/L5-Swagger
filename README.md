@@ -43,7 +43,7 @@ Changes in 5.0
 - Swagger UI 3.
 - Configuration changes.
 - Assets dependency dropped. Now includes from composer package.
-- [See migration](#migrate-from-30-40-to-50)
+- [See migration](#migrate-from-3040-to-50)
 
 Changes in 4.0
 ============
