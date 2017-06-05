@@ -3,36 +3,18 @@
 /**
  * @SWG\Swagger(
  *     basePath="/api/v1",
- *     schemes={"http"},
+ *     schemes={"http", "https"},
  *     host=L5_SWAGGER_CONST_HOST,
  *     @SWG\Info(
  *         version="1.0.0",
  *         title="L5 Swagger API",
+ *         description="L5 Swagger API description",
  *         @SWG\Contact(
  *             email="darius@matulionis.lt"
  *         ),
  *     )
  * )
  */
-
-/**
- * @SWG\SecurityScheme(
- *   securityDefinition="api_key",
- *   type="apiKey",
- *   in="query",
- *   name="api_key"
- * )
- */
-
-/**
- * @SWG\SecurityScheme(
- *   securityDefinition="X-Api-Token",
- *   type="apiKey",
- *   in="header",
- *   name="X-Api-Token"
- * )
- */
-
 
 
 /**
@@ -47,9 +29,12 @@
  *          description="successful operation"
  *       ),
  *       @SWG\Response(response=400, description="Bad request"),
+ *       security={
+ *           {"api_key_security_example": {}}
+ *       }
  *     )
  *
- * Returns lis of projects
+ * Returns list of projects
  */
 
 
@@ -73,6 +58,11 @@
  *       ),
  *      @SWG\Response(response=400, description="Bad request"),
  *      @SWG\Response(response=404, description="Resource Not Found"),
+ *      security={
+ *         {
+ *             "oauth2_security_example": {"write:projects", "read:projects"}
+ *         }
+ *     },
  * )
  *
  */

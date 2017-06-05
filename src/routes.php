@@ -11,3 +11,8 @@ $router->get(config('l5-swagger.routes.api'), [
     'middleware' => config('l5-swagger.routes.middleware.api', []),
     'uses' => '\L5Swagger\Http\Controllers\SwaggerController@api',
 ]);
+
+$router->get(config('l5-swagger.routes.docs').'/asset/{asset}', [
+    'as' => 'l5-swagger.asset',
+    'uses' => '\L5Swagger\Http\Controllers\SwaggerAssetController@index',
+]);
