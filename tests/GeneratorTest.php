@@ -17,7 +17,7 @@ class GeneratorTest extends TestCase
 
         $this->get(route('l5-swagger.docs'))
             ->assertSee('L5 Swagger API')
-            ->assertSee('http://my-default-host.com')
+            ->assertSee('my-default-host.com')
             ->isOk();
     }
 
@@ -36,7 +36,7 @@ class GeneratorTest extends TestCase
 
         $this->get(route('l5-swagger.docs'))
             ->assertSee('L5 Swagger API')
-            ->assertSee('/new/api/base/path')
+            ->assertSee('\\/new\\/api\\/base\\/path')
             ->isOk();
     }
 
@@ -61,33 +61,39 @@ class GeneratorTest extends TestCase
         $this->setAnnotationsPath();
 
         $cfg = config('l5-swagger');
-        $cfg['validatorUrl'] = 'http://validator-url.dev';
+        $cfg['validator_url'] = 'http://validator-url.dev';
         config(['l5-swagger' => $cfg]);
 
         $this->get(route('l5-swagger.api'))
-            ->assertSee('http://validator-url.dev')
+            ->assertSee('validator-url.dev')
             ->isOk();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
     }
 
     /** @test */
-    public function canSetCustomResponseHeader()
+    public function canGenerateApiJsonFileWithSecurityDefinition()
     {
         $this->setAnnotationsPath();
 
         $cfg = config('l5-swagger');
-        $cfg['headers']['view'] = [
-            'header1' => 'param1',
-            'header2' => 'param2',
+        $security = [
+            'new_api_key_securitye' => [
+                'type' => 'apiKey',
+                'name' => 'api_key_name',
+                'in' => 'query'
+            ]
         ];
+        $cfg['security'] = $security;
         config(['l5-swagger' => $cfg]);
 
-        $this->get(route('l5-swagger.api'))
-            ->assertHeader('header1', 'param1')
-            ->assertHeader('header2', 'param2')
-            ->isOk();
+        Generator::generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
+
+        $this->get(route('l5-swagger.docs'))
+            ->assertSee('new_api_key_securitye')
+            ->assertJsonFragment($security)
+            ->isOk();
     }
 }

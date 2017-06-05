@@ -6,7 +6,6 @@ use L5Swagger\Console\PublishCommand;
 use Illuminate\Support\ServiceProvider;
 use L5Swagger\Console\GenerateDocsCommand;
 use L5Swagger\Console\PublishViewsCommand;
-use L5Swagger\Console\PublishAssetsCommand;
 use L5Swagger\Console\PublishConfigCommand;
 
 class L5SwaggerServiceProvider extends ServiceProvider
@@ -31,11 +30,6 @@ class L5SwaggerServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../resources/views' => config('l5-swagger.paths.views'),
         ], 'views');
-
-        //Publish assets
-        $this->publishes([
-            __DIR__.'/../resources/assets' => config('l5-swagger.paths.assets'),
-        ], 'assets');
 
         //Include routes
 
@@ -66,10 +60,6 @@ class L5SwaggerServiceProvider extends ServiceProvider
             return new PublishViewsCommand();
         });
 
-        $this->app->singleton('command.l5-swagger.publish-assets', function () {
-            return new PublishAssetsCommand();
-        });
-
         $this->app->singleton('command.l5-swagger.generate', function () {
             return new GenerateDocsCommand();
         });
@@ -78,7 +68,6 @@ class L5SwaggerServiceProvider extends ServiceProvider
             'command.l5-swagger.publish',
             'command.l5-swagger.publish-config',
             'command.l5-swagger.publish-views',
-            'command.l5-swagger.publish-assets',
             'command.l5-swagger.generate'
         );
     }
@@ -94,7 +83,6 @@ class L5SwaggerServiceProvider extends ServiceProvider
             'command.l5-swagger.publish',
             'command.l5-swagger.publish-config',
             'command.l5-swagger.publish-views',
-            'command.l5-swagger.publish-assets',
             'command.l5-swagger.generate',
         ];
     }

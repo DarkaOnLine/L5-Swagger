@@ -18,7 +18,7 @@ class PublishCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Publish config, views, assets';
+    protected $description = 'Publish config, views';
 
     /**
      * Execute the console command.

@@ -9,8 +9,8 @@ class RoutesTest extends TestCase
     {
         $jsonUrl = route('l5-swagger.docs');
 
-        $this->get($jsonUrl)
-            ->isNotFound();
+        $response = $this->get($jsonUrl);
+        $this->assertTrue($response->isNotFound());
     }
 
     /** @test */
@@ -45,6 +45,14 @@ class RoutesTest extends TestCase
     {
         $this->get(config('l5-swagger.routes.api'))
             ->assertSee(route('l5-swagger.docs', config('l5-swagger.paths.docs_json', 'api-docs.json')))
+            ->isOk();
+    }
+
+    /** @test */
+    public function itCanServeAssets()
+    {
+        $this->get(l5_swagger_asset('swagger-ui.css'))
+            ->assertSee('.swagger-ui')
             ->isOk();
     }
 }
