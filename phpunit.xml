@@ -4,7 +4,7 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         stopOnFailure="true"
+         stopOnFailure="false"
          syntaxCheck="true">
     <testsuite name="L5-Swagger TestSuite">
         <directory>tests/</directory>

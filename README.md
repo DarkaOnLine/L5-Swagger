@@ -43,6 +43,7 @@ Changes in 5.0
 - Swagger UI 3.
 - Configuration changes.
 - Assets dependency dropped. Now includes from composer package.
+- [See migration](#migrate-from-30-40-to-50)
 
 Changes in 4.0
 ============
@@ -80,12 +81,20 @@ or add `\L5Swagger\L5SwaggerServiceProvider::class` line in your `config/app.php
 - Run `l5-swagger:publish-assets` to publish new swagger-ui assets
 - Run `l5-swagger:publish-views` to publish new views
 
+Migrate from 3.0|4.0 to 5.0
+============
+- Remove `config/l5-swagger.php` file (make a copy if needed)
+- Remove `public/vendor/l5-swagger` directory
+- Remove `resources/views/vendor/l5-swagger` directory
+- Run `l5-swagger:publish` to publish new swagger-ui view and configuration
+- Edit your `config/l5-swagger.php` file
+
 Configuration
 ============
 - Run `l5-swagger:publish` to publish everything
 - Run `l5-swagger:publish-config` to publish configs (`config/l5-swagger.php`)
 - Run `l5-swagger:publish-assets` to publish swagger-ui to your public folder (`public/vendor/l5-swagger`)
-- Run `l5-swagger:publish-views` to publish views (`resources/views/vendor/l5-swagger`) - <= 4.0
+- Run `l5-swagger:publish-views` to publish views (`resources/views/vendor/l5-swagger`) - only for versions <= 4.0
 - Run `l5-swagger:generate` to generate docs or set `generate_always` param to `true` in your config or .env file 
 
 Swagger-php

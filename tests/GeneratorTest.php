@@ -27,7 +27,7 @@ class GeneratorTest extends TestCase
         $this->setAnnotationsPath();
 
         $cfg = config('l5-swagger');
-        $cfg['paths']['base'] = '/new/api/base/path';
+        $cfg['paths']['base'] = '/new_path/is/here';
         config(['l5-swagger' => $cfg]);
 
         Generator::generateDocs();
@@ -36,7 +36,7 @@ class GeneratorTest extends TestCase
 
         $this->get(route('l5-swagger.docs'))
             ->assertSee('L5 Swagger API')
-            ->assertSee('\\/new\\/api\\/base\\/path')
+            ->assertSee('new_path')
             ->isOk();
     }
 
