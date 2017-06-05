@@ -22,6 +22,7 @@ class Generator
             File::makeDirectory($docDir);
             $excludeDirs = config('l5-swagger.paths.excludes');
             $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
+            $swagger->basePath = config('l5-swagger.paths.base');
 
             if (config('l5-swagger.paths.base') !== null) {
                 $swagger->basePath = config('l5-swagger.paths.base');
