@@ -47,7 +47,7 @@ class Generator
     {
         $securityConfig = config('l5-swagger.security', []);
 
-        if (is_array($securityConfig) && !empty($securityConfig)) {
+        if (is_array($securityConfig) && ! empty($securityConfig)) {
             $documentation = collect(
                 json_decode(file_get_contents($filename))
             );

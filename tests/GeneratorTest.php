@@ -81,8 +81,8 @@ class GeneratorTest extends TestCase
             'new_api_key_securitye' => [
                 'type' => 'apiKey',
                 'name' => 'api_key_name',
-                'in' => 'query'
-            ]
+                'in' => 'query',
+            ],
         ];
         $cfg['security'] = $security;
         config(['l5-swagger' => $cfg]);

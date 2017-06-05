@@ -16,17 +16,17 @@ if (! function_exists('swagger_ui_dist_path')) {
             'favicon-32x32.png',
             'swagger-ui-bundle.js',
             'swagger-ui.js',
-            'swagger-ui.css'
+            'swagger-ui.css',
         ];
 
         $path = base_path('vendor/swagger-api/swagger-ui/dist/');
 
-        if (!$asset) {
+        if (! $asset) {
             return realpath($path);
         }
 
-        if (!in_array($asset, $allowed_files)) {
-            throw new L5SwaggerException(sprintf("(%s) - this L5 Swagger asset is not allowed", $asset));
+        if (! in_array($asset, $allowed_files)) {
+            throw new L5SwaggerException(sprintf('(%s) - this L5 Swagger asset is not allowed', $asset));
         }
 
         return realpath($path.$asset);
@@ -44,8 +44,8 @@ if (! function_exists('l5_swagger_asset')) {
     {
         $file = swagger_ui_dist_path($asset);
 
-        if (!file_exists($file)) {
-            throw new L5SwaggerException(sprintf("Requested L5 Swagger asset file (%s) does not exists", $asset));
+        if (! file_exists($file)) {
+            throw new L5SwaggerException(sprintf('Requested L5 Swagger asset file (%s) does not exists', $asset));
         }
 
         return route('l5-swagger.asset', $asset);

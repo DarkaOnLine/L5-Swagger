@@ -17,7 +17,7 @@ class TestCase extends OrchestraTestCase
     public function setUp()
     {
         parent::setUp();
-        
+
         $this->copyAssets();
     }
 
@@ -65,11 +65,11 @@ class TestCase extends OrchestraTestCase
 
     protected function copyAssets()
     {
-        $src = __DIR__ . '/../vendor/swagger-api/swagger-ui/dist/';
-        $destination = __DIR__ . '/../vendor/orchestra/testbench/fixture/vendor/swagger-api/swagger-ui/dist/';
+        $src = __DIR__.'/../vendor/swagger-api/swagger-ui/dist/';
+        $destination = __DIR__.'/../vendor/orchestra/testbench/fixture/vendor/swagger-api/swagger-ui/dist/';
 
-        if (!is_dir($destination)) {
-            $base =  __DIR__ . '/../vendor/orchestra/testbench/fixture/vendor/';
+        if (! is_dir($destination)) {
+            $base = __DIR__.'/../vendor/orchestra/testbench/fixture/vendor/';
             mkdir($base = $base.'swagger-api');
             mkdir($base = $base.'/swagger-ui');
             mkdir($base = $base.'/dist');
@@ -77,14 +77,14 @@ class TestCase extends OrchestraTestCase
 
         foreach (scandir($src) as $file) {
             $filePath = $src.$file;
-            
-            if (!is_readable($filePath) || is_dir($filePath)) {
+
+            if (! is_readable($filePath) || is_dir($filePath)) {
                 continue;
             }
 
             copy(
                 $filePath,
-                $destination . $file
+                $destination.$file
             );
         }
     }

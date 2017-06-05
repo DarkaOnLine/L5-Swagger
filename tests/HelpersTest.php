@@ -2,8 +2,6 @@
 
 namespace Tests;
 
-use Illuminate\Support\Facades\Artisan;
-
 class HelpersTest extends TestCase
 {
     /** @test */

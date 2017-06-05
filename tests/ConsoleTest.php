@@ -48,7 +48,7 @@ class ConsoleTest extends TestCase
         $this->setAnnotationsPath();
 
         Artisan::call('l5-swagger:publish-views');
-        
+
         $this->assertTrue(file_exists(config('l5-swagger.paths.views').'/index.blade.php'));
     }
 }
