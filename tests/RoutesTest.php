@@ -55,4 +55,12 @@ class RoutesTest extends TestCase
             ->assertSee('.swagger-ui')
             ->isOk();
     }
+
+    /** @test */
+    public function userCanAccessOauth2Redirect()
+    {
+        $this->get(l5_swagger_asset('oauth2-redirect.html'))
+            ->assertSee('<script>')
+            ->isOk();
+    }
 }
