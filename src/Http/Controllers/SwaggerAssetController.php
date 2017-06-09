@@ -15,7 +15,7 @@ class SwaggerAssetController extends BaseController
         return (new Response(
             file_get_contents($path), 200, [
                 'Content-Type' => (pathinfo($asset))['extension'] == 'css' ?
-                    'text/css' : 'application/javascript'
+                    'text/css' : 'application/javascript',
             ]
         ))->setSharedMaxAge(31536000)
         ->setMaxAge(31536000)
