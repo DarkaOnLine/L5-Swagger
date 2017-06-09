@@ -11,5 +11,14 @@ class SwaggerAssetController extends BaseController
         $path = swagger_ui_dist_path($asset);
 
         return file_get_contents($path);
+
+        return (new Response(
+            file_get_contents($path), 200, [
+                'Content-Type' => (pathinfo($asset))['extension'] == 'css' ?
+                    'text/css' : 'application/javascript'
+            ]
+        ))->setSharedMaxAge(31536000)
+        ->setMaxAge(31536000)
+        ->setExpires(new \DateTime('+1 year'));
     }
 }
