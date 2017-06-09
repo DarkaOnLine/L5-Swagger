@@ -17,6 +17,7 @@ if (! function_exists('swagger_ui_dist_path')) {
             'swagger-ui-bundle.js',
             'swagger-ui.js',
             'swagger-ui.css',
+            'oauth2-redirect.html',
         ];
 
         $path = base_path('vendor/swagger-api/swagger-ui/dist/');
