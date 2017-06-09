@@ -16,3 +16,8 @@ $router->get(config('l5-swagger.routes.docs').'/asset/{asset}', [
     'as' => 'l5-swagger.asset',
     'uses' => '\L5Swagger\Http\Controllers\SwaggerAssetController@index',
 ]);
+
+$router->get(config('l5-swagger.routes.oauth2_callback'), [
+    'as' => 'l5-swagger.oauth2_callback',
+    'uses' => '\L5Swagger\Http\Controllers\SwaggerController@oauth2Callback',
+]);

@@ -45,6 +45,7 @@ class RoutesTest extends TestCase
     {
         $this->get(config('l5-swagger.routes.api'))
             ->assertSee(route('l5-swagger.docs', config('l5-swagger.paths.docs_json', 'api-docs.json')))
+            ->assertSee(route('l5-swagger.oauth2_callback'))
             ->isOk();
     }
 
@@ -59,8 +60,9 @@ class RoutesTest extends TestCase
     /** @test */
     public function userCanAccessOauth2Redirect()
     {
-        $this->get(l5_swagger_asset('oauth2-redirect.html'))
-            ->assertSee('<script>')
+        $this->get(route('l5-swagger.oauth2_callback'))
+            ->assertSee('swaggerUIRedirectOauth2')
+            ->assertSee('oauth2.auth.code')
             ->isOk();
     }
 }

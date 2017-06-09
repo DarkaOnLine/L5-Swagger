@@ -63,4 +63,14 @@ class SwaggerController extends BaseController
 
         return $response;
     }
+
+    /**
+     * Display Oauth2 callback pages.
+     *
+     * @return string
+     */
+    public function oauth2Callback()
+    {
+        return \File::get(swagger_ui_dist_path('oauth2-redirect.html'));
+    }
 }
