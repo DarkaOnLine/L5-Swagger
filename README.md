@@ -27,16 +27,16 @@ For Swagger 2.0
 
 For Swagger 1.0
 ```php
-    composer require darkaonline/l5-swagger
+composer require darkaonline/l5-swagger
 ```
 
-- Open your `AppServiceProvider` (located in `app/Providers`) and add this line in `register` function
+Open your `AppServiceProvider` (located in `app/Providers`) and add this line in `register` function
 ```php
-    $this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
+$this->app->register(\L5Swagger\L5SwaggerServiceProvider::class);
 ```
 or open your `config/app.php` and add this line in `providers` section
 ```php
-    \L5Swagger\L5SwaggerServiceProvider::class
+L5Swagger\L5SwaggerServiceProvider::class,
 ```
 Changes in 5.0
 ============
