@@ -12,12 +12,16 @@ if (! function_exists('swagger_ui_dist_path')) {
     {
         $allowed_files = [
             'favicon-16x16.png',
-            'swagger-ui-standalone-preset.js',
             'favicon-32x32.png',
-            'swagger-ui-bundle.js',
-            'swagger-ui.js',
-            'swagger-ui.css',
             'oauth2-redirect.html',
+            'swagger-ui-bundle.js',
+            'swagger-ui-bundle.js.map',
+            'swagger-ui-standalone-preset.js',
+            'swagger-ui-standalone-preset.js.map',
+            'swagger-ui.css',
+            'swagger-ui.css.map',
+            'swagger-ui.js',
+            'swagger-ui.js.map'
         ];
 
         $path = base_path('vendor/swagger-api/swagger-ui/dist/');
