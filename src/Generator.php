@@ -30,7 +30,8 @@ class Generator
             $filename = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
             $swagger->saveAs($filename);
 
-            self::appendSecurityDefinisions($filename);
+            self::appendSecurityDefinitions($filename);
+            self::appendSecurity($filename);
         }
     }
 
@@ -43,7 +44,7 @@ class Generator
         }
     }
 
-    protected static function appendSecurityDefinisions(string $filename)
+    protected static function appendSecurityDefinitions(string $filename)
     {
         $securityConfig = config('l5-swagger.security', []);
 
@@ -59,6 +60,27 @@ class Generator
             }
 
             $documentation->offsetSet('securityDefinitions', $securityDefinitions);
+
+            file_put_contents($filename, $documentation->toJson());
+        }
+    }
+
+    protected static function appendSecurity(string $filename)
+    {
+        $securityConfig = config('l5-swagger.security_schemes', []);
+
+        if (is_array($securityConfig) && ! empty($securityConfig)) {
+            $documentation = collect(
+                json_decode(file_get_contents($filename))
+            );
+
+            $securityDefinitions = $documentation->has('security') ? collect($documentation->get('security')) : collect();
+
+            foreach ($securityConfig as $key => $cfg) {
+                $securityDefinitions->offsetSet($key, self::arrayToObject($cfg));
+            }
+
+            $documentation->offsetSet('security', $securityDefinitions);
 
             file_put_contents($filename, $documentation->toJson());
         }
