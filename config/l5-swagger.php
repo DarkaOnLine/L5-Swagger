@@ -134,6 +134,26 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | A declaration of which security schemes are applied for the API as a whole.
+    | Will be generated into documentation file.
+    |--------------------------------------------------------------------------
+    */
+    'security_schemes' => [
+        /*
+        |--------------------------------------------------------------------------
+        | Examples of Security Requirement Objects
+        |--------------------------------------------------------------------------
+        */
+        /*
+        ['api_key_security_example' => []], // Non-OAuth2 Security Requirement
+        ['oauth2_security_example' => [ // OAuth2 Security Requirement
+                'read:projects', // Scopes, empty is allowed
+                'write:projects',
+        ]],*/
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Turn this off to remove swagger generation on production
     |--------------------------------------------------------------------------
     */
