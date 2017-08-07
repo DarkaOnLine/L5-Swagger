@@ -69,8 +69,12 @@ class TestCase extends OrchestraTestCase
         $destination = __DIR__.'/../vendor/orchestra/testbench/fixture/vendor/swagger-api/swagger-ui/dist/';
 
         if (! is_dir($destination)) {
-            $base = __DIR__.'/../vendor/orchestra/testbench/fixture/vendor/';
-            mkdir($base = $base.'swagger-api');
+            $base = realpath(
+                __DIR__.'/../vendor/orchestra/testbench/fixture/'
+            );
+            
+            mkdir($base = $base.'/vendor');
+            mkdir($base = $base.'/swagger-api');
             mkdir($base = $base.'/swagger-ui');
             mkdir($base = $base.'/dist');
         }
