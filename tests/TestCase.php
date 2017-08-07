@@ -72,7 +72,7 @@ class TestCase extends OrchestraTestCase
             $base = realpath(
                 __DIR__.'/../vendor/orchestra/testbench/fixture/'
             );
-            
+
             mkdir($base = $base.'/vendor');
             mkdir($base = $base.'/swagger-api');
             mkdir($base = $base.'/swagger-ui');
