@@ -21,6 +21,8 @@ install:
   - travis_retry composer update $DEFAULT_COMPOSER_FLAGS
   - composer info -D | sort
 script:
+  - sudo chown -R travis:travis /home/travis/build/DarkaOnLine
+  - sudo chmod -R 777 /home/travis/build/DarkaOnLine
   - vendor/bin/phpunit
 after_success:
   #- if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml; fi
