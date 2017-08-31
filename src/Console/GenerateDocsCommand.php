@@ -26,7 +26,7 @@ class GenerateDocsCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         $this->info('Regenerating docs');
         Generator::generateDocs();
