@@ -22,7 +22,7 @@ For Swagger 2.0
  5.2.x    | 2.2       | 1.1, 1.2, 2.0              | ```php composer require "darkaonline/l5-swagger:~3.0" ```
  5.3.x    | 2.2       | 1.1, 1.2, 2.0              | ```php composer require "darkaonline/l5-swagger:~3.0" ```
  5.4.x    | 2.2       | 1.1, 1.2, 2.0              | ```php composer require "darkaonline/l5-swagger:~4.0" ```
- 5.4.x    | 3         | 2.0                        | ```php composer require "darkaonline/l5-swagger:~5.0" ```
+ 5.4.x    | 3         | 2.0                        | ```php composer require "darkaonline/l5-swagger:5.4.*" ```
 
 
 For Swagger 1.0
