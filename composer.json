@@ -15,7 +15,7 @@
   ],
   "require": {
     "php": "^7.0",
-    "laravel/framework": "5.4.*",
+    "laravel/framework": "5.5.*",
     "zircote/swagger-php": "~2.0",
     "swagger-api/swagger-ui": "^3.0"
   },

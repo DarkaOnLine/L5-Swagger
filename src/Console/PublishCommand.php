@@ -25,7 +25,7 @@ class PublishCommand extends Command
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         $this->info('Publishing all files');
         $this->call('vendor:publish', [
