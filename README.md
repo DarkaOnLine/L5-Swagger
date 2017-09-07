@@ -39,6 +39,9 @@ or open your `config/app.php` and add this line in `providers` section
 ```php
 L5Swagger\L5SwaggerServiceProvider::class,
 ```
+
+For Laravel 5.5, no need to manually add `L5SwaggerServiceProvider` into config. It uses package auto discovery feature.
+
 Changes in 5.0
 ============
 - Swagger UI 3.
