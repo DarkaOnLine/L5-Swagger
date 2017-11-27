@@ -53,12 +53,14 @@ class Generator
             );
 
             $securityDefinitions = $documentation->has('securityDefinitions') ? collect($documentation->get('securityDefinitions')) : collect();
+            $security = $documentation->has('security') ? collect($documentation->get('security')) : collect();
 
             foreach ($securityConfig as $key => $cfg) {
                 $securityDefinitions->offsetSet($key, self::arrayToObject($cfg));
+                $security->offsetSet($key, array());
             }
-
             $documentation->offsetSet('securityDefinitions', $securityDefinitions);
+            $documentation->offsetSet('security', array($security));
 
             file_put_contents($filename, $documentation->toJson());
         }
