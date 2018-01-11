@@ -20,17 +20,18 @@ before_install:
 install:
   - travis_retry composer update $DEFAULT_COMPOSER_FLAGS
   - composer info -D | sort
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 script:
   - chown -R travis:travis /home/travis/build/DarkaOnLine/L5-Swagger
   - chmod -R 777 /home/travis/build/DarkaOnLine/L5-Swagger
   - vendor/bin/phpunit
+  - cp tests/storage/logs/test-reports/clover.xml clover.xml
 after_success:
-  #- if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml; fi
+  - if [ $REPORT_TESTS_COVERAGE == 1 ] && [ $TRAVIS_PULL_REQUEST == "false" ]; then ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT; fi
   - if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/coveralls -v; fi
-
-#addons:
-#  code_climate:
-#    repo_token: CODECLIMATE_REPO_TOKEN
 notifications:
   email: false
   slack:
