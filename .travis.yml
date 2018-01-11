@@ -30,7 +30,7 @@ script:
   - vendor/bin/phpunit
   - cp tests/storage/logs/test-reports/clover.xml clover.xml
 after_success:
-  - if [ $REPORT_TESTS_COVERAGE == 1 && $TRAVIS_PULL_REQUEST == "false" ]; then ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [ $REPORT_TESTS_COVERAGE == 1 ] && [ $TRAVIS_PULL_REQUEST == "false" ]; then ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT; fi
   - if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/coveralls -v; fi
 notifications:
   email: false
