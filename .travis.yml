@@ -29,7 +29,7 @@ script:
   - chmod -R 777 /home/travis/build/DarkaOnLine/L5-Swagger
   - vendor/bin/phpunit
 after_script:
-  - if [ $REPORT_TESTS_COVERAGE == 1 ]; ./cc-test-reporter after-build -t clover -p ./tests/storage/logs/test-reports/ --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [ $REPORT_TESTS_COVERAGE == 1 ]; then ./cc-test-reporter after-build -t clover -p ./tests/storage/logs/test-reports/ --exit-code $TRAVIS_TEST_RESULT; fi
 after_success:
   #- if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/test-reporter --coverage-report=./tests/storage/logs/test-reports/clover.xml; fi
   - if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/coveralls -v; fi
