@@ -28,6 +28,7 @@ script:
   - chown -R travis:travis /home/travis/build/DarkaOnLine/L5-Swagger
   - chmod -R 777 /home/travis/build/DarkaOnLine/L5-Swagger
   - vendor/bin/phpunit
+  - cp tests/storage/logs/test-reports/clover.xml clover.xml
 after_script:
   - if [ $REPORT_TESTS_COVERAGE == 1 ]; then ./cc-test-reporter after-build -t clover -p ./tests/storage/logs/test-reports/ --exit-code $TRAVIS_TEST_RESULT; fi
 after_success:
