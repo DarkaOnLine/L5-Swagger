@@ -77,6 +77,7 @@ const ui = SwaggerUIBundle({
 
   requestInterceptor: function() {
     this.headers['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
+    return this;
   }
 })
 ```
