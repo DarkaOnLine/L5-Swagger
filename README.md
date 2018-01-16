@@ -57,7 +57,6 @@ Next, edit your `config/l5-swagger.php` configuration file. Locate the `l5-swagg
 
 ```php
 'api' => [
-  'auth',
   \App\Http\Middleware\EncryptCookies::class,
   \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
   \Illuminate\Session\Middleware\StartSession::class,
@@ -65,6 +64,7 @@ Next, edit your `config/l5-swagger.php` configuration file. Locate the `l5-swagg
   \App\Http\Middleware\VerifyCsrfToken::class,
   \Illuminate\Routing\Middleware\SubstituteBindings::class,
   \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
+  'auth',
 ]
 ```
 
