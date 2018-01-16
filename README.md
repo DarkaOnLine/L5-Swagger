@@ -68,6 +68,16 @@ Next, edit your `config/l5-swagger.php` configuration file. Locate the `l5-swagg
 ]
 ```
 
+TIPS
+============
+
+## L5_SWAGGER_GENERATE_ALWAYS
+
+One of the setting I find useful to enable is `l5-swagger.generate_always`, which will cause your Swagger doc to be regenerated each time you load the Swagger UI (<span style="color:OrangeRed">not intended for production use!</span>). All you have to do to enable this in your dev environment is add an environment variable to `.env` named `L5_SWAGGER_GENERATE_ALWAYS` and set it to `true`.
+
+## oauth2 + passport = Bearer \<token\>
+Follow instruction in issue #57.
+
 Changes in 5.0
 ============
 - Swagger UI 3.
