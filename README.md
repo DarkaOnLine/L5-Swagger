@@ -79,6 +79,7 @@ const ui = SwaggerUIBundle({
     this.headers['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
   }
 })
+```
 
 The other setting I find useful to enable is `l5-swagger.generate_always`, which will cause your Swagger doc to be regenerated each time you load the Swagger UI (not intended for production use!). All you have to do to enable this in your dev environment is add an environment variable to `.env` named `L5_SWAGGER_GENERATE_ALWAYS` and set it to `true`.
 
