@@ -42,6 +42,48 @@ L5Swagger\L5SwaggerServiceProvider::class,
 
 For Laravel 5.5, no need to manually add `L5SwaggerServiceProvider` into config. It uses package auto discovery feature.
 
+Using Swagger UI with Passport
+============
+The easiest way to build and test your Laravel-based API using Swagger-php is to use Passport's `CreateFreshApiToken` middleware. This middleware, built into Laravel's core, adds a cookie to all responses, and the cookie authenticates all subsequent requests through Passport's `TokenGuard`. 
+
+To get started, first publish L5-Swagger's config and view files into your own project:
+
+```bash
+$ php artisan l5-swagger:publish-config
+$ php artisan l5-swagger:publish-views
+```
+
+Next, edit your `config/l5-swagger.php` configuration file. Locate the `l5-swagger.routes.middleware` section, and add the following middleware list to the `api` route:
+
+```php
+'api' => [
+  \App\Http\Middleware\EncryptCookies::class,
+  \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+  \Illuminate\Session\Middleware\StartSession::class,
+  \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+  \App\Http\Middleware\VerifyCsrfToken::class,
+  \Illuminate\Routing\Middleware\SubstituteBindings::class,
+  \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
+  'auth',
+]
+```
+
+Finally, open your copy of `resources/views/vendor/l5-swagger/index.blade.php`, scroll to the initialization of `SwaggerUIBundle`, and add the following configuration property:
+
+```js
+const ui = SwaggerUIBundle({
+
+  // ...
+
+  requestInterceptor: function() {
+    this.headers['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
+    return this;
+  }
+})
+```
+
+The other setting I find useful to enable is `l5-swagger.generate_always`, which will cause your Swagger doc to be regenerated each time you load the Swagger UI (not intended for production use!). All you have to do to enable this in your dev environment is add an environment variable to `.env` named `L5_SWAGGER_GENERATE_ALWAYS` and set it to `true`.
+
 Changes in 5.0
 ============
 - Swagger UI 3.
