@@ -9,8 +9,8 @@ env:
 matrix:
   fast_finish: true
   include:
-  - php: 7.0
   - php: 7.1
+  - php: 7.2
     env: REPORT_TESTS_COVERAGE=1
 cache:
   directories:

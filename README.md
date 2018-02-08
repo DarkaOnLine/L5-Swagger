@@ -24,6 +24,7 @@ For Swagger 2.0
  5.4.x    | 2.2       | 1.1, 1.2, 2.0              | ```php composer require "darkaonline/l5-swagger:~4.0" ```
  5.4.x    | 3         | 2.0                        | ```php composer require "darkaonline/l5-swagger:5.4.*" ```
  5.5.x    | 3         | 2.0                        | ```php composer require "darkaonline/l5-swagger:5.5.*" ```
+ 5.6.x    | 3         | 2.0                        | ```php composer require "darkaonline/l5-swagger:5.6.*" ```
 
 
 For Swagger 1.0
