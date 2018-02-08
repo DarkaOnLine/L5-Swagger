@@ -84,7 +84,7 @@ window.onload = function() {
     requestInterceptor: function() {
       this.headers['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
       return this;
-    }
+    },
 
     presets: [
       SwaggerUIBundle.presets.apis,
