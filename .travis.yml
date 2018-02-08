@@ -26,6 +26,7 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - chown -R travis:travis /home/travis/build/DarkaOnLine/L5-Swagger
+  - mkdir -p tests/storage/logs/test-reports
   - chmod -R 777 /home/travis/build/DarkaOnLine/L5-Swagger
   - vendor/bin/phpunit
   - cp tests/storage/logs/test-reports/clover.xml clover.xml
