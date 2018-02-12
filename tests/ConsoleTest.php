@@ -24,9 +24,7 @@ class ConsoleTest extends TestCase
     /** @test */
     public function canPublish()
     {
-        $this->setAnnotationsPath();
-
-        Artisan::call('vendor:publish', ['--provider' => "'L5Swagger\L5SwaggerServiceProvider'"]);
+        Artisan::call('vendor:publish', ['--provider' => 'L5Swagger\L5SwaggerServiceProvider']);
 
         $this->assertTrue(file_exists(config_path('l5-swagger.php')));
         $this->assertTrue(file_exists(config('l5-swagger.paths.views').'/index.blade.php'));

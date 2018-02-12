@@ -28,8 +28,8 @@ script:
   - chown -R travis:travis /home/travis/build/DarkaOnLine/L5-Swagger
   - mkdir -p tests/storage/logs/test-reports
   - chmod -R 777 /home/travis/build/DarkaOnLine/L5-Swagger
-  - vendor/bin/phpunit
-  - cp tests/storage/logs/test-reports/clover.xml clover.xml
+  - if [ $REPORT_TESTS_COVERAGE != 1 ]; then vendor/bin/phpunit --no-coverage; fi
+  - if [ $REPORT_TESTS_COVERAGE == 1 ]; then vendor/bin/phpunit; cp tests/storage/logs/test-reports/clover.xml clover.xml; fi
 after_success:
   - if [ $REPORT_TESTS_COVERAGE == 1 ] && [ $TRAVIS_PULL_REQUEST == "false" ]; then ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT; fi
   - if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/coveralls -v; fi
