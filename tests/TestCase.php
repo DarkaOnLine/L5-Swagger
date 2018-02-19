@@ -7,13 +7,6 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [
-            L5SwaggerServiceProvider::class,
-        ];
-    }
-
     public function setUp()
     {
         parent::setUp();
@@ -28,6 +21,18 @@ class TestCase extends OrchestraTestCase
             rmdir(config('l5-swagger.paths.docs'));
         }
         parent::tearDown();
+    }
+
+    protected function isOpenApi()
+    {
+        return version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            L5SwaggerServiceProvider::class,
+        ];
     }
 
     protected function crateJsonDocumentationFile()
@@ -47,7 +52,12 @@ class TestCase extends OrchestraTestCase
     protected function setAnnotationsPath()
     {
         $cfg = config('l5-swagger');
-        $cfg['paths']['annotations'] = __DIR__.'/storage/annotations';
+        $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/Swagger';
+
+        if ($this->isOpenApi()) {
+            $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/OpenApi';
+        }
+
         $cfg['generate_always'] = true;
 
         //Adding constants which will be replaced in generated json file
