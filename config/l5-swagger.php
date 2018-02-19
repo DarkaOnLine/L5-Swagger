@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'api' => [
         /*
         |--------------------------------------------------------------------------
@@ -13,7 +12,6 @@ return [
     ],
 
     'routes' => [
-
         /*
         |--------------------------------------------------------------------------
         | Route for accessing api documentation interface
@@ -49,11 +47,9 @@ return [
             'docs' => [],
             'oauth2_callback' => [],
         ],
-
     ],
 
     'paths' => [
-
         /*
         |--------------------------------------------------------------------------
         | Absolute path to location where parsed swagger annotations will be stored

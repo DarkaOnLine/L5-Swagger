@@ -16,7 +16,7 @@ class GeneratorTest extends TestCase
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
         $this->get(route('l5-swagger.docs'))
-            ->assertSee('L5 Swagger API')
+            ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
             ->isOk();
     }
@@ -24,6 +24,10 @@ class GeneratorTest extends TestCase
     /** @test */
     public function canGenerateApiJsonFileWithChangedBasePath()
     {
+        if ($this->isOpenApi() == true) {
+            $this->markTestSkipped('only for openApi 2.0');
+        }
+
         $this->setAnnotationsPath();
 
         $cfg = config('l5-swagger');
@@ -35,7 +39,7 @@ class GeneratorTest extends TestCase
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
         $this->get(route('l5-swagger.docs'))
-            ->assertSee('L5 Swagger API')
+            ->assertSee('L5 Swagger')
             ->assertSee('new_path')
             ->isOk();
     }
