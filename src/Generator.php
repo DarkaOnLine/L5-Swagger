@@ -53,10 +53,10 @@ class Generator
             );
 
             $openApi3 = version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
+
+            $root = $documentation;
             if ($openApi3) {
                 $root = $documentation->has('components') ? collect($documentation->get('components')) : collect();
-            } else {
-                $root = $documentation;
             }
 
             $securityKey = $openApi3 ? 'securitySchemes' : 'securityDefinitions';
