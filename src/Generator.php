@@ -52,13 +52,23 @@ class Generator
                 json_decode(file_get_contents($filename))
             );
 
-            $securityDefinitions = $documentation->has('securityDefinitions') ? collect($documentation->get('securityDefinitions')) : collect();
+            if (version_compare(config('l5-swagger.swagger_version'), '3.0', '>=')) {
+                $root = $documentation->has('components') ? collect($documentation->get('components')) : collect();
+            } else {
+                $root = $documentation;
+            }
+
+            $securityDefinitions = $root->has('securityDefinitions') ? collect($root->get('securityDefinitions')) : collect();
 
             foreach ($securityConfig as $key => $cfg) {
                 $securityDefinitions->offsetSet($key, self::arrayToObject($cfg));
             }
 
-            $documentation->offsetSet('securityDefinitions', $securityDefinitions);
+            $root->offsetSet('securityDefinitions', $securityDefinitions);
+
+            if (version_compare(config('l5-swagger.swagger_version'), '3.0', '>=')) {
+                $documentation->offsetSet('components', $root);
+            }
 
             file_put_contents($filename, $documentation->toJson());
         }
