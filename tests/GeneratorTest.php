@@ -124,7 +124,7 @@ class GeneratorTest extends TestCase
 
         $this->get(route('l5-swagger.docs'))
              ->assertSee('new_api_key_securitye')
-             ->assertJsonFragment(['components' => ['securityDefinitions' => $security]])
+             ->assertJsonFragment(['components' => ['securitySchemes' => $security]])
              ->isOk();
     }
 }

@@ -52,21 +52,23 @@ class Generator
                 json_decode(file_get_contents($filename))
             );
 
-            if (version_compare(config('l5-swagger.swagger_version'), '3.0', '>=')) {
+            $openApi3 = version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
+            if ($openApi3) {
                 $root = $documentation->has('components') ? collect($documentation->get('components')) : collect();
             } else {
                 $root = $documentation;
             }
 
-            $securityDefinitions = $root->has('securityDefinitions') ? collect($root->get('securityDefinitions')) : collect();
+            $securityKey = $openApi3 ? 'securitySchemes' : 'securityDefinitions';
+            $securityDefinitions = $root->has($securityKey) ? collect($root->get($securityKey)) : collect();
 
             foreach ($securityConfig as $key => $cfg) {
                 $securityDefinitions->offsetSet($key, self::arrayToObject($cfg));
             }
 
-            $root->offsetSet('securityDefinitions', $securityDefinitions);
+            $root->offsetSet($securityKey, $securityDefinitions);
 
-            if (version_compare(config('l5-swagger.swagger_version'), '3.0', '>=')) {
+            if ($openApi3) {
                 $documentation->offsetSet('components', $root);
             }
 
