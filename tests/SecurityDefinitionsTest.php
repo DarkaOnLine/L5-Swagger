@@ -9,7 +9,10 @@ class SecurityDefinitionsTest extends TestCase
     /** @test */
     public function canGenerateApiJsonFileWithSecurityDefinition()
     {
-        $this->setAnnotationsPath(2.0);
+        if ($this->isOpenApi()) {
+            $this->markTestSkipped('only for openApi 2.0');
+        }
+        $this->setAnnotationsPath();
 
         $cfg = config('l5-swagger');
         $security = [
@@ -36,8 +39,10 @@ class SecurityDefinitionsTest extends TestCase
     /** @test */
     public function canGenerateApiJsonFileWithSecurityDefinitionOpenApi3()
     {
-        $this->setAnnotationsPath(3.0);
-        $this->markTestSkipped('only for openApi 2.0');
+        if (!$this->isOpenApi()) {
+            $this->markTestSkipped('only for openApi 3.0');
+        }
+        $this->setAnnotationsPath();
 
         $cfg = config('l5-swagger');
         $security = [
@@ -52,8 +57,6 @@ class SecurityDefinitionsTest extends TestCase
         config(['l5-swagger' => $cfg]);
 
         tap(new Generator)->generateDocs();
-
-        var_dump(json_decode(file_get_contents($this->jsonDocsFile())));
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
