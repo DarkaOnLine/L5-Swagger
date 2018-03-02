@@ -30,7 +30,8 @@ class Generator
             $filename = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
             $swagger->saveAs($filename);
 
-            self::appendSecurityDefinisions($filename);
+            $security = new SecurityDefinitions();
+            $security->generate($filename);
         }
     }
 
@@ -41,43 +42,5 @@ class Generator
                 defined($key) || define($key, $value);
             }
         }
-    }
-
-    protected static function appendSecurityDefinisions(string $filename)
-    {
-        $securityConfig = config('l5-swagger.security', []);
-
-        if (is_array($securityConfig) && ! empty($securityConfig)) {
-            $documentation = collect(
-                json_decode(file_get_contents($filename))
-            );
-
-            $openApi3 = version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
-
-            $root = $documentation;
-            if ($openApi3) {
-                $root = $documentation->has('components') ? collect($documentation->get('components')) : collect();
-            }
-
-            $securityKey = $openApi3 ? 'securitySchemes' : 'securityDefinitions';
-            $securityDefinitions = $root->has($securityKey) ? collect($root->get($securityKey)) : collect();
-
-            foreach ($securityConfig as $key => $cfg) {
-                $securityDefinitions->offsetSet($key, self::arrayToObject($cfg));
-            }
-
-            $root->offsetSet($securityKey, $securityDefinitions);
-
-            if ($openApi3) {
-                $documentation->offsetSet('components', $root);
-            }
-
-            file_put_contents($filename, $documentation->toJson());
-        }
-    }
-
-    public static function arrayToObject($array)
-    {
-        return json_decode(json_encode($array));
     }
 }
