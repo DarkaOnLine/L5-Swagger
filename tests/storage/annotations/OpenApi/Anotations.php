@@ -28,6 +28,23 @@
  */
 
 /**
+ * @OAS\SecurityScheme(
+ *     type="oauth2",
+ *     description="Use a global client_id / client_secret and your username / password combo to obtain a token",
+ *     name="Password Based",
+ *     in="header",
+ *     scheme="https",
+ *     securityScheme="Password Based",
+ *     @OAS\Flow(
+ *         flow="password",
+ *         authorizationUrl="/oauth/authorize",
+ *         tokenUrl="/oauth/token",
+ *         refreshUrl="/oauth/token/refresh"
+ *     )
+ * )
+ */
+
+/**
  * @OAS\Tag(
  *     name="project",
  *     description="Everything about your Projects",

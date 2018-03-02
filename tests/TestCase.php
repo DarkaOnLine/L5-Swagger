@@ -49,12 +49,12 @@ class TestCase extends OrchestraTestCase
         return config('l5-swagger.paths.docs').'/'.config('l5-swagger.paths.docs_json');
     }
 
-    protected function setAnnotationsPath()
+    protected function setAnnotationsPath($apiVersion = null)
     {
         $cfg = config('l5-swagger');
         $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/Swagger';
 
-        if ($this->isOpenApi()) {
+        if ($apiVersion >= 3.0 || $this->isOpenApi()) {
             $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/OpenApi';
         }
 
