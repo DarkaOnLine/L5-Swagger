@@ -39,7 +39,7 @@ class SecurityDefinitionsTest extends TestCase
     /** @test */
     public function canGenerateApiJsonFileWithSecurityDefinitionOpenApi3()
     {
-        if (!$this->isOpenApi()) {
+        if (! $this->isOpenApi()) {
             $this->markTestSkipped('only for openApi 3.0');
         }
         $this->setAnnotationsPath();
