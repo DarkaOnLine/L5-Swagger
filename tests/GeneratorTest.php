@@ -74,30 +74,4 @@ class GeneratorTest extends TestCase
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
     }
-
-    /** @test */
-    public function canGenerateApiJsonFileWithSecurityDefinition()
-    {
-        $this->setAnnotationsPath();
-
-        $cfg = config('l5-swagger');
-        $security = [
-            'new_api_key_securitye' => [
-                'type' => 'apiKey',
-                'name' => 'api_key_name',
-                'in' => 'query',
-            ],
-        ];
-        $cfg['security'] = $security;
-        config(['l5-swagger' => $cfg]);
-
-        Generator::generateDocs();
-
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
-
-        $this->get(route('l5-swagger.docs'))
-            ->assertSee('new_api_key_securitye')
-            ->assertJsonFragment($security)
-            ->isOk();
-    }
 }
