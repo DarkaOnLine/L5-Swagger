@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 class SecurityDefinitions
 {
     /**
-     * Reads in the l5-swagger configuration and appends security settings to documentation
+     * Reads in the l5-swagger configuration and appends security settings to documentation.
      *
      * @param string $filename The path to the generated json documentation
      */
@@ -31,7 +31,7 @@ class SecurityDefinitions
     }
 
     /**
-     * Inject security settings for Swagger 1 & 2
+     * Inject security settings for Swagger 1 & 2.
      *
      * @param Collection $documentation The parse json
      * @param array $securityConfig The security settings from l5-swagger
@@ -55,7 +55,7 @@ class SecurityDefinitions
     }
 
     /**
-     * Inject security settings for OpenApi 3
+     * Inject security settings for OpenApi 3.
      *
      * @param Collection $documentation The parse json
      * @param array $securityConfig The security settings from l5-swagger
@@ -86,7 +86,7 @@ class SecurityDefinitions
     }
 
     /**
-     * Converts an array to an object
+     * Converts an array to an object.
      *
      * @param $array
      *
