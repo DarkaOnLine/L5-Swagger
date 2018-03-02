@@ -62,7 +62,7 @@ class SecurityDefinitionsTest extends TestCase
 
         $this->get(route('l5-swagger.docs'))
              ->assertSee('new_api_key_securitye')
-             ->assertJsonFragment(['components' => ['securitySchemes' => $security]])
+             ->assertJsonFragment($security)
              ->isOk();
     }
 }
