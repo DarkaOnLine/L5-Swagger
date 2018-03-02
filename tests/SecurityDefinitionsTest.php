@@ -3,7 +3,6 @@
 namespace Tests;
 
 use L5Swagger\Generator;
-use L5Swagger\SecurityDefinitions;
 
 class SecurityDefinitionsTest extends TestCase
 {
