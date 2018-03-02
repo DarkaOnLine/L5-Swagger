@@ -22,15 +22,12 @@ class SecurityDefinitions
 
             $openApi3 = version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
 
-            if ($openApi3) {
-                $documentation = $this->generateOpenApi($documentation, $securityConfig);
-            } else {
-                $documentation = $this->generateSwaggerApi($documentation, $securityConfig);
-            }
+            $documentation = $openApi3 ?
+                $this->generateOpenApi($documentation, $securityConfig) :
+                $this->generateSwaggerApi($documentation, $securityConfig);
 
             file_put_contents($filename, $documentation->toJson());
         }
-
     }
 
     /**
