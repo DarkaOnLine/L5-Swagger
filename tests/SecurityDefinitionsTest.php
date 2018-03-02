@@ -24,7 +24,7 @@ class SecurityDefinitionsTest extends TestCase
         $cfg['swagger_version'] = '2.0';
         config(['l5-swagger' => $cfg]);
 
-        Generator::generateDocs();
+        tap(new Generator)->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
@@ -51,7 +51,7 @@ class SecurityDefinitionsTest extends TestCase
         $cfg['swagger_version'] = '3.0';
         config(['l5-swagger' => $cfg]);
 
-        Generator::generateDocs();
+        tap(new Generator)->generateDocs();
 
         var_dump(json_decode(file_get_contents($this->jsonDocsFile())));
 
