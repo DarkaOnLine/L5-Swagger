@@ -27,7 +27,7 @@ Installation
 You can publish L5-Swagger's config and view files into your project by running:
 
 ```bash
-$ php artisan vendor:publish --provider 'L5Swagger\L5SwaggerServiceProvider'
+$ php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 ```
 
 For Laravel >=5.5, no need to manually add `L5SwaggerServiceProvider` into config. It uses package auto discovery feature. Skip this if you are on >=5.5, if not:
@@ -66,7 +66,7 @@ The easiest way to build and test your Laravel-based API using Swagger-php is to
 To get started, first publish L5-Swagger's config and view files into your own project:
 
 ```bash
-$ php artisan vendor:publish --provider 'L5Swagger\L5SwaggerServiceProvider'
+$ php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 ```
 
 Next, edit your `config/l5-swagger.php` configuration file. Locate the `l5-swagger.routes.middleware` section, and add the following middleware list to the `api` route:
