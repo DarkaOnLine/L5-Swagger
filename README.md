@@ -41,8 +41,7 @@ or open your `config/app.php` and add this line in `providers` section
 L5Swagger\L5SwaggerServiceProvider::class,
 ```
 
-Swagger annotations and generating documentation
-============
+## Swagger annotations and generating documentation
 In order to generate the Swagger documentation for your API, Swagger offers a set of annotations to declare and manipulate the output. These annotations can be added in your controller. An example can [be found here](https://github.com/DarkaOnLine/L5-Swagger/blob/master/tests/storage/annotations/Swagger/Anotations.php). 
 
 After the annotiations have been added you can run `php artisan l5-swagger:generate` to generate the documentation. Make sure your settings in `config/l5-swagger.php` are complete.
