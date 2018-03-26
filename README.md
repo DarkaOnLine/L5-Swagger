@@ -28,7 +28,7 @@ Installation
 You can publish L5-Swagger's config and view files into your project by running:
 
 ```bash
-$ php artisan vendor:publish --provider 'L5Swagger\L5SwaggerServiceProvider'
+$ php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 ```
 
 For Laravel >=5.5, no need to manually add `L5SwaggerServiceProvider` into config. It uses package auto discovery feature. Skip this if you are on >=5.5, if not:
@@ -41,6 +41,11 @@ or open your `config/app.php` and add this line in `providers` section
 ```php
 L5Swagger\L5SwaggerServiceProvider::class,
 ```
+
+## Swagger annotations and generating documentation
+In order to generate the Swagger documentation for your API, Swagger offers a set of annotations to declare and manipulate the output. These annotations can be added in your controller, model or even a seperate file. An example of annotations can [be found here](https://github.com/DarkaOnLine/L5-Swagger/blob/master/tests/storage/annotations/Swagger/Anotations.php). For more info check out Swagger's ["pet store" example](https://github.com/zircote/swagger-php/tree/3.x/Examples/petstore-3.0) or the [Swagger OpenApi Specification](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md).
+
+After the annotiations have been added you can run `php artisan l5-swagger:generate` to generate the documentation. Alternatively, you can set `L5_SWAGGER_GENERATE_ALWAYS` to `true` in your `.env` file so that your documentation will automatically be generated. Make sure your settings in `config/l5-swagger.php` are complete.
 
 Using [OpenApi 3.0 Specification](https://github.com/OAI/OpenAPI-Specification)
 ============
@@ -67,7 +72,7 @@ The easiest way to build and test your Laravel-based API using Swagger-php is to
 To get started, first publish L5-Swagger's config and view files into your own project:
 
 ```bash
-$ php artisan vendor:publish --provider 'L5Swagger\L5SwaggerServiceProvider'
+$ php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 ```
 
 Next, edit your `config/l5-swagger.php` configuration file. Locate the `l5-swagger.routes.middleware` section, and add the following middleware list to the `api` route:
