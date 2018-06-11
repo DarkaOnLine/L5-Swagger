@@ -31,7 +31,7 @@ class Generator
                     ];
                 }
 
-                if (config('swagger_version') === '2.0') {
+                if (config('swagger_version') !== '3.0') {
                     $swagger->basePath = config('l5-swagger.paths.base');
                 }
             }
