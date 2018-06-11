@@ -29,7 +29,9 @@ class Generator
                     $swagger->servers = [
                         new Server(['url' => config('l5-swagger.paths.base')]),
                     ];
-                } else {
+                }
+
+                if (config('swagger_version') === '2.0') {
                     $swagger->basePath = config('l5-swagger.paths.base');
                 }
             }
