@@ -45,6 +45,30 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
+    public function canGenerateApiJsonFileWithChangedBaseServer()
+    {
+        if (! $this->isOpenApi()) {
+            $this->markTestSkipped('only for openApi 3.0');
+        }
+
+        $this->setAnnotationsPath();
+
+        $cfg = config('l5-swagger');
+        $cfg['paths']['base'] = 'https://test-server.url';
+        $cfg['swagger_version'] = '3.0';
+        config(['l5-swagger' => $cfg]);
+
+        tap(new Generator)->generateDocs();
+
+        $this->assertTrue(file_exists($this->jsonDocsFile()));
+
+        $this->get(route('l5-swagger.docs'))
+            ->assertSee('https://test-server.url')
+            ->assertDontSee('basePath')
+            ->isOk();
+    }
+
+    /** @test */
     public function canSetProxy()
     {
         $this->setAnnotationsPath();

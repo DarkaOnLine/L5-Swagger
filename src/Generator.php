@@ -4,7 +4,6 @@ namespace L5Swagger;
 
 use File;
 use Config;
-use Swagger\Annotations\Server;
 
 class Generator
 {
@@ -43,9 +42,10 @@ class Generator
     {
         if (config('l5-swagger.paths.base') !== null) {
             $isVersion3 = version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
+
             if ($isVersion3) {
                 $swagger->servers = [
-                    new Server(['url' => config('l5-swagger.paths.base')]),
+                    new \Swagger\Annotations\Server(['url' => config('l5-swagger.paths.base')]),
                 ];
             }
 
