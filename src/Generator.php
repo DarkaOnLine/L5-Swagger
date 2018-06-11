@@ -35,7 +35,7 @@ class Generator
     }
 
     /**
-     * Generate servers section or basePath depending on Swagger version
+     * Generate servers section or basePath depending on Swagger version.
      *
      * @param \Swagger\Annotations\OpenApi $swagger Swagger/OpenAPI instance
      */
