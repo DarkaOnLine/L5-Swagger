@@ -25,13 +25,11 @@ class Generator
             $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
 
             if (config('l5-swagger.paths.base') !== null) {
-                if (config('swagger_version') === '3.0') {
+                if (version_compare(config('l5-swagger.swagger_version'), '3.0', '>=')) {
                     $swagger->servers = [
                         new Server(['url' => config('l5-swagger.paths.base')]),
                     ];
-                }
-
-                if (config('swagger_version') !== '3.0') {
+                } else {
                     $swagger->basePath = config('l5-swagger.paths.base');
                 }
             }
