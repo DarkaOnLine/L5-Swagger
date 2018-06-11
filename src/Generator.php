@@ -4,6 +4,7 @@ namespace L5Swagger;
 
 use File;
 use Config;
+use Swagger\Annotations\Server;
 
 class Generator
 {
@@ -24,7 +25,13 @@ class Generator
             $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
 
             if (config('l5-swagger.paths.base') !== null) {
-                $swagger->basePath = config('l5-swagger.paths.base');
+                if (config('swagger_version') === '3.0') {
+                    $swagger->servers = [
+                        new Server(['url' => config('l5-swagger.paths.base')]),
+                    ];
+                } else {
+                    $swagger->basePath = config('l5-swagger.paths.base');
+                }
             }
 
             $filename = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
