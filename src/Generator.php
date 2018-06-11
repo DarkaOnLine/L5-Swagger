@@ -24,24 +24,34 @@ class Generator
             $excludeDirs = config('l5-swagger.paths.excludes');
             $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
 
-            if (config('l5-swagger.paths.base') !== null) {
-                $isVersion3 = version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
-                if ($isVersion3) {
-                    $swagger->servers = [
-                        new Server(['url' => config('l5-swagger.paths.base')]),
-                    ];
-                }
-
-                if (! $isVersion3) {
-                    $swagger->basePath = config('l5-swagger.paths.base');
-                }
-            }
+            self::generateServers($swagger);
 
             $filename = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
             $swagger->saveAs($filename);
 
             $security = new SecurityDefinitions();
             $security->generate($filename);
+        }
+    }
+
+    /**
+     * Generate servers section or basePath depending on Swagger version.
+     *
+     * @param \Swagger\Annotations\OpenApi $swagger Swagger/OpenAPI instance
+     */
+    protected static function generateServers($swagger)
+    {
+        if (config('l5-swagger.paths.base') !== null) {
+            $isVersion3 = version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
+            if ($isVersion3) {
+                $swagger->servers = [
+                    new Server(['url' => config('l5-swagger.paths.base')]),
+                ];
+            }
+
+            if (! $isVersion3) {
+                $swagger->basePath = config('l5-swagger.paths.base');
+            }
         }
     }
 
