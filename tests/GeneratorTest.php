@@ -3,9 +3,25 @@
 namespace Tests;
 
 use L5Swagger\Generator;
+use L5Swagger\Exceptions\L5SwaggerException;
 
 class GeneratorTest extends TestCase
 {
+    /** @test **/
+    public function itThrowsExceptionIfDocumatationDirIsNotWritable()
+    {
+        $this->setAnnotationsPath();
+
+        mkdir(config('l5-swagger.paths.docs'), 0555);
+        chmod(config('l5-swagger.paths.docs'), 0555);
+
+        $this->expectException(L5SwaggerException::class);
+
+        Generator::generateDocs();
+
+        chmod(config('l5-swagger.paths.docs'), 0777);
+    }
+
     /** @test */
     public function canGenerateApiJsonFile()
     {
