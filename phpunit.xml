@@ -4,8 +4,7 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         stopOnFailure="false"
-         syntaxCheck="true">
+         stopOnFailure="false">
     <testsuite name="L5-Swagger TestSuite">
         <directory>tests/</directory>
     </testsuite>
@@ -15,11 +14,8 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-html" target="tests/storage/logs/test-reports" charset="UTF-8"
-             yui="true" highlight="true"
-             lowUpperBound="50" highLowerBound="80" />
+        <log type="coverage-html" target="tests/storage/logs/test-reports" lowUpperBound="50" highLowerBound="80" />
         <log type="coverage-clover" target="tests/storage/logs/test-reports/clover.xml"/>
-        <log type="junit" target="tests/storage/logs/test-reports/junit.xml" logIncompleteSkipped="false"/>
     </logging>
     <php>
         <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>

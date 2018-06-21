@@ -3,9 +3,25 @@
 namespace Tests;
 
 use L5Swagger\Generator;
+use L5Swagger\Exceptions\L5SwaggerException;
 
 class GeneratorTest extends TestCase
 {
+    /** @test **/
+    public function itThrowsExceptionIfDocumatationDirIsNotWritable()
+    {
+        $this->setAnnotationsPath();
+
+        mkdir(config('l5-swagger.paths.docs'), 0555);
+        chmod(config('l5-swagger.paths.docs'), 0555);
+
+        $this->expectException(L5SwaggerException::class);
+
+        Generator::generateDocs();
+
+        chmod(config('l5-swagger.paths.docs'), 0777);
+    }
+
     /** @test */
     public function canGenerateApiJsonFile()
     {
@@ -14,8 +30,14 @@ class GeneratorTest extends TestCase
         Generator::generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
+        $this->assertTrue(file_exists($this->yamlDocsFile()));
 
         $this->get(route('l5-swagger.docs'))
+            ->assertSee('L5 Swagger')
+            ->assertSee('my-default-host.com')
+            ->isOk();
+
+        $this->get(route('l5-swagger.docs', ['jsonFile' => config('l5-swagger.paths.docs_yaml')]))
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
             ->isOk();
@@ -39,6 +61,11 @@ class GeneratorTest extends TestCase
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
         $this->get(route('l5-swagger.docs'))
+            ->assertSee('L5 Swagger')
+            ->assertSee('new_path')
+            ->isOk();
+
+        $this->get(route('l5-swagger.docs', ['jsonFile' => config('l5-swagger.paths.docs_yaml')]))
             ->assertSee('L5 Swagger')
             ->assertSee('new_path')
             ->isOk();
@@ -66,6 +93,11 @@ class GeneratorTest extends TestCase
             ->assertSee('https://test-server.url')
             ->assertDontSee('basePath')
             ->isOk();
+
+        $this->get(route('l5-swagger.docs', ['jsonFile' => config('l5-swagger.paths.docs_yaml')]))
+            ->assertSee('https://test-server.url')
+            ->assertDontSee('basePath')
+            ->isOk();
     }
 
     /** @test */
@@ -81,6 +113,7 @@ class GeneratorTest extends TestCase
             ->isOk();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
+        $this->assertTrue(file_exists($this->yamlDocsFile()));
     }
 
     /** @test */
@@ -96,6 +129,11 @@ class GeneratorTest extends TestCase
             ->assertSee('validator-url.dev')
             ->isOk();
 
+        $this->get(route('l5-swagger.api', ['jsonFile' => config('l5-swagger.paths.docs_yaml')]))
+            ->assertSee('validator-url.dev')
+            ->isOk();
+
         $this->assertTrue(file_exists($this->jsonDocsFile()));
+        $this->assertTrue(file_exists($this->yamlDocsFile()));
     }
 }

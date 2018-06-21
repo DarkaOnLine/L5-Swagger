@@ -68,6 +68,14 @@ return [
 
         /*
         |--------------------------------------------------------------------------
+        | File name of the generated YAML documentation file
+        |--------------------------------------------------------------------------
+         */
+
+        'docs_yaml' => 'api-docs.yaml',
+
+        /*
+        |--------------------------------------------------------------------------
         | Absolute path to directory containing the swagger annotations are stored.
         |--------------------------------------------------------------------------
         */
@@ -155,6 +163,14 @@ return [
     */
 
     'generate_always' => env('L5_SWAGGER_GENERATE_ALWAYS', false),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Turn this on to generate a copy of documentation in yaml format
+    |--------------------------------------------------------------------------
+     */
+
+    'generate_yaml_copy' => env('L5_SWAGGER_GENERATE_YAML_COPY', false),
 
     /*
     |--------------------------------------------------------------------------
