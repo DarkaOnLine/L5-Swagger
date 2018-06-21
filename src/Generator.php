@@ -26,18 +26,18 @@ class Generator
 
             self::generateServers($swagger);
 
-            $json_documentation_file = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
-            $swagger->saveAs($json_documentation_file);
+            $jsonDocumentationFile = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
+            $swagger->saveAs($jsonDocumentationFile);
 
             if (config('l5-swagger.generate_yaml_copy', false)) {
                 file_put_contents(
                     $docDir.'/'.config('l5-swagger.paths.docs_yaml', 'api-docs.yaml'),
-                    (new YamlDumper(2))->dump(json_decode(file_get_contents($json_documentation_file), true), 20)
+                    (new YamlDumper(2))->dump(json_decode(file_get_contents($jsonDocumentationFile), true), 20)
                 );
             }
 
             $security = new SecurityDefinitions();
-            $security->generate($json_documentation_file);
+            $security->generate($jsonDocumentationFile);
         }
     }
 
