@@ -4,7 +4,7 @@ namespace L5Swagger;
 
 use File;
 use Config;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\Yaml\Dumper as YamlDumper;
 
 class Generator
 {
@@ -32,7 +32,7 @@ class Generator
             if (config('l5-swagger.generate_yaml_copy', false)) {
                 file_put_contents(
                     $docDir.'/'.config('l5-swagger.paths.docs_yaml', 'api-docs.yaml'),
-                    Yaml::dump(json_decode(file_get_contents($json_documentation_file), true), 20, 2)
+                    (new YamlDumper(2))->dump(json_decode(file_get_contents($json_documentation_file), true), 20)
                 );
             }
 
