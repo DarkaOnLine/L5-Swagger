@@ -4,6 +4,7 @@ namespace L5Swagger;
 
 use File;
 use Config;
+use Symfony\Component\Yaml\Yaml;
 
 class Generator
 {
@@ -28,6 +29,11 @@ class Generator
             $filename = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
             $swagger->saveAs($filename);
 
+            if (config('l5-swagger.generate_yaml_copy', false)) {
+                $dumped = Yaml::dump(json_decode(file_get_contents($filename), true), 20, 2);
+                file_put_contents($docDir.'/'.config('l5-swagger.paths.docs_yaml', 'api-docs.yaml'), $dumped);
+            }
+
             $security = new SecurityDefinitions();
             $security->generate($filename);
         }
@@ -35,8 +41,6 @@ class Generator
 
     /**
      * Generate servers section or basePath depending on Swagger version.
-     *
-     * @param \Swagger\Annotations\OpenApi $swagger Swagger/OpenAPI instance
      */
     protected static function generateServers($swagger)
     {
