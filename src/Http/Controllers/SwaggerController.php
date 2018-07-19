@@ -44,9 +44,11 @@ class SwaggerController extends BaseController
             Generator::generateDocs();
         }
 
-        if (config('l5-swagger.proxy')) {
-            $proxy = Request::server('REMOTE_ADDR');
-            Request::setTrustedProxies([$proxy]);
+        if ($proxy = config('l5-swagger.proxy')) {
+            if (! is_array($proxy)) {
+                $proxy = [$proxy];
+            }
+            Request::setTrustedProxies($proxy, \Illuminate\Http\Request::HEADER_X_FORWARDED_ALL);
         }
 
         // Need the / at the end to avoid CORS errors on Homestead systems.
