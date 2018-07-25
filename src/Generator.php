@@ -113,11 +113,17 @@ class Generator
      */
     protected function scanFilesForDocumentation()
     {
-        $this->swagger = \OpenApi\scan(
-            $this->appDir,
-            ['exclude' => $this->excludedDirs]
-        );
-
+        if ($this->isOpenApi()) {
+            $this->swagger = \OpenApi\scan(
+                $this->appDir,
+                ['exclude' => $this->excludedDirs]
+            );
+        } else {
+            $this->swagger = \Swagger\scan(
+                $this->appDir,
+                ['exclude' => $this->excludedDirs]
+            );
+        }
         return $this;
     }
 
