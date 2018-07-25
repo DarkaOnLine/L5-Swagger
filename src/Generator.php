@@ -118,7 +118,8 @@ class Generator
                 $this->appDir,
                 ['exclude' => $this->excludedDirs]
             );
-        } else {
+        } 
+        if (!$this->isOpenApi()) {
             $this->swagger = \Swagger\scan(
                 $this->appDir,
                 ['exclude' => $this->excludedDirs]
