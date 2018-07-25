@@ -1,14 +1,14 @@
 <?php
 
 /**
- * @OAS\Info(
+ * @OA\Info(
  *      version="1.0.0",
  *      title="L5 OpenApi",
  *      description="L5 Swagger OpenApi description",
- *      @OAS\Contact(
+ *      @OA\Contact(
  *          email="darius@matulionis.lt"
  *      ),
- *     @OAS\License(
+ *     @OA\License(
  *         name="Apache 2.0",
  *         url="http://www.apache.org/licenses/LICENSE-2.0.html"
  *     )
@@ -16,26 +16,26 @@
  */
 
 /**
- *  @OAS\Server(
+ *  @OA\Server(
  *      url=L5_SWAGGER_CONST_HOST,
  *      description="L5 Swagger OpenApi dynamic host server"
  *  )
  *
- *  @OAS\Server(
+ *  @OA\Server(
 *      url="https://projects.dev/api/v1",
  *      description="L5 Swagger OpenApi Server"
  * )
  */
 
 /**
- * @OAS\SecurityScheme(
+ * @OA\SecurityScheme(
  *     type="oauth2",
  *     description="Use a global client_id / client_secret and your username / password combo to obtain a token",
  *     name="Password Based",
  *     in="header",
  *     scheme="https",
  *     securityScheme="Password Based",
- *     @OAS\Flow(
+ *     @OA\Flow(
  *         flow="password",
  *         authorizationUrl="/oauth/authorize",
  *         tokenUrl="/oauth/token",
@@ -45,41 +45,41 @@
  */
 
 /**
- * @OAS\Tag(
+ * @OA\Tag(
  *     name="project",
  *     description="Everything about your Projects",
- *     @OAS\ExternalDocumentation(
+ *     @OA\ExternalDocumentation(
  *         description="Find out more",
  *         url="http://swagger.io"
  *     )
  * )
  *
- * @OAS\Tag(
+ * @OA\Tag(
  *     name="user",
  *     description="Operations about user",
- *     @OAS\ExternalDocumentation(
+ *     @OA\ExternalDocumentation(
  *         description="Find out more about",
  *         url="http://swagger.io"
  *     )
  * )
- * @OAS\ExternalDocumentation(
+ * @OA\ExternalDocumentation(
  *     description="Find out more about Swagger",
  *     url="http://swagger.io"
  * )
  */
 
 /**
- * @OAS\Get(
+ * @OA\Get(
  *      path="/projects",
  *      operationId="getProjectsList",
  *      tags={"Projects"},
  *      summary="Get list of projects",
  *      description="Returns list of projects",
- *      @OAS\Response(
+ *      @OA\Response(
  *          response=200,
  *          description="successful operation"
  *       ),
- *       @OAS\Response(response=400, description="Bad request"),
+ *       @OA\Response(response=400, description="Bad request"),
  *       security={
  *           {"api_key_security_example": {}}
  *       }
@@ -89,27 +89,27 @@
  */
 
 /**
- * @OAS\Get(
+ * @OA\Get(
  *      path="/projects/{id}",
  *      operationId="getProjectById",
  *      tags={"Projects"},
  *      summary="Get project information",
  *      description="Returns project data",
- *      @OAS\Parameter(
+ *      @OA\Parameter(
  *          name="id",
  *          description="Project id",
  *          required=true,
  *          in="path",
- *          @OAS\Schema(
+ *          @OA\Schema(
  *              type="integer"
  *          )
  *      ),
- *      @OAS\Response(
+ *      @OA\Response(
  *          response=200,
  *          description="successful operation"
  *       ),
- *      @OAS\Response(response=400, description="Bad request"),
- *      @OAS\Response(response=404, description="Resource Not Found"),
+ *      @OA\Response(response=400, description="Bad request"),
+ *      @OA\Response(response=404, description="Resource Not Found"),
  *      security={
  *         {
  *             "oauth2_security_example": {"write:projects", "read:projects"}

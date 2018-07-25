@@ -39,7 +39,7 @@ class Generator
     protected $constants;
 
     /**
-     * @var \Swagger\Annotations\Swagger
+     * @var \OpenApi\Annotations\OpenApi
      */
     protected $swagger;
 
@@ -113,10 +113,19 @@ class Generator
      */
     protected function scanFilesForDocumentation()
     {
-        $this->swagger = \Swagger\scan(
-            $this->appDir,
-            ['exclude' => $this->excludedDirs]
-        );
+        if ($this->isOpenApi()) {
+            $this->swagger = \OpenApi\scan(
+                $this->appDir,
+                ['exclude' => $this->excludedDirs]
+            );
+        }
+
+        if (! $this->isOpenApi()) {
+            $this->swagger = \Swagger\scan(
+                $this->appDir,
+                ['exclude' => $this->excludedDirs]
+            );
+        }
 
         return $this;
     }
@@ -131,7 +140,7 @@ class Generator
         if (config('l5-swagger.paths.base') !== null) {
             if ($this->isOpenApi()) {
                 $this->swagger->servers = [
-                    new \Swagger\Annotations\Server(['url' => config('l5-swagger.paths.base')]),
+                    new \OpenApi\Annotations\Server(['url' => config('l5-swagger.paths.base')]),
                 ];
             }
 
