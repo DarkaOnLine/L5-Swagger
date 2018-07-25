@@ -112,8 +112,8 @@ class Generator
      * @return Generator
      */
     protected function scanFilesForDocumentation()
-    {   
-        
+    {
+
         if ($this->isOpenApi()) {
             $this->swagger = \OpenApi\scan(
                 $this->appDir,
@@ -126,7 +126,6 @@ class Generator
                 ['exclude' => $this->excludedDirs]
             );
         }
-
         return $this;
     }
 
