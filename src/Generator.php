@@ -120,13 +120,13 @@ class Generator
             );
         }
 
-        if (!$this->isOpenApi()) {
+        if (! $this->isOpenApi()) {
             $this->swagger = \Swagger\scan(
                 $this->appDir,
                 ['exclude' => $this->excludedDirs]
             );
         }
-        
+
         return $this;
     }
 
