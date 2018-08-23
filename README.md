@@ -5,7 +5,7 @@
 [![StyleCI](https://styleci.io/repos/32315619/shield)](https://styleci.io/repos/32315619)
 [![Dependency Status](https://beta.gemnasium.com/badges/github.com/DarkaOnLine/L5-Swagger.svg)](https://beta.gemnasium.com/projects/github.com/DarkaOnLine/L5-Swagger)
 
-L5 Swagger
+L5 Swagger - OpenApi or Swagger Specification for your Laravel project made easy.
 ==========
 
 Swagger 2.0 for Laravel >=5.1
