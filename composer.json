@@ -26,6 +26,9 @@
     "orchestra/testbench": "3.6.*",
     "php-coveralls/php-coveralls": "^2.0"
   },
+  "suggest": {
+    "zircote/swagger-php:~2.0": "!!! Require Swagger-PHP ~2.0 for @SWG annotations support !!!"
+  },
   "autoload": {
     "psr-4": {
       "L5Swagger\\": "src"

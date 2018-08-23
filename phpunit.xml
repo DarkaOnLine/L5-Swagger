@@ -19,5 +19,6 @@
     </logging>
     <php>
         <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
+        <env name="SWAGGER_VERSION" value="3.0"/>
     </php>
 </phpunit>

@@ -15,15 +15,16 @@ This package is a wrapper of [Swagger-php](https://github.com/zircote/swagger-ph
 Installation
 ============
 
- Laravel  | Swagger UI| OpenAPI Spec compatibility | L5-Swagger
-:---------|:----------|:---------------------------|:----------
- 5.1.x    | 2.2       | 1.1, 1.2, 2.0              | ```php composer require "darkaonline/l5-swagger:~3.0" ```
- 5.2.x    | 2.2       | 1.1, 1.2, 2.0              | ```php composer require "darkaonline/l5-swagger:~3.0" ```
- 5.3.x    | 2.2       | 1.1, 1.2, 2.0              | ```php composer require "darkaonline/l5-swagger:~3.0" ```
- 5.4.x    | 2.2       | 1.1, 1.2, 2.0              | ```php composer require "darkaonline/l5-swagger:~4.0" ```
- 5.4.x    | 3         | 2.0                        | ```php composer require "darkaonline/l5-swagger:5.4.*" ```
- 5.5.x    | 3         | 2.0, 3.0                        | ```php composer require "darkaonline/l5-swagger:5.5.*" ```
- 5.6.x    | 3         | 2.0, 3.0                        | ```php composer require "darkaonline/l5-swagger:5.6.*" ```
+ Laravel          | Swagger UI| OpenAPI Spec compatibility | L5-Swagger
+:-----------------|:----------|:---------------------------|:----------
+ 5.7.x OR 5.6.x   | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger:5.7.*"` <span style="color: red"> !!! run ` composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!</span>
+ 5.6.x            | 3         | 2.0                        | `composer require "darkaonline/l5-swagger:5.6.*"`
+ 5.5.x            | 3         | 2.0                        | `composer require "darkaonline/l5-swagger:5.5.*"`
+ 5.4.x            | 3         | 2.0                        | `composer require "darkaonline/l5-swagger:5.4.*"`
+ 5.4.x            | 2.2       | 1.1, 1.2, 2.0              | `composer require "darkaonline/l5-swagger:~4.0"`
+ 5.3.x            | 2.2       | 1.1, 1.2, 2.0              | `composer require "darkaonline/l5-swagger:~3.0"`
+ 5.2.x            | 2.2       | 1.1, 1.2, 2.0              | `composer require "darkaonline/l5-swagger:~3.0"`
+ 5.1.x            | 2.2       | 1.1, 1.2, 2.0              | `composer require "darkaonline/l5-swagger:~3.0"`
 
 You can publish L5-Swagger's config and view files into your project by running:
 
@@ -42,28 +43,26 @@ or open your `config/app.php` and add this line in `providers` section
 L5Swagger\L5SwaggerServiceProvider::class,
 ```
 
-## Swagger annotations and generating documentation
-In order to generate the Swagger documentation for your API, Swagger offers a set of annotations to declare and manipulate the output. These annotations can be added in your controller, model or even a seperate file. An example of annotations can [be found here](https://github.com/DarkaOnLine/L5-Swagger/blob/master/tests/storage/annotations/Swagger/Anotations.php). For more info check out Swagger's ["pet store" example](https://github.com/zircote/swagger-php/tree/3.x/Examples/petstore-3.0) or the [Swagger OpenApi Specification](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md).
+## Swagger/OpenApi annotations and generating documentation
+In order to generate the Swagger/OpenApi documentation for your API, Swagger offers a set of annotations to declare and manipulate the output. These annotations can be added in your controller, model or even a seperate file. An example of [OpenApi annotations can be found here](https://github.com/DarkaOnLine/L5-Swagger/blob/master/tests/storage/annotations/OpenApi/Anotations.php) and [Swagger annotations can be found here](https://github.com/DarkaOnLine/L5-Swagger/blob/master/tests/storage/annotations/Swagger/Anotations.php). For more info check out Swagger's ["pet store" example](https://github.com/zircote/swagger-php/tree/3.x/Examples/petstore-3.0) or the [Swagger OpenApi Specification](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md).
 
 After the annotiations have been added you can run `php artisan l5-swagger:generate` to generate the documentation. Alternatively, you can set `L5_SWAGGER_GENERATE_ALWAYS` to `true` in your `.env` file so that your documentation will automatically be generated. Make sure your settings in `config/l5-swagger.php` are complete.
 
-Using [OpenApi 3.0 Specification](https://github.com/OAI/OpenAPI-Specification)
+I am still using Swagger @SWG annotation
 ============
-If you would like to use lattes OpenApi specifications (originally known as the Swagger Specification) in you project you should:
-- Explicitly require `swagger-php` version 3.* in your projects composer by running:
+If still using Swagger @SWG annotations in you project you should:
+- Explicitly require `swagger-php` version 2.* in your projects composer by running:
 ```bash
-composer require 'zircote/swagger-php:3.*'
+composer require 'zircote/swagger-php:2.*'
 ```
-- Set environment variable `SWAGGER_VERSION` to **3.0** in your `.env` file:
+- Set environment variable `SWAGGER_VERSION` to **2.0** in your `.env` file:
 ```
-SWAGGER_VERSION=3.0
+SWAGGER_VERSION=2.0
 ```
 or in your `config/l5-swagger.php`:
 ```php
-'swagger_version' => env('SWAGGER_VERSION', '3.0'),
+'swagger_version' => env('SWAGGER_VERSION', '2.0'),
 ```
-- Use examples provided here: https://github.com/zircote/swagger-php/tree/3.x/Examples/petstore-3.0
-
 
 Using Swagger UI with Passport
 ============
