@@ -21,7 +21,12 @@ class Generator
 
             File::makeDirectory($docDir);
             $excludeDirs = config('l5-swagger.paths.excludes');
-            $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
+
+            if (version_compare(config('l5-swagger.swagger_version'), '3.0', '>=')) {
+                $swagger = \OpenApi\scan($appDir, ['exclude' => $excludeDirs]);
+            } else {
+                $swagger = \Swagger\scan($appDir, ['exclude' => $excludeDirs]);
+            }
 
             if (config('l5-swagger.paths.base') !== null) {
                 $swagger->basePath = config('l5-swagger.paths.base');
