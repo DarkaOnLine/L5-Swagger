@@ -4,7 +4,6 @@ namespace L5Swagger\Http\Controllers;
 
 use File;
 use Illuminate\Routing\Controller as BaseController;
-use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use Request;
 use Response;
@@ -27,7 +26,7 @@ class SwaggerController extends BaseController
             try {
                 Generator::generateDocs();
             } catch (\Exception $e) {
-                abort(404, 'Cannot find ' . $filePath.' and cannot be generated.');
+                abort(404, 'Cannot find '.$filePath.' and cannot be generated.');
             }
         }
 
