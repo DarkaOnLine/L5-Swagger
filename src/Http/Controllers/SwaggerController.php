@@ -3,10 +3,10 @@
 namespace L5Swagger\Http\Controllers;
 
 use File;
+use Illuminate\Routing\Controller as BaseController;
+use L5Swagger\Generator;
 use Request;
 use Response;
-use L5Swagger\Generator;
-use Illuminate\Routing\Controller as BaseController;
 
 class SwaggerController extends BaseController
 {
@@ -23,7 +23,11 @@ class SwaggerController extends BaseController
             (! is_null($jsonFile) ? $jsonFile : config('l5-swagger.paths.docs_json', 'api-docs.json'));
 
         if (! File::exists($filePath)) {
-            abort(404, 'Cannot find '.$filePath);
+            try {
+                Generator::generateDocs();
+            } catch (\Exception $e) {
+                abort(404, 'Cannot find '.$filePath.' and cannot be generated.');
+            }
         }
 
         $content = File::get($filePath);
