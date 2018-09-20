@@ -3,10 +3,11 @@
 namespace L5Swagger\Http\Controllers;
 
 use File;
+use Illuminate\Routing\Controller as BaseController;
+use L5Swagger\Exceptions\L5SwaggerException;
+use L5Swagger\Generator;
 use Request;
 use Response;
-use L5Swagger\Generator;
-use Illuminate\Routing\Controller as BaseController;
 
 class SwaggerController extends BaseController
 {
@@ -19,11 +20,15 @@ class SwaggerController extends BaseController
      */
     public function docs($jsonFile = null)
     {
-        $filePath = config('l5-swagger.paths.docs').'/'.
-            (! is_null($jsonFile) ? $jsonFile : config('l5-swagger.paths.docs_json', 'api-docs.json'));
+        $filePath = config('l5-swagger.paths.docs') . '/' .
+            (!is_null($jsonFile) ? $jsonFile : config('l5-swagger.paths.docs_json', 'api-docs.json'));
 
-        if (! File::exists($filePath)) {
-            abort(404, 'Cannot find '.$filePath);
+        if (!File::exists($filePath)) {
+            try {
+                Generator::generateDocs();
+            } catch (\Exception $e) {
+                abort(404, 'Cannot find ' . $filePath.' and cannot be generated.');
+            }
         }
 
         $content = File::get($filePath);
@@ -45,7 +50,7 @@ class SwaggerController extends BaseController
         }
 
         if ($proxy = config('l5-swagger.proxy')) {
-            if (! is_array($proxy)) {
+            if (!is_array($proxy)) {
                 $proxy = [$proxy];
             }
             Request::setTrustedProxies($proxy, \Illuminate\Http\Request::HEADER_X_FORWARDED_ALL);
