@@ -218,7 +218,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Uncomment to add constants which can be used in anotations
+    | Uncomment to add constants which can be used in annotations
     |--------------------------------------------------------------------------
      */
     'constants' => [
