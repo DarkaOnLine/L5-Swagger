@@ -106,8 +106,14 @@ class GeneratorTest extends TestCase
         $this->setAnnotationsPath();
 
         $cfg = config('l5-swagger');
-        $cfg['proxy'] = '*';
+        $proxy = '99.56.62.66';
+        $cfg['proxy'] = $proxy;
         config(['l5-swagger' => $cfg]);
+
+        $this->get(route('l5-swagger.api'))
+            ->assertStatus(200);
+
+        $this->assertEquals(\Request::getTrustedProxies()[0], $proxy);
 
         $this->get(route('l5-swagger.docs'))
             ->assertStatus(200);
