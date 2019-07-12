@@ -109,7 +109,7 @@ class GeneratorTest extends TestCase
         $cfg['proxy'] = '*';
         config(['l5-swagger' => $cfg]);
 
-        $this->get(route('l5-swagger.api'))
+        $this->get(route('l5-swagger.docs'))
             ->assertStatus(200);
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
@@ -131,6 +131,9 @@ class GeneratorTest extends TestCase
 
         $this->get(route('l5-swagger.api', ['jsonFile' => config('l5-swagger.paths.docs_yaml')]))
             ->assertSee('validator-url.dev')
+            ->assertStatus(200);
+
+        $this->get(route('l5-swagger.docs'))
             ->assertStatus(200);
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
