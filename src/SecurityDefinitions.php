@@ -26,7 +26,10 @@ class SecurityDefinitions
                 $this->generateOpenApi($documentation, $securityConfig) :
                 $this->generateSwaggerApi($documentation, $securityConfig);
 
-            file_put_contents($filename, $documentation->toJson());
+            file_put_contents(
+                $filename,
+                $documentation->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+            );
         }
     }
 
