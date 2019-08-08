@@ -2,10 +2,11 @@
 
 namespace L5Swagger\Http\Controllers;
 
-use File;
-use Request;
-use Response;
 use L5Swagger\Generator;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Response;
+use L5Swagger\Exceptions\L5SwaggerException;
 use Illuminate\Routing\Controller as BaseController;
 
 class SwaggerController extends BaseController
@@ -15,7 +16,7 @@ class SwaggerController extends BaseController
      *
      * @param string $jsonFile
      *
-     * @return \Response
+     * @return \Illuminate\Http\Response
      */
     public function docs($jsonFile = null)
     {
@@ -40,7 +41,7 @@ class SwaggerController extends BaseController
     /**
      * Display Swagger API page.
      *
-     * @return \Response
+     * @return \Illuminate\Http\Response
      */
     public function api()
     {
@@ -48,7 +49,7 @@ class SwaggerController extends BaseController
             if (! is_array($proxy)) {
                 $proxy = [$proxy];
             }
-            Request::setTrustedProxies($proxy, \Illuminate\Http\Request::HEADER_X_FORWARDED_ALL);
+            \Illuminate\Http\Request::setTrustedProxies($proxy, \Illuminate\Http\Request::HEADER_X_FORWARDED_ALL);
         }
 
         // Need the / at the end to avoid CORS errors on Homestead systems.
@@ -70,9 +71,10 @@ class SwaggerController extends BaseController
      * Display Oauth2 callback pages.
      *
      * @return string
+     * @throws L5SwaggerException
      */
     public function oauth2Callback()
     {
-        return \File::get(swagger_ui_dist_path('oauth2-redirect.html'));
+        return File::get(swagger_ui_dist_path('oauth2-redirect.html'));
     }
 }
