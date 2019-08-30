@@ -100,6 +100,14 @@ return [
 
         /*
         |--------------------------------------------------------------------------
+        | Edit to set path where swagger ui assets should be stored
+        |--------------------------------------------------------------------------
+        */
+
+        'swagger_ui_assets_path' => env('L5_SWAGGER_UI_ASSETS_PATH', 'vendor/swagger-api/swagger-ui/dist/'),
+
+        /*
+        |--------------------------------------------------------------------------
         | Absolute path to directories that you would like to exclude from swagger generation
         |--------------------------------------------------------------------------
         */
