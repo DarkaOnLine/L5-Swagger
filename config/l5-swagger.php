@@ -52,7 +52,7 @@ return [
     'paths' => [
         /*
         |--------------------------------------------------------------------------
-        | Absolute path to location where parsed swagger annotations will be stored
+        | Absolute paths to location where parsed swagger annotations will be stored
         |--------------------------------------------------------------------------
         */
 
@@ -76,11 +76,13 @@ return [
 
         /*
         |--------------------------------------------------------------------------
-        | Absolute path to directory containing the swagger annotations are stored.
+        | Absolute paths to directory containing the swagger annotations are stored.
         |--------------------------------------------------------------------------
         */
 
-        'annotations' => base_path('app'),
+        'annotations' => [
+            base_path('app')
+        ],
 
         /*
         |--------------------------------------------------------------------------
