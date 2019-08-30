@@ -52,7 +52,7 @@ return [
     'paths' => [
         /*
         |--------------------------------------------------------------------------
-        | Absolute paths to location where parsed swagger annotations will be stored
+        | Absolute path to location where parsed swagger annotations will be stored
         |--------------------------------------------------------------------------
         */
 
