@@ -44,6 +44,8 @@ or open your `config/app.php` and add this line in `providers` section
 L5Swagger\L5SwaggerServiceProvider::class,
 ```
 
+You can access your documentation at `/api/documentation` endpoint.
+
 ## Swagger/OpenApi annotations and generating documentation
 In order to generate the Swagger/OpenApi documentation for your API, Swagger offers a set of annotations to declare and manipulate the output. These annotations can be added in your controller, model or even a seperate file. An example of [OpenApi annotations can be found here](https://github.com/DarkaOnLine/L5-Swagger/blob/master/tests/storage/annotations/OpenApi/Anotations.php) and [Swagger annotations can be found here](https://github.com/DarkaOnLine/L5-Swagger/blob/master/tests/storage/annotations/Swagger/Anotations.php). For more info check out Swagger's ["pet store" example](https://github.com/zircote/swagger-php/tree/master/Examples/petstore-3.0) or the [Swagger OpenApi Specification](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md).
 
