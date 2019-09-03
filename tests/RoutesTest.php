@@ -2,6 +2,8 @@
 
 namespace Tests;
 
+use L5Swagger\Exceptions\L5SwaggerException;
+
 class RoutesTest extends TestCase
 {
     /** @test */
@@ -55,6 +57,22 @@ class RoutesTest extends TestCase
         $this->get(l5_swagger_asset('swagger-ui.css'))
             ->assertSee('.swagger-ui')
             ->isOk();
+    }
+
+    /** @test */
+    public function itWillThrowExceptionForIncorrectAsset()
+    {
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('(bad-swagger-ui.css) - this L5 Swagger asset is not allowed');
+
+        l5_swagger_asset('bad-swagger-ui.css');
+    }
+
+    /** @test */
+    public function itHandleBadAssetRequest()
+    {
+        $this->get(route('l5-swagger.asset', 'file.css'))
+            ->assertNotFound();
     }
 
     /** @test */

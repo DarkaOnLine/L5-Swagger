@@ -22,7 +22,7 @@ class SwaggerAssetController extends BaseController
                 ->setMaxAge(31536000)
                 ->setExpires(new \DateTime('+1 year'));
         } catch (L5SwaggerException $exception) {
-            abort(404, $exception->getMessage());
+            return abort(404, $exception->getMessage());
         }
     }
 }
