@@ -29,9 +29,7 @@ class L5SwaggerServiceProvider extends ServiceProvider
         ], 'views');
 
         //Include routes
-        \Route::group(['namespace' => 'L5Swagger'], function ($router) {
-            require __DIR__.'/routes.php';
-        });
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
 
         //Register commands
         $this->commands([GenerateDocsCommand::class]);

@@ -9,9 +9,9 @@ use Symfony\Component\Yaml\Dumper as YamlDumper;
 class Generator
 {
     /**
-     * @var string
+     * @var string|array
      */
-    protected $appDir;
+    protected $annotationsDir;
 
     /**
      * @var string
@@ -50,7 +50,7 @@ class Generator
 
     public function __construct()
     {
-        $this->appDir = config('l5-swagger.paths.annotations');
+        $this->annotationsDir = config('l5-swagger.paths.annotations');
         $this->docDir = config('l5-swagger.paths.docs');
         $this->docsFile = $this->docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
         $this->yamlDocsFile = $this->docDir.'/'.config('l5-swagger.paths.docs_yaml', 'api-docs.yaml');
@@ -115,14 +115,14 @@ class Generator
     {
         if ($this->isOpenApi()) {
             $this->swagger = \OpenApi\scan(
-                $this->appDir,
+                $this->annotationsDir,
                 ['exclude' => $this->excludedDirs]
             );
         }
 
         if (! $this->isOpenApi()) {
             $this->swagger = \Swagger\scan(
-                $this->appDir,
+                $this->annotationsDir,
                 ['exclude' => $this->excludedDirs]
             );
         }
