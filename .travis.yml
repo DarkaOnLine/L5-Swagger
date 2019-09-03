@@ -10,10 +10,6 @@ env:
 matrix:
   fast_finish: true
   include:
-  - php: 7.1
-    env: CACHE_NAME=SWAGGER
-  - php: 7.1
-    env: SWAGGER_VERSION=3.0 CACHE_NAME=OPEN_API
   - php: 7.2
     env: CACHE_NAME=SWAGGER
   - php: 7.2
