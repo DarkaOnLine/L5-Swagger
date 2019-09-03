@@ -18,7 +18,7 @@ class ConsoleTest extends TestCase
         $fileContent = file_get_contents($this->jsonDocsFile());
 
         $this->assertJson($fileContent);
-        $this->assertContains('L5 Swagger', $fileContent);
+        $this->assertStringContainsString('L5 Swagger', $fileContent);
     }
 
     /** @test */

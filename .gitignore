@@ -11,3 +11,4 @@ composer-extra-assets.lock
 .bowerrc
 bower.json
 package.json
+.phpunit.result.cache
