@@ -3,7 +3,6 @@
 [![Coverage Status](https://coveralls.io/repos/github/DarkaOnLine/L5-Swagger/badge.svg?branch=master)](https://coveralls.io/github/DarkaOnLine/L5-Swagger?branch=master)
 [![Code Climate](https://codeclimate.com/github/DarkaOnLine/L5-Swagger/badges/gpa.svg)](https://codeclimate.com/github/DarkaOnLine/L5-Swagger)
 [![StyleCI](https://styleci.io/repos/32315619/shield)](https://styleci.io/repos/32315619)
-[![Dependency Status](https://beta.gemnasium.com/badges/github.com/DarkaOnLine/L5-Swagger.svg)](https://beta.gemnasium.com/projects/github.com/DarkaOnLine/L5-Swagger)
 
 L5 Swagger - OpenApi or Swagger Specification for your Laravel project made easy.
 ==========
@@ -17,7 +16,7 @@ Installation
 
  Laravel          | Swagger UI| OpenAPI Spec compatibility | L5-Swagger
 :-----------------|:----------|:---------------------------|:----------
- 6.0.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
+ 6.0.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
  5.8.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger:5.8.*"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
  5.7.x OR 5.6.x   | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger:5.7.*"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
  5.6.x            | 3         | 2.0                        | `composer require "darkaonline/l5-swagger:5.6.*"`
