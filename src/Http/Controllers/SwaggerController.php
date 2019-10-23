@@ -12,7 +12,7 @@ use Illuminate\Routing\Controller as BaseController;
 class SwaggerController extends BaseController
 {
     /**
-     * Dump api-docs content endpoint. Supports dumping a json, yml or yaml file.
+     * Dump api-docs content endpoint. Supports dumping a json, or yaml file.
      *
      * @param string $file
      *
@@ -20,15 +20,17 @@ class SwaggerController extends BaseController
      */
     public function docs(string $file = null)
     {
-        $targetFile = config('l5-swagger.paths.docs_json', 'api-docs.json');
         $extension = 'json';
+        $targetFile = config('l5-swagger.paths.docs_json', 'api-docs.json');
+
         if (!is_null($file)) {
             $targetFile = $file;
             $extension = explode('.', $file)[1];
         }
+
         $filePath = config('l5-swagger.paths.docs').'/'.$targetFile;
 
-        if (! File::exists($filePath)) {
+        if (config('l5-swagger.generate_always') || ! File::exists($filePath)) {
             try {
                 Generator::generateDocs();
             } catch (\Exception $e) {
@@ -38,15 +40,15 @@ class SwaggerController extends BaseController
 
         $content = File::get($filePath);
 
-        $contentType = 'application/json';
         if ($extension === 'yaml') {
-            // Use text/plain instead of application/yaml to prevent triggering a file
-            // download in Firefox
-            $contentType = 'text/plain';
+            return Response::make($content, 200, [
+                'Content-Type' => 'application/yaml',
+                'Content-Disposition' => 'inline',
+            ]);
         }
 
         return Response::make($content, 200, [
-            'Content-Type' => $contentType,
+            'Content-Type' => 'application/json'
         ]);
     }
 
