@@ -23,7 +23,7 @@ class SwaggerController extends BaseController
         $extension = 'json';
         $targetFile = config('l5-swagger.paths.docs_json', 'api-docs.json');
 
-        if (!is_null($file)) {
+        if (! is_null($file)) {
             $targetFile = $file;
             $extension = explode('.', $file)[1];
         }
@@ -48,7 +48,7 @@ class SwaggerController extends BaseController
         }
 
         return Response::make($content, 200, [
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
         ]);
     }
 
