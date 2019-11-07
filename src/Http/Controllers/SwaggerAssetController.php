@@ -3,8 +3,8 @@
 namespace L5Swagger\Http\Controllers;
 
 use Illuminate\Http\Response;
-use L5Swagger\Exceptions\L5SwaggerException;
 use Illuminate\Routing\Controller as BaseController;
+use L5Swagger\Exceptions\L5SwaggerException;
 
 class SwaggerAssetController extends BaseController
 {
