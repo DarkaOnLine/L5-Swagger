@@ -2,8 +2,8 @@
 
 namespace L5Swagger\Http\Controllers;
 
-use Log;
 use L5Swagger\Generator;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
