@@ -36,7 +36,15 @@ class SwaggerController extends BaseController
                 Generator::generateDocs();
             } catch (\Exception $e) {
                 Log::error($e);
-                abort(404, 'Cannot find '.$filePath.' and cannot be generated.');
+                
+                abort(
+                    404,
+                    sprintf(
+                        'Unable to generate documentation file to: "%s". Please make sure directory is writable. Error: %s',
+                        $filePath,
+                        $e->getMessage()
+                    )
+                );
             }
         }
 
