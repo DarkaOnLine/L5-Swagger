@@ -36,7 +36,7 @@ class SwaggerController extends BaseController
                 Generator::generateDocs();
             } catch (\Exception $e) {
                 Log::error($e);
-                
+
                 abort(
                     404,
                     sprintf(
