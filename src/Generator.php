@@ -143,9 +143,7 @@ class Generator
                     $this->swagger->servers = [];
                 }
 
-                $this->swagger->servers[] = [
-                    new \OpenApi\Annotations\Server(['url' => config('l5-swagger.paths.base')]),
-                ];
+                $this->swagger->servers[] = new \OpenApi\Annotations\Server(['url' => config('l5-swagger.paths.base')]);
             }
 
             if (! $this->isOpenApi()) {
