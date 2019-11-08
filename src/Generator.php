@@ -139,9 +139,11 @@ class Generator
     {
         if (config('l5-swagger.paths.base') !== null) {
             if ($this->isOpenApi()) {
-                $this->swagger->servers = [
-                    new \OpenApi\Annotations\Server(['url' => config('l5-swagger.paths.base')]),
-                ];
+                if (! is_array($this->swagger->servers)) {
+                    $this->swagger->servers = [];
+                }
+
+                $this->swagger->servers[] = new \OpenApi\Annotations\Server(['url' => config('l5-swagger.paths.base')]);
             }
 
             if (! $this->isOpenApi()) {

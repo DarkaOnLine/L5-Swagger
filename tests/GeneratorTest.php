@@ -91,11 +91,13 @@ class GeneratorTest extends TestCase
 
         $this->get(route('l5-swagger.docs'))
             ->assertSee('https://test-server.url')
+            ->assertSee('https://projects.dev/api/v1')
             ->assertDontSee('basePath')
             ->assertStatus(200);
 
         $this->get(route('l5-swagger.docs', ['jsonFile' => config('l5-swagger.paths.docs_yaml')]))
             ->assertSee('https://test-server.url')
+            ->assertSee('https://projects.dev/api/v1')
             ->assertDontSee('basePath')
             ->assertStatus(200);
     }
