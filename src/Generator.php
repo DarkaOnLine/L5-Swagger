@@ -2,7 +2,7 @@
 
 namespace L5Swagger;
 
-use File;
+use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 
