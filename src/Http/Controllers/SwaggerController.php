@@ -13,6 +13,16 @@ use L5Swagger\Generator;
 class SwaggerController extends BaseController
 {
     /**
+     * @var L5Swagger\Generator
+     */
+    protected $generator;
+
+    public function __construct(Generator $generator)
+    {
+        $this->generator = $generator;
+    }
+
+    /**
      * Dump api-docs content endpoint. Supports dumping a json, or yaml file.
      *
      * @param string $file
@@ -33,7 +43,7 @@ class SwaggerController extends BaseController
 
         if (config('l5-swagger.generate_always') || ! File::exists($filePath)) {
             try {
-                Generator::generateDocs();
+                $this->generator->generateDocs();
             } catch (\Exception $e) {
                 Log::error($e);
 

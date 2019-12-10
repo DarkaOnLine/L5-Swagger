@@ -3,7 +3,6 @@
 namespace Tests;
 
 use L5Swagger\Exceptions\L5SwaggerException;
-use L5Swagger\Generator;
 
 class GeneratorTest extends TestCase
 {
@@ -17,7 +16,7 @@ class GeneratorTest extends TestCase
 
         $this->expectException(L5SwaggerException::class);
 
-        Generator::generateDocs();
+        $this->generator->generateDocs();
 
         chmod(config('l5-swagger.paths.docs'), 0777);
     }
@@ -27,7 +26,7 @@ class GeneratorTest extends TestCase
     {
         $this->setAnnotationsPath();
 
-        Generator::generateDocs();
+        $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
         $this->assertTrue(file_exists($this->yamlDocsFile()));
@@ -56,7 +55,7 @@ class GeneratorTest extends TestCase
         $cfg['paths']['base'] = '/new_path/is/here';
         config(['l5-swagger' => $cfg]);
 
-        Generator::generateDocs();
+        $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
@@ -85,7 +84,7 @@ class GeneratorTest extends TestCase
         $cfg['swagger_version'] = '3.0';
         config(['l5-swagger' => $cfg]);
 
-        tap(new Generator)->generateDocs();
+        $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 

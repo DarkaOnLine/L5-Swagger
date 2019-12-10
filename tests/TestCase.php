@@ -2,14 +2,19 @@
 
 namespace Tests;
 
+use L5Swagger\Generator;
 use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
+    protected $generator;
+
     public function setUp() :void
     {
         parent::setUp();
+
+        $this->makeGenerator();
 
         $this->copyAssets();
     }
@@ -82,6 +87,13 @@ class TestCase extends OrchestraTestCase
         $cfg['constants']['L5_SWAGGER_CONST_HOST'] = 'http://my-default-host.com';
 
         config(['l5-swagger' => $cfg]);
+
+        $this->makeGenerator();
+    }
+
+    protected function makeGenerator()
+    {
+        $this->generator = $this->app->make(Generator::class);
     }
 
     protected function setCustomDocsFileName($fileName)

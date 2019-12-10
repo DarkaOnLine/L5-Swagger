@@ -2,8 +2,6 @@
 
 namespace Tests;
 
-use L5Swagger\Generator;
-
 class SecurityDefinitionsTest extends TestCase
 {
     /** @test */
@@ -26,7 +24,7 @@ class SecurityDefinitionsTest extends TestCase
         $cfg['swagger_version'] = '2.0';
         config(['l5-swagger' => $cfg]);
 
-        tap(new Generator)->generateDocs();
+        $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
@@ -56,7 +54,7 @@ class SecurityDefinitionsTest extends TestCase
         $cfg['swagger_version'] = '3.0';
         config(['l5-swagger' => $cfg]);
 
-        tap(new Generator)->generateDocs();
+        $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 

@@ -48,20 +48,41 @@ class Generator
      */
     protected $yamlCopyRequired;
 
-    public function __construct()
-    {
-        $this->annotationsDir = config('l5-swagger.paths.annotations');
-        $this->docDir = config('l5-swagger.paths.docs');
-        $this->docsFile = $this->docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
-        $this->yamlDocsFile = $this->docDir.'/'.config('l5-swagger.paths.docs_yaml', 'api-docs.yaml');
-        $this->excludedDirs = config('l5-swagger.paths.excludes');
-        $this->constants = config('l5-swagger.constants') ?: [];
-        $this->yamlCopyRequired = config('l5-swagger.generate_yaml_copy', false);
+    /**
+     * @var string
+     */
+    protected $basePath;
+
+    /**
+     * @var string
+     */
+    protected $swaggerVersion;
+
+    public function __construct(
+        $annotationsDir,
+        $docDir,
+        $docsFile,
+        $yamlDocsFile,
+        $excludedDirs,
+        $constants,
+        $yamlCopyRequired,
+        $basePath,
+        $swaggerVersion
+    ) {
+        $this->annotationsDir = $annotationsDir;
+        $this->docDir = $docDir;
+        $this->docsFile = $docsFile;
+        $this->yamlDocsFile = $yamlDocsFile;
+        $this->excludedDirs = $excludedDirs;
+        $this->constants = $constants;
+        $this->yamlCopyRequired = $yamlCopyRequired;
+        $this->basePath = $basePath;
+        $this->swaggerVersion = $swaggerVersion;
     }
 
-    public static function generateDocs()
+    public function generateDocs()
     {
-        (new static)->prepareDirectory()
+        $this->prepareDirectory()
             ->defineConstants()
             ->scanFilesForDocumentation()
             ->populateServers()
@@ -137,17 +158,17 @@ class Generator
      */
     protected function populateServers()
     {
-        if (config('l5-swagger.paths.base') !== null) {
+        if ($this->basePath !== null) {
             if ($this->isOpenApi()) {
                 if (! is_array($this->swagger->servers)) {
                     $this->swagger->servers = [];
                 }
 
-                $this->swagger->servers[] = new \OpenApi\Annotations\Server(['url' => config('l5-swagger.paths.base')]);
+                $this->swagger->servers[] = new \OpenApi\Annotations\Server(['url' => $this->basePath]);
             }
 
             if (! $this->isOpenApi()) {
-                $this->swagger->basePath = config('l5-swagger.paths.base');
+                $this->swagger->basePath = $this->basePath;
             }
         }
 
@@ -191,6 +212,6 @@ class Generator
      */
     protected function isOpenApi()
     {
-        return version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
+        return version_compare($this->swaggerVersion, '3.0', '>=');
     }
 }
