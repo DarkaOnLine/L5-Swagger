@@ -4,6 +4,7 @@ namespace Tests;
 
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
+use Symfony\Component\Yaml\Yaml;
 
 class GeneratorTest extends TestCase
 {
@@ -146,5 +147,18 @@ class GeneratorTest extends TestCase
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
         $this->assertTrue(file_exists($this->yamlDocsFile()));
+    }
+
+    /** @test */
+    public function canAppropriateYamlType()
+    {
+        $this->setAnnotationsPath();
+
+        Generator::generateDocs();
+
+        $objects = Yaml::parse(file_get_contents($this->yamlDocsFile()), Yaml::PARSE_OBJECT_FOR_MAP);
+
+        $actual = $objects->paths->{'/projects'}->get->security[0]->api_key_security_example;
+        $this->assertIsArray($actual);
     }
 }
