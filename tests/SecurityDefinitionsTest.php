@@ -2,12 +2,10 @@
 
 namespace Tests;
 
-use L5Swagger\Generator;
-
 class SecurityDefinitionsTest extends TestCase
 {
     /** @test */
-    public function canGenerateApiJsonFileWithSecurityDefinition()
+    public function canGenerateApiJsonFileWithSecurityDefinition(): void
     {
         if ($this->isOpenApi()) {
             $this->markTestSkipped('only for openApi 2.0');
@@ -26,7 +24,7 @@ class SecurityDefinitionsTest extends TestCase
         $cfg['swagger_version'] = '2.0';
         config(['l5-swagger' => $cfg]);
 
-        tap(new Generator)->generateDocs();
+        $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
@@ -37,7 +35,7 @@ class SecurityDefinitionsTest extends TestCase
     }
 
     /** @test */
-    public function canGenerateApiJsonFileWithSecurityDefinitionOpenApi3()
+    public function canGenerateApiJsonFileWithSecurityDefinitionOpenApi3(): void
     {
         if (! $this->isOpenApi()) {
             $this->markTestSkipped('only for openApi 3.0');
@@ -56,7 +54,7 @@ class SecurityDefinitionsTest extends TestCase
         $cfg['swagger_version'] = '3.0';
         config(['l5-swagger' => $cfg]);
 
-        tap(new Generator)->generateDocs();
+        $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 

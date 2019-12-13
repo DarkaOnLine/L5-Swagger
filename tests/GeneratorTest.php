@@ -3,14 +3,13 @@
 namespace Tests;
 
 use L5Swagger\Exceptions\L5SwaggerException;
-use L5Swagger\Generator;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 
 class GeneratorTest extends TestCase
 {
     /** @test **/
-    public function itThrowsExceptionIfDocumatationDirIsNotWritable()
+    public function itThrowsExceptionIfDocumentationDirIsNotWritable(): void
     {
         $this->setAnnotationsPath();
 
@@ -19,17 +18,17 @@ class GeneratorTest extends TestCase
 
         $this->expectException(L5SwaggerException::class);
 
-        Generator::generateDocs();
+        $this->generator->generateDocs();
 
         chmod(config('l5-swagger.paths.docs'), 0777);
     }
 
     /** @test */
-    public function canGenerateApiJsonFile()
+    public function canGenerateApiJsonFile(): void
     {
         $this->setAnnotationsPath();
 
-        Generator::generateDocs();
+        $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
         $this->assertTrue(file_exists($this->yamlDocsFile()));
@@ -46,7 +45,7 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canGenerateApiJsonFileWithChangedBasePath()
+    public function canGenerateApiJsonFileWithChangedBasePath(): void
     {
         if ($this->isOpenApi() == true) {
             $this->markTestSkipped('only for openApi 2.0');
@@ -58,7 +57,7 @@ class GeneratorTest extends TestCase
         $cfg['paths']['base'] = '/new_path/is/here';
         config(['l5-swagger' => $cfg]);
 
-        Generator::generateDocs();
+        $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
@@ -74,7 +73,7 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canGenerateApiJsonFileWithChangedBaseServer()
+    public function canGenerateApiJsonFileWithChangedBaseServer(): void
     {
         if (! $this->isOpenApi()) {
             $this->markTestSkipped('only for openApi 3.0');
@@ -87,7 +86,7 @@ class GeneratorTest extends TestCase
         $cfg['swagger_version'] = '3.0';
         config(['l5-swagger' => $cfg]);
 
-        tap(new Generator)->generateDocs();
+        $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
@@ -105,7 +104,7 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canSetProxy()
+    public function canSetProxy(): void
     {
         $this->setAnnotationsPath();
 
@@ -127,7 +126,7 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canSetValidatorUrl()
+    public function canSetValidatorUrl(): void
     {
         $this->setAnnotationsPath();
 
@@ -151,11 +150,11 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canAppropriateYamlType()
+    public function canAppropriateYamlType(): void
     {
         $this->setAnnotationsPath();
 
-        Generator::generateDocs();
+        $this->generator->generateDocs();
 
         $objects = (new Parser())->parse(file_get_contents($this->yamlDocsFile()), Yaml::PARSE_OBJECT_FOR_MAP);
 

@@ -49,20 +49,41 @@ class Generator
      */
     protected $yamlCopyRequired;
 
-    public function __construct()
-    {
-        $this->annotationsDir = config('l5-swagger.paths.annotations');
-        $this->docDir = config('l5-swagger.paths.docs');
-        $this->docsFile = $this->docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
-        $this->yamlDocsFile = $this->docDir.'/'.config('l5-swagger.paths.docs_yaml', 'api-docs.yaml');
-        $this->excludedDirs = config('l5-swagger.paths.excludes');
-        $this->constants = config('l5-swagger.constants') ?: [];
-        $this->yamlCopyRequired = config('l5-swagger.generate_yaml_copy', false);
+    /**
+     * @var string
+     */
+    protected $basePath;
+
+    /**
+     * @var string
+     */
+    protected $swaggerVersion;
+
+    public function __construct(
+        $annotationsDir,
+        string $docDir,
+        string $docsFile,
+        string $yamlDocsFile,
+        array $excludedDirs,
+        array $constants,
+        bool $yamlCopyRequired,
+        ?string $basePath,
+        string $swaggerVersion
+    ) {
+        $this->annotationsDir = $annotationsDir;
+        $this->docDir = $docDir;
+        $this->docsFile = $docsFile;
+        $this->yamlDocsFile = $yamlDocsFile;
+        $this->excludedDirs = $excludedDirs;
+        $this->constants = $constants;
+        $this->yamlCopyRequired = $yamlCopyRequired;
+        $this->basePath = $basePath;
+        $this->swaggerVersion = $swaggerVersion;
     }
 
-    public static function generateDocs()
+    public function generateDocs(): void
     {
-        (new static)->prepareDirectory()
+        $this->prepareDirectory()
             ->defineConstants()
             ->scanFilesForDocumentation()
             ->populateServers()
@@ -73,9 +94,11 @@ class Generator
     /**
      * Check directory structure and permissions.
      *
+     * @throws L5SwaggerException
+     *
      * @return Generator
      */
-    protected function prepareDirectory()
+    protected function prepareDirectory(): Generator
     {
         if (File::exists($this->docDir) && ! is_writable($this->docDir)) {
             throw new L5SwaggerException('Documentation storage directory is not writable');
@@ -96,7 +119,7 @@ class Generator
      *
      * @return Generator
      */
-    protected function defineConstants()
+    protected function defineConstants(): Generator
     {
         if (! empty($this->constants)) {
             foreach ($this->constants as $key => $value) {
@@ -112,7 +135,7 @@ class Generator
      *
      * @return Generator
      */
-    protected function scanFilesForDocumentation()
+    protected function scanFilesForDocumentation(): Generator
     {
         if ($this->isOpenApi()) {
             $this->swagger = \OpenApi\scan(
@@ -136,19 +159,19 @@ class Generator
      *
      * @return Generator
      */
-    protected function populateServers()
+    protected function populateServers(): Generator
     {
-        if (config('l5-swagger.paths.base') !== null) {
+        if ($this->basePath !== null) {
             if ($this->isOpenApi()) {
                 if (! is_array($this->swagger->servers)) {
                     $this->swagger->servers = [];
                 }
 
-                $this->swagger->servers[] = new \OpenApi\Annotations\Server(['url' => config('l5-swagger.paths.base')]);
+                $this->swagger->servers[] = new \OpenApi\Annotations\Server(['url' => $this->basePath]);
             }
 
             if (! $this->isOpenApi()) {
-                $this->swagger->basePath = config('l5-swagger.paths.base');
+                $this->swagger->basePath = $this->basePath;
             }
         }
 
@@ -158,9 +181,11 @@ class Generator
     /**
      * Save documentation as json file.
      *
+     * @throws \Exception
+     *
      * @return Generator
      */
-    protected function saveJson()
+    protected function saveJson(): Generator
     {
         $this->swagger->saveAs($this->docsFile);
 
@@ -172,10 +197,8 @@ class Generator
 
     /**
      * Save documentation as yaml file.
-     *
-     * @return Generator
      */
-    protected function makeYamlCopy()
+    protected function makeYamlCopy(): void
     {
         if ($this->yamlCopyRequired) {
             file_put_contents(
@@ -195,8 +218,8 @@ class Generator
      *
      * @return bool
      */
-    protected function isOpenApi()
+    protected function isOpenApi(): bool
     {
-        return version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
+        return version_compare($this->swaggerVersion, '3.0', '>=');
     }
 }

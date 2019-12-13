@@ -8,6 +8,18 @@ use L5Swagger\Generator;
 class GenerateDocsCommand extends Command
 {
     /**
+     * @var L5Swagger\Generator
+     */
+    protected $generator;
+
+    public function __construct(Generator $generator)
+    {
+        parent::__construct();
+
+        $this->generator = $generator;
+    }
+
+    /**
      * The console command name.
      *
      * @var string
@@ -29,6 +41,6 @@ class GenerateDocsCommand extends Command
     public function handle()
     {
         $this->info('Regenerating docs');
-        Generator::generateDocs();
+        $this->generator->generateDocs();
     }
 }
