@@ -59,7 +59,7 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * Create json docs file
+     * Create json docs file.
      */
     protected function crateJsonDocumentationFile(): void
     {
@@ -67,7 +67,7 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * Get path for json docs file
+     * Get path for json docs file.
      *
      * @return string
      */
@@ -81,7 +81,7 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * Get path for yaml docs file
+     * Get path for yaml docs file.
      *
      * @return string
      */
@@ -95,7 +95,7 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * Prepare config for testing
+     * Prepare config for testing.
      */
     protected function setAnnotationsPath(): void
     {
@@ -118,7 +118,7 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * Make Generator
+     * Make Generator.
      */
     protected function makeGenerator(): void
     {
@@ -136,7 +136,7 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * Copy assets from vendor to testbench
+     * Copy assets from vendor to testbench.
      */
     protected function copyAssets(): void
     {

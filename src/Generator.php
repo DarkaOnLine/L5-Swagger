@@ -98,7 +98,7 @@ class Generator
      *
      * @return Generator
      */
-    protected function prepareDirectory(): Generator
+    protected function prepareDirectory(): self
     {
         if (File::exists($this->docDir) && ! is_writable($this->docDir)) {
             throw new L5SwaggerException('Documentation storage directory is not writable');
@@ -119,7 +119,7 @@ class Generator
      *
      * @return Generator
      */
-    protected function defineConstants(): Generator
+    protected function defineConstants(): self
     {
         if (! empty($this->constants)) {
             foreach ($this->constants as $key => $value) {
@@ -135,7 +135,7 @@ class Generator
      *
      * @return Generator
      */
-    protected function scanFilesForDocumentation(): Generator
+    protected function scanFilesForDocumentation(): self
     {
         if ($this->isOpenApi()) {
             $this->swagger = \OpenApi\scan(
@@ -159,7 +159,7 @@ class Generator
      *
      * @return Generator
      */
-    protected function populateServers(): Generator
+    protected function populateServers(): self
     {
         if ($this->basePath !== null) {
             if ($this->isOpenApi()) {
@@ -185,7 +185,7 @@ class Generator
      *
      * @return Generator
      */
-    protected function saveJson(): Generator
+    protected function saveJson(): self
     {
         $this->swagger->saveAs($this->docsFile);
 
