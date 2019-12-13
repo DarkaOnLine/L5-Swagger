@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 class ConsoleTest extends TestCase
 {
     /** @test */
-    public function canGenerate()
+    public function canGenerate(): void
     {
         $this->setAnnotationsPath();
 
@@ -22,7 +22,7 @@ class ConsoleTest extends TestCase
     }
 
     /** @test */
-    public function canPublish()
+    public function canPublish(): void
     {
         Artisan::call('vendor:publish', ['--provider' => 'L5Swagger\L5SwaggerServiceProvider']);
 

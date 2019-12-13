@@ -3,11 +3,13 @@
 namespace Tests;
 
 use L5Swagger\Exceptions\L5SwaggerException;
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Yaml;
 
 class GeneratorTest extends TestCase
 {
     /** @test **/
-    public function itThrowsExceptionIfDocumatationDirIsNotWritable()
+    public function itThrowsExceptionIfDocumentationDirIsNotWritable(): void
     {
         $this->setAnnotationsPath();
 
@@ -22,7 +24,7 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canGenerateApiJsonFile()
+    public function canGenerateApiJsonFile(): void
     {
         $this->setAnnotationsPath();
 
@@ -43,7 +45,7 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canGenerateApiJsonFileWithChangedBasePath()
+    public function canGenerateApiJsonFileWithChangedBasePath(): void
     {
         if ($this->isOpenApi() == true) {
             $this->markTestSkipped('only for openApi 2.0');
@@ -71,7 +73,7 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canGenerateApiJsonFileWithChangedBaseServer()
+    public function canGenerateApiJsonFileWithChangedBaseServer(): void
     {
         if (! $this->isOpenApi()) {
             $this->markTestSkipped('only for openApi 3.0');
@@ -102,7 +104,7 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canSetProxy()
+    public function canSetProxy(): void
     {
         $this->setAnnotationsPath();
 
@@ -124,7 +126,7 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canSetValidatorUrl()
+    public function canSetValidatorUrl(): void
     {
         $this->setAnnotationsPath();
 
@@ -145,5 +147,18 @@ class GeneratorTest extends TestCase
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
         $this->assertTrue(file_exists($this->yamlDocsFile()));
+    }
+
+    /** @test */
+    public function canAppropriateYamlType(): void
+    {
+        $this->setAnnotationsPath();
+
+        $this->generator->generateDocs();
+
+        $objects = (new Parser())->parse(file_get_contents($this->yamlDocsFile()), Yaml::PARSE_OBJECT_FOR_MAP);
+
+        $actual = $objects->paths->{'/projects'}->get->security[0]->api_key_security_example;
+        $this->assertIsArray($actual);
     }
 }

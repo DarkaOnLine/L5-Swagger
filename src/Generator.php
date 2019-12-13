@@ -5,6 +5,7 @@ namespace L5Swagger;
 use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
+use Symfony\Component\Yaml\Yaml;
 
 class Generator
 {
@@ -60,14 +61,14 @@ class Generator
 
     public function __construct(
         $annotationsDir,
-        $docDir,
-        $docsFile,
-        $yamlDocsFile,
-        $excludedDirs,
-        $constants,
-        $yamlCopyRequired,
-        $basePath,
-        $swaggerVersion
+        string $docDir,
+        string $docsFile,
+        string $yamlDocsFile,
+        array $excludedDirs,
+        array $constants,
+        bool $yamlCopyRequired,
+        ?string $basePath,
+        string $swaggerVersion
     ) {
         $this->annotationsDir = $annotationsDir;
         $this->docDir = $docDir;
@@ -80,7 +81,7 @@ class Generator
         $this->swaggerVersion = $swaggerVersion;
     }
 
-    public function generateDocs()
+    public function generateDocs(): void
     {
         $this->prepareDirectory()
             ->defineConstants()
@@ -93,9 +94,11 @@ class Generator
     /**
      * Check directory structure and permissions.
      *
+     * @throws L5SwaggerException
+     *
      * @return Generator
      */
-    protected function prepareDirectory()
+    protected function prepareDirectory(): Generator
     {
         if (File::exists($this->docDir) && ! is_writable($this->docDir)) {
             throw new L5SwaggerException('Documentation storage directory is not writable');
@@ -116,7 +119,7 @@ class Generator
      *
      * @return Generator
      */
-    protected function defineConstants()
+    protected function defineConstants(): Generator
     {
         if (! empty($this->constants)) {
             foreach ($this->constants as $key => $value) {
@@ -132,7 +135,7 @@ class Generator
      *
      * @return Generator
      */
-    protected function scanFilesForDocumentation()
+    protected function scanFilesForDocumentation(): Generator
     {
         if ($this->isOpenApi()) {
             $this->swagger = \OpenApi\scan(
@@ -156,7 +159,7 @@ class Generator
      *
      * @return Generator
      */
-    protected function populateServers()
+    protected function populateServers(): Generator
     {
         if ($this->basePath !== null) {
             if ($this->isOpenApi()) {
@@ -178,9 +181,11 @@ class Generator
     /**
      * Save documentation as json file.
      *
+     * @throws \Exception
+     *
      * @return Generator
      */
-    protected function saveJson()
+    protected function saveJson(): Generator
     {
         $this->swagger->saveAs($this->docsFile);
 
@@ -192,15 +197,18 @@ class Generator
 
     /**
      * Save documentation as yaml file.
-     *
-     * @return Generator
      */
-    protected function makeYamlCopy()
+    protected function makeYamlCopy(): void
     {
         if ($this->yamlCopyRequired) {
             file_put_contents(
                 $this->yamlDocsFile,
-                (new YamlDumper(2))->dump(json_decode(file_get_contents($this->docsFile), true), 20)
+                (new YamlDumper(2))->dump(
+                    json_decode(file_get_contents($this->docsFile), true),
+                    20,
+                    0,
+                    Yaml::DUMP_OBJECT_AS_MAP ^ Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE
+                )
             );
         }
     }
@@ -210,7 +218,7 @@ class Generator
      *
      * @return bool
      */
-    protected function isOpenApi()
+    protected function isOpenApi(): bool
     {
         return version_compare($this->swaggerVersion, '3.0', '>=');
     }

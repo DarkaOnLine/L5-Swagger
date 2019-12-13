@@ -8,6 +8,9 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
+    /**
+     * @var Generator
+     */
     protected $generator;
 
     public function setUp() :void
@@ -36,24 +39,39 @@ class TestCase extends OrchestraTestCase
         parent::tearDown();
     }
 
-    protected function isOpenApi()
+    /**
+     * @return bool
+     */
+    protected function isOpenApi(): bool
     {
         return version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
     }
 
-    protected function getPackageProviders($app)
+    /**
+     * @param \Illuminate\Foundation\Application $app
+     * @return array
+     */
+    protected function getPackageProviders($app): array
     {
         return [
             L5SwaggerServiceProvider::class,
         ];
     }
 
-    protected function crateJsonDocumentationFile()
+    /**
+     * Create json docs file
+     */
+    protected function crateJsonDocumentationFile(): void
     {
         file_put_contents($this->jsonDocsFile(), '{}');
     }
 
-    protected function jsonDocsFile()
+    /**
+     * Get path for json docs file
+     *
+     * @return string
+     */
+    protected function jsonDocsFile(): string
     {
         if (! is_dir(config('l5-swagger.paths.docs'))) {
             mkdir(config('l5-swagger.paths.docs'));
@@ -62,7 +80,12 @@ class TestCase extends OrchestraTestCase
         return config('l5-swagger.paths.docs').'/'.config('l5-swagger.paths.docs_json');
     }
 
-    protected function yamlDocsFile()
+    /**
+     * Get path for yaml docs file
+     *
+     * @return string
+     */
+    protected function yamlDocsFile(): string
     {
         if (! is_dir(config('l5-swagger.paths.docs'))) {
             mkdir(config('l5-swagger.paths.docs'));
@@ -71,7 +94,10 @@ class TestCase extends OrchestraTestCase
         return config('l5-swagger.paths.docs').'/'.config('l5-swagger.paths.docs_yaml');
     }
 
-    protected function setAnnotationsPath()
+    /**
+     * Prepare config for testing
+     */
+    protected function setAnnotationsPath(): void
     {
         $cfg = config('l5-swagger');
         $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/Swagger';
@@ -91,19 +117,28 @@ class TestCase extends OrchestraTestCase
         $this->makeGenerator();
     }
 
-    protected function makeGenerator()
+    /**
+     * Make Generator
+     */
+    protected function makeGenerator(): void
     {
         $this->generator = $this->app->make(Generator::class);
     }
 
-    protected function setCustomDocsFileName($fileName)
+    /**
+     * @param string $fileName
+     */
+    protected function setCustomDocsFileName(string $fileName): void
     {
         $cfg = config('l5-swagger');
         $cfg['paths']['docs_json'] = $fileName;
         config(['l5-swagger' => $cfg]);
     }
 
-    protected function copyAssets()
+    /**
+     * Copy assets from vendor to testbench
+     */
+    protected function copyAssets(): void
     {
         $src = __DIR__.'/../vendor/swagger-api/swagger-ui/dist/';
         $destination = __DIR__.'/../vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist/';

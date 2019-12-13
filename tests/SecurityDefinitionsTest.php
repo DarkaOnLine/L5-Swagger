@@ -5,7 +5,7 @@ namespace Tests;
 class SecurityDefinitionsTest extends TestCase
 {
     /** @test */
-    public function canGenerateApiJsonFileWithSecurityDefinition()
+    public function canGenerateApiJsonFileWithSecurityDefinition(): void
     {
         if ($this->isOpenApi()) {
             $this->markTestSkipped('only for openApi 2.0');
@@ -35,7 +35,7 @@ class SecurityDefinitionsTest extends TestCase
     }
 
     /** @test */
-    public function canGenerateApiJsonFileWithSecurityDefinitionOpenApi3()
+    public function canGenerateApiJsonFileWithSecurityDefinitionOpenApi3(): void
     {
         if (! $this->isOpenApi()) {
             $this->markTestSkipped('only for openApi 3.0');
