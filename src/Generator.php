@@ -5,6 +5,7 @@ namespace L5Swagger;
 use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
+use Symfony\Component\Yaml\Yaml;
 
 class Generator
 {
@@ -179,7 +180,12 @@ class Generator
         if ($this->yamlCopyRequired) {
             file_put_contents(
                 $this->yamlDocsFile,
-                (new YamlDumper(2))->dump(json_decode(file_get_contents($this->docsFile), true), 20)
+                (new YamlDumper(2))->dump(
+                    json_decode(file_get_contents($this->docsFile), true),
+                    20,
+                    0,
+                    Yaml::DUMP_OBJECT_AS_MAP ^ Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE
+                )
             );
         }
     }
