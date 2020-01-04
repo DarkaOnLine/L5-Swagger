@@ -109,6 +109,10 @@ class Generator
             File::deleteDirectory($this->docDir);
         }
 
+        if (File::exists($this->docDir)) {
+            throw new L5SwaggerException('Documentation storage directory or files could not be deleted');
+        }
+
         File::makeDirectory($this->docDir);
 
         return $this;
