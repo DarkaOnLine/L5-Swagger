@@ -13,7 +13,7 @@ class TestCase extends OrchestraTestCase
      */
     protected $generator;
 
-    public function setUp() :void
+    public function setUp(): void
     {
         parent::setUp();
 
@@ -22,7 +22,7 @@ class TestCase extends OrchestraTestCase
         $this->copyAssets();
     }
 
-    public function tearDown() :void
+    public function tearDown(): void
     {
         if (file_exists($this->jsonDocsFile())) {
             unlink($this->jsonDocsFile());
