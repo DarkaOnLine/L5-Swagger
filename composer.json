@@ -15,7 +15,7 @@
   ],
   "require": {
     "php": "^7.2",
-    "laravel/framework": "^6.0",
+    "laravel/framework": "^7.0",
     "zircote/swagger-php": "~2.0|3.*",
     "swagger-api/swagger-ui": "^3.0",
     "symfony/yaml": "^5.0"
@@ -23,7 +23,7 @@
   "require-dev": {
     "phpunit/phpunit": "8.*",
     "mockery/mockery": "1.*",
-    "orchestra/testbench": "4.*",
+    "orchestra/testbench": "5.*",
     "php-coveralls/php-coveralls": "^2.0"
   },
   "suggest": {
