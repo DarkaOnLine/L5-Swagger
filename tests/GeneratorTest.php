@@ -17,6 +17,7 @@ class GeneratorTest extends TestCase
         chmod(config('l5-swagger.paths.docs'), 0555);
 
         $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('Documentation storage directory is not writable');
 
         $this->generator->generateDocs();
 
