@@ -27,8 +27,9 @@ if (! function_exists('swagger_ui_dist_path')) {
             'swagger-ui.js.map',
         ];
 
+        $defaultPath = 'vendor/swagger-api/swagger-ui/dist/';
         $path = base_path(
-            config('l5-swagger.documentations.'.$documentation.'.paths.swagger_ui_assets_path', 'vendor/swagger-api/swagger-ui/dist/')
+            config('l5-swagger.documentations.'.$documentation.'.paths.swagger_ui_assets_path', $defaultPath)
         );
 
         if (! $asset) {

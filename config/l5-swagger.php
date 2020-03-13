@@ -191,8 +191,6 @@ return [
             |--------------------------------------------------------------------------
             */
 
-            'swagger_version' => env('SWAGGER_VERSION', '3.0'),
-
             /*
             |--------------------------------------------------------------------------
             | Edit to trust the proxy's ip address - needed for AWS Load Balancer

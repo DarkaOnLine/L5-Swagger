@@ -47,51 +47,12 @@ class GeneratorTest extends TestCase
     }
 
     /** @test */
-    public function canGenerateApiJsonFileWithChangedBasePath(): void
-    {
-        if ($this->isOpenApi() == true) {
-            $this->markTestSkipped('only for openApi 2.0');
-        }
-
-        $this->setAnnotationsPath();
-
-        $cfg = config('l5-swagger.documentations.default');
-        $cfg['paths']['base'] = '/new_path/is/here';
-        config(['l5-swagger' => [
-            'default' => 'default',
-            'documentations' => [
-                'default' => $cfg,
-            ],
-        ]]);
-
-        $this->generator->generateDocs();
-
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
-
-        $this->get(route('l5-swagger.default.docs'))
-            ->assertSee('L5 Swagger')
-            ->assertSee('new_path')
-            ->assertStatus(200);
-
-        $jsonFile = config('l5-swagger.documentations.default.paths.docs_yaml');
-        $this->get(route('l5-swagger.default.docs', ['jsonFile' => $jsonFile]))
-            ->assertSee('L5 Swagger')
-            ->assertSee('new_path')
-            ->assertStatus(200);
-    }
-
-    /** @test */
     public function canGenerateApiJsonFileWithChangedBaseServer(): void
     {
-        if (! $this->isOpenApi()) {
-            $this->markTestSkipped('only for openApi 3.0');
-        }
-
         $this->setAnnotationsPath();
 
         $cfg = config('l5-swagger.documentations.default');
         $cfg['paths']['base'] = 'https://test-server.url';
-        $cfg['swagger_version'] = '3.0';
         config(['l5-swagger' => [
             'default' => 'default',
             'documentations' => [

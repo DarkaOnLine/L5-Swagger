@@ -6,7 +6,7 @@ use Closure;
 
 class Config
 {
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next)
     {
         $actions = $request->route()->getAction();
 

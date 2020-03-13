@@ -20,15 +20,13 @@ class GeneratorFactory
         $paths = $config['paths'];
         $constants = $config['constants'] ?: [];
         $yamlCopyRequired = $config['generate_yaml_copy'] ?? false;
-        $swaggerVersion = $config['swagger_version'];
 
-        $security = new SecurityDefinitions($swaggerVersion, $config['security']);
+        $security = new SecurityDefinitions($config['security']);
 
         return new Generator(
             $paths,
             $constants,
             $yamlCopyRequired,
-            $swaggerVersion,
             $security
         );
     }

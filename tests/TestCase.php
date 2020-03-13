@@ -40,14 +40,6 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * @return bool
-     */
-    protected function isOpenApi(): bool
-    {
-        return version_compare(config('l5-swagger.documentations.default.swagger_version'), '3.0', '>=');
-    }
-
-    /**
      * @param \Illuminate\Foundation\Application $app
      * @return array
      */
@@ -104,12 +96,7 @@ class TestCase extends OrchestraTestCase
     protected function setAnnotationsPath(): void
     {
         $cfg = config('l5-swagger.documentations.default');
-        $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/Swagger';
-
-        if ($this->isOpenApi()) {
-            $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/OpenApi';
-        }
-
+        $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/OpenApi';
         $cfg['generate_always'] = true;
         $cfg['generate_yaml_copy'] = true;
 

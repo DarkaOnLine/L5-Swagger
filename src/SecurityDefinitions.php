@@ -6,12 +6,10 @@ use Illuminate\Support\Collection;
 
 class SecurityDefinitions
 {
-    protected $swaggerVersion;
     protected $securityConfig;
 
-    public function __construct(string $swaggerVersion, array $securityConfig = [])
+    public function __construct(array $securityConfig = [])
     {
-        $this->swaggerVersion = $swaggerVersion;
         $this->securityConfig = $securityConfig;
     }
 
@@ -29,41 +27,13 @@ class SecurityDefinitions
                 json_decode(file_get_contents($filename))
             );
 
-            $openApi3 = version_compare($this->swaggerVersion, '3.0', '>=');
-
-            $documentation = $openApi3 ?
-                $this->generateOpenApi($documentation, $securityConfig) :
-                $this->generateSwaggerApi($documentation, $securityConfig);
+            $documentation = $this->generateOpenApi($documentation, $securityConfig);
 
             file_put_contents(
                 $filename,
                 $documentation->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
             );
         }
-    }
-
-    /**
-     * Inject security settings for Swagger 1 & 2.
-     *
-     * @param Collection $documentation The parse json
-     * @param array $securityConfig The security settings from l5-swagger
-     *
-     * @return Collection
-     */
-    protected function generateSwaggerApi(Collection $documentation, array $securityConfig)
-    {
-        $securityDefinitions = collect();
-        if ($documentation->has('securityDefinitions')) {
-            $securityDefinitions = collect($documentation->get('securityDefinitions'));
-        }
-
-        foreach ($securityConfig as $key => $cfg) {
-            $securityDefinitions->offsetSet($key, self::arrayToObject($cfg));
-        }
-
-        $documentation->offsetSet('securityDefinitions', $securityDefinitions);
-
-        return $documentation;
     }
 
     /**

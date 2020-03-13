@@ -55,11 +55,6 @@ class Generator
     protected $basePath;
 
     /**
-     * @var string
-     */
-    protected $swaggerVersion;
-
-    /**
      * @var SecurityDefinitions
      */
     protected $security;
@@ -68,7 +63,6 @@ class Generator
         array $paths,
         array $constants,
         bool $yamlCopyRequired,
-        string $swaggerVersion,
         SecurityDefinitions $security
     ) {
         $this->annotationsDir = $paths['annotations'];
@@ -79,7 +73,6 @@ class Generator
         $this->basePath = $paths['base'];
         $this->constants = $constants;
         $this->yamlCopyRequired = $yamlCopyRequired;
-        $this->swaggerVersion = $swaggerVersion;
         $this->security = $security;
     }
 
@@ -143,19 +136,10 @@ class Generator
      */
     protected function scanFilesForDocumentation(): self
     {
-        if ($this->isOpenApi()) {
-            $this->swagger = \OpenApi\scan(
-                $this->annotationsDir,
-                ['exclude' => $this->excludedDirs]
-            );
-        }
-
-        if (! $this->isOpenApi()) {
-            $this->swagger = \Swagger\scan(
-                $this->annotationsDir,
-                ['exclude' => $this->excludedDirs]
-            );
-        }
+        $this->swagger = \OpenApi\scan(
+            $this->annotationsDir,
+            ['exclude' => $this->excludedDirs]
+        );
 
         return $this;
     }
@@ -168,17 +152,11 @@ class Generator
     protected function populateServers(): self
     {
         if ($this->basePath !== null) {
-            if ($this->isOpenApi()) {
-                if (! is_array($this->swagger->servers)) {
-                    $this->swagger->servers = [];
-                }
-
-                $this->swagger->servers[] = new \OpenApi\Annotations\Server(['url' => $this->basePath]);
+            if (! is_array($this->swagger->servers)) {
+                $this->swagger->servers = [];
             }
 
-            if (! $this->isOpenApi()) {
-                $this->swagger->basePath = $this->basePath;
-            }
+            $this->swagger->servers[] = new \OpenApi\Annotations\Server(['url' => $this->basePath]);
         }
 
         return $this;
@@ -216,15 +194,5 @@ class Generator
                 )
             );
         }
-    }
-
-    /**
-     * Check which documentation version is used.
-     *
-     * @return bool
-     */
-    protected function isOpenApi(): bool
-    {
-        return version_compare($this->swaggerVersion, '3.0', '>=');
     }
 }

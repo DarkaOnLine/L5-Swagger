@@ -6,29 +6,20 @@ env:
   global:
   - DEFAULT_COMPOSER_FLAGS="--no-interaction --no-progress --optimize-autoloader"
   - REPORT_TESTS_COVERAGE=0
-  - SWAGGER_VERSION=2.0
+  - CACHE_NAME=OPEN_API
 matrix:
   fast_finish: true
   include:
   - php: 7.2
-    env: CACHE_NAME=SWAGGER
-  - php: 7.2
-    env: SWAGGER_VERSION=3.0 CACHE_NAME=OPEN_API
   - php: 7.3
-    env: CACHE_NAME=SWAGGER
-  - php: 7.3
-    env: SWAGGER_VERSION=3.0 CACHE_NAME=OPEN_API
   - php: 7.4
-    env: CACHE_NAME=SWAGGER
-  - php: 7.4
-    env: SWAGGER_VERSION=3.0 CACHE_NAME=OPEN_API REPORT_TESTS_COVERAGE=1
+    env: REPORT_TESTS_COVERAGE=1
 cache:
   directories:
   - "$HOME/.composer/cache"
 install:
   - travis_retry composer update $DEFAULT_COMPOSER_FLAGS
-  - if [ $SWAGGER_VERSION == 2.0 ]; then composer require 'zircote/swagger-php:2.*'; fi
-  - if [ $SWAGGER_VERSION == 3.0 ]; then composer require 'zircote/swagger-php:3.*'; fi
+  - composer require 'zircote/swagger-php:3.*'
   - composer info -D | sort
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
