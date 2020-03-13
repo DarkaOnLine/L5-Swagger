@@ -11,7 +11,7 @@ if (! function_exists('swagger_ui_dist_path')) {
      * @return string
      * @throws \L5Swagger\Exceptions\L5SwaggerException
      */
-    function swagger_ui_dist_path($asset = null)
+    function swagger_ui_dist_path(string $documentation, $asset = null)
     {
         $allowed_files = [
             'favicon-16x16.png',
@@ -28,7 +28,7 @@ if (! function_exists('swagger_ui_dist_path')) {
         ];
 
         $path = base_path(
-            config('l5-swagger.paths.swagger_ui_assets_path', 'vendor/swagger-api/swagger-ui/dist/')
+            config('l5-swagger.documentations.'.$documentation.'.paths.swagger_ui_assets_path', 'vendor/swagger-api/swagger-ui/dist/')
         );
 
         if (! $asset) {
@@ -52,14 +52,14 @@ if (! function_exists('l5_swagger_asset')) {
      * @return string
      * @throws \L5Swagger\Exceptions\L5SwaggerException
      */
-    function l5_swagger_asset($asset)
+    function l5_swagger_asset(string $documentation, $asset)
     {
-        $file = swagger_ui_dist_path($asset);
+        $file = swagger_ui_dist_path($documentation, $asset);
 
         if (! file_exists($file)) {
             throw new L5SwaggerException(sprintf('Requested L5 Swagger asset file (%s) does not exists', $asset));
         }
 
-        return route('l5-swagger.asset', $asset).'?v='.md5_file($file);
+        return route('l5-swagger.'.$documentation.'.asset', $asset).'?v='.md5_file($file);
     }
 }

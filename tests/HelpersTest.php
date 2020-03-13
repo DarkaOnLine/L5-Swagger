@@ -9,6 +9,6 @@ class HelpersTest extends TestCase
     {
         $this->expectException(\L5Swagger\Exceptions\L5SwaggerException::class);
 
-        l5_swagger_asset('asdasd');
+        l5_swagger_asset('default', 'asdasd');
     }
 }

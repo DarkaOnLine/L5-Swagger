@@ -8,10 +8,12 @@ use L5Swagger\Exceptions\L5SwaggerException;
 
 class SwaggerAssetController extends BaseController
 {
-    public function index($asset)
+    public function index(\Illuminate\Http\Request $request, $asset)
     {
+        $documentation = $request->offsetGet('documentation');
+
         try {
-            $path = swagger_ui_dist_path($asset);
+            $path = swagger_ui_dist_path($documentation, $asset);
 
             return (new Response(
                 file_get_contents($path), 200, [

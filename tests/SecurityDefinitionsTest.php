@@ -12,7 +12,7 @@ class SecurityDefinitionsTest extends TestCase
         }
         $this->setAnnotationsPath();
 
-        $cfg = config('l5-swagger');
+        $cfg = config('l5-swagger.documentations.default');
         $security = [
             'new_api_key_securitye' => [
                 'type' => 'apiKey',
@@ -22,13 +22,18 @@ class SecurityDefinitionsTest extends TestCase
         ];
         $cfg['security'] = $security;
         $cfg['swagger_version'] = '2.0';
-        config(['l5-swagger' => $cfg]);
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => [
+                'default' => $cfg,
+            ],
+        ]]);
 
         $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
-        $this->get(route('l5-swagger.docs'))
+        $this->get(route('l5-swagger.default.docs'))
              ->assertSee('new_api_key_securitye')
              ->assertJsonFragment($security)
              ->isOk();
@@ -42,7 +47,7 @@ class SecurityDefinitionsTest extends TestCase
         }
         $this->setAnnotationsPath();
 
-        $cfg = config('l5-swagger');
+        $cfg = config('l5-swagger.documentations.default');
         $security = [
             'new_api_key_securitye' => [
                 'type' => 'apiKey',
@@ -52,13 +57,18 @@ class SecurityDefinitionsTest extends TestCase
         ];
         $cfg['security'] = $security;
         $cfg['swagger_version'] = '3.0';
-        config(['l5-swagger' => $cfg]);
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => [
+                'default' => $cfg,
+            ],
+        ]]);
 
         $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
-        $this->get(route('l5-swagger.docs'))
+        $this->get(route('l5-swagger.default.docs'))
              ->assertSee('new_api_key_securitye')
              ->assertJsonFragment($security)
              ->isOk();

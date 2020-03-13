@@ -59,26 +59,28 @@ class Generator
      */
     protected $swaggerVersion;
 
+    /**
+     * @var SecurityDefinitions
+     */
+    protected $security;
+
     public function __construct(
-        $annotationsDir,
-        string $docDir,
-        string $docsFile,
-        string $yamlDocsFile,
-        array $excludedDirs,
+        array $paths,
         array $constants,
         bool $yamlCopyRequired,
-        ?string $basePath,
-        string $swaggerVersion
+        string $swaggerVersion,
+        SecurityDefinitions $security
     ) {
-        $this->annotationsDir = $annotationsDir;
-        $this->docDir = $docDir;
-        $this->docsFile = $docsFile;
-        $this->yamlDocsFile = $yamlDocsFile;
-        $this->excludedDirs = $excludedDirs;
+        $this->annotationsDir = $paths['annotations'];
+        $this->docDir = $paths['docs'];
+        $this->docsFile = $this->docDir.'/'.($paths['docs_json'] ?? 'api-docs.json');
+        $this->yamlDocsFile = $this->docDir.'/'.($paths['docs_yaml'] ?? 'api-docs.yaml');
+        $this->excludedDirs = $paths['excludes'];
+        $this->basePath = $paths['base'];
         $this->constants = $constants;
         $this->yamlCopyRequired = $yamlCopyRequired;
-        $this->basePath = $basePath;
         $this->swaggerVersion = $swaggerVersion;
+        $this->security = $security;
     }
 
     public function generateDocs(): void
@@ -193,8 +195,7 @@ class Generator
     {
         $this->swagger->saveAs($this->docsFile);
 
-        $security = new SecurityDefinitions();
-        $security->generate($this->docsFile);
+        $this->security->generate($this->docsFile);
 
         return $this;
     }

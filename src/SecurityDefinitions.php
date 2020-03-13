@@ -6,6 +6,15 @@ use Illuminate\Support\Collection;
 
 class SecurityDefinitions
 {
+    protected $swaggerVersion;
+    protected $securityConfig;
+
+    public function __construct(string $swaggerVersion, array $securityConfig = [])
+    {
+        $this->swaggerVersion = $swaggerVersion;
+        $this->securityConfig = $securityConfig;
+    }
+
     /**
      * Reads in the l5-swagger configuration and appends security settings to documentation.
      *
@@ -13,14 +22,14 @@ class SecurityDefinitions
      */
     public function generate($filename)
     {
-        $securityConfig = config('l5-swagger.security', []);
+        $securityConfig = $this->securityConfig;
 
         if (is_array($securityConfig) && ! empty($securityConfig)) {
             $documentation = collect(
                 json_decode(file_get_contents($filename))
             );
 
-            $openApi3 = version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
+            $openApi3 = version_compare($this->swaggerVersion, '3.0', '>=');
 
             $documentation = $openApi3 ?
                 $this->generateOpenApi($documentation, $securityConfig) :
@@ -41,7 +50,7 @@ class SecurityDefinitions
      *
      * @return Collection
      */
-    public function generateSwaggerApi(Collection $documentation, array $securityConfig)
+    protected function generateSwaggerApi(Collection $documentation, array $securityConfig)
     {
         $securityDefinitions = collect();
         if ($documentation->has('securityDefinitions')) {
@@ -65,7 +74,7 @@ class SecurityDefinitions
      *
      * @return Collection
      */
-    public function generateOpenApi(Collection $documentation, array $securityConfig)
+    protected function generateOpenApi(Collection $documentation, array $securityConfig)
     {
         $components = collect();
         if ($documentation->has('components')) {
