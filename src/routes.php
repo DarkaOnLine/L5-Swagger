@@ -11,10 +11,20 @@ Route::group(['namespace' => 'L5Swagger'], function (Router $router) {
             continue;
         }
 
-        Route::group([
-            'middleware' => \L5Swagger\Http\Middleware\Config::class,
-            'documentation' => $name,
-        ], function (Router $router) use ($name, $config) {
+        $groupOptions = $config['routes']['group_options'] ?? [];
+
+        if (! isset($groupOptions['middleware'])) {
+            $groupOptions['middleware'] = [];
+        }
+
+        if (is_string($groupOptions['middleware'])) {
+            $groupOptions['middleware'] = [$groupOptions['middleware']];
+        }
+
+        $groupOptions['l5-swagger.documentation'] = $name;
+        $groupOptions['middleware'][] = \L5Swagger\Http\Middleware\Config::class;
+
+        Route::group($groupOptions, function (Router $router) use ($name, $config) {
             if (isset($config['routes']['api'])) {
                 $router->get($config['routes']['api'], [
                     'as' => 'l5-swagger.'.$name.'.api',

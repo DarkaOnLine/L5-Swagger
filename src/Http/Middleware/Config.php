@@ -10,7 +10,7 @@ class Config
     {
         $actions = $request->route()->getAction();
 
-        $documentation = $actions['documentation'];
+        $documentation = $actions['l5-swagger.documentation'];
 
         $config = config('l5-swagger.documentations.'.$documentation);
 
