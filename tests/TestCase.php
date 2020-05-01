@@ -2,12 +2,23 @@
 
 namespace Tests;
 
+use L5Swagger\ConfigFactory;
 use L5Swagger\Generator;
 use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
+    /**
+     * @var ConfigFactory
+     */
+    protected $configFactory;
+
+    /**
+     * @var array
+     */
+    protected $defaultConfig;
+
     /**
      * @var Generator
      */
@@ -17,6 +28,7 @@ class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
+        $this->makeConfigFactory();
         $this->makeGenerator();
 
         $this->copyAssets();
@@ -24,6 +36,8 @@ class TestCase extends OrchestraTestCase
 
     public function tearDown(): void
     {
+        $config = $this->configFactory->documentationConfig();
+
         if (file_exists($this->jsonDocsFile())) {
             unlink($this->jsonDocsFile());
         }
@@ -32,8 +46,8 @@ class TestCase extends OrchestraTestCase
             unlink($this->yamlDocsFile());
         }
 
-        if (file_exists(config('l5-swagger.documentations.default.paths.docs'))) {
-            rmdir(config('l5-swagger.documentations.default.paths.docs'));
+        if (file_exists($config['paths']['docs'])) {
+            rmdir($config['paths']['docs']);
         }
 
         parent::tearDown();
@@ -65,13 +79,14 @@ class TestCase extends OrchestraTestCase
      */
     protected function jsonDocsFile(): string
     {
-        $docs = config('l5-swagger.documentations.default.paths.docs');
+        $config = $this->configFactory->documentationConfig();
+        $docs = $config['paths']['docs'];
 
         if (! is_dir($docs)) {
             mkdir($docs);
         }
 
-        return $docs.'/'.config('l5-swagger.documentations.default.paths.docs_json');
+        return $docs.DIRECTORY_SEPARATOR.$config['paths']['docs_json'];
     }
 
     /**
@@ -81,13 +96,14 @@ class TestCase extends OrchestraTestCase
      */
     protected function yamlDocsFile(): string
     {
-        $docs = config('l5-swagger.documentations.default.paths.docs');
+        $config = $this->configFactory->documentationConfig();
+        $docs = $config['paths']['docs'];
 
         if (! is_dir($docs)) {
             mkdir($docs);
         }
 
-        return $docs.'/'.config('l5-swagger.documentations.default.paths.docs_yaml');
+        return $docs.DIRECTORY_SEPARATOR.$config['paths']['docs_yaml'];
     }
 
     /**
@@ -108,9 +124,18 @@ class TestCase extends OrchestraTestCase
             'documentations' => [
                 'default' => $cfg,
             ],
+            'defaults' => config('l5-swagger.defaults'),
         ]]);
 
         $this->makeGenerator();
+    }
+
+    /**
+     * Make Config Factory.
+     */
+    protected function makeConfigFactory(): void
+    {
+        $this->configFactory = $this->app->make(ConfigFactory::class);
     }
 
     /**
@@ -133,6 +158,7 @@ class TestCase extends OrchestraTestCase
             'documentations' => [
                 'default' => $cfg,
             ],
+            'defaults' => config('l5-swagger.defaults'),
         ]]);
     }
 

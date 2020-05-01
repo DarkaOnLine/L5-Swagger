@@ -45,9 +45,10 @@ class RoutesTest extends TestCase
     /** @test */
     public function userCanAccessDocumentationInterface(): void
     {
-        $jsonFile = config('l5-swagger.documentations.default.paths.docs_json', 'api-docs.json');
+        $config = $this->configFactory->documentationConfig();
+        $jsonFile = $config['paths']['docs_json'] ?? 'api-docs.json';
 
-        $this->get(config('l5-swagger.documentations.default.routes.api'))
+        $this->get($config['routes']['api'])
             ->assertSee(route('l5-swagger.default.docs', $jsonFile))
             ->assertSee(route('l5-swagger.default.oauth2_callback'))
             ->isOk();

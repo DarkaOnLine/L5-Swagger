@@ -7,6 +7,16 @@ use L5Swagger\Exceptions\L5SwaggerException;
 class GeneratorFactory
 {
     /**
+     * @var ConfigFactory
+     */
+    private $configFactory;
+
+    public function __construct(ConfigFactory $configFactory)
+    {
+        $this->configFactory = $configFactory;
+    }
+
+    /**
      * Make Generator Instance.
      *
      * @throws L5SwaggerException
@@ -15,7 +25,7 @@ class GeneratorFactory
      */
     public function make(string $documentation): Generator
     {
-        $config = $this->documentationConfig($documentation);
+        $config = $this->configFactory->documentationConfig($documentation);
 
         $paths = $config['paths'];
         $constants = $config['constants'] ?: [];
@@ -29,23 +39,5 @@ class GeneratorFactory
             $yamlCopyRequired,
             $security
         );
-    }
-
-    /**
-     * Get documentation config.
-     *
-     * @throws L5SwaggerException
-     *
-     * @return array
-     */
-    protected function documentationConfig(string $documentation): array
-    {
-        $documentations = config('l5-swagger.documentations');
-
-        if (! isset($documentations[$documentation])) {
-            throw new L5SwaggerException('Documentation config not found');
-        }
-
-        return $documentations[$documentation];
     }
 }

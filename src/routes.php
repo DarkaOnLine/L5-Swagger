@@ -2,11 +2,16 @@
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
+use L5Swagger\ConfigFactory;
 
 Route::group(['namespace' => 'L5Swagger'], function (Router $router) {
-    $documentations = config('l5-swagger.documentations', false);
+    $configFactory = resolve(ConfigFactory::class);
 
-    foreach ($documentations as $name => $config) {
+    $documentations = config('l5-swagger.documentations', []);
+
+    foreach (array_keys($documentations) as $name) {
+        $config = $configFactory->documentationConfig($name);
+
         if (! isset($config['routes'])) {
             continue;
         }

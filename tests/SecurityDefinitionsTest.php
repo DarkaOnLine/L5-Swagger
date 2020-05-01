@@ -23,6 +23,7 @@ class SecurityDefinitionsTest extends TestCase
             'documentations' => [
                 'default' => $cfg,
             ],
+            'defaults' => config('l5-swagger.defaults'),
         ]]);
 
         $this->generator->generateDocs();

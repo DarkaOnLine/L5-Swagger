@@ -67,8 +67,8 @@ class Generator
     ) {
         $this->annotationsDir = $paths['annotations'];
         $this->docDir = $paths['docs'];
-        $this->docsFile = $this->docDir.'/'.($paths['docs_json'] ?? 'api-docs.json');
-        $this->yamlDocsFile = $this->docDir.'/'.($paths['docs_yaml'] ?? 'api-docs.yaml');
+        $this->docsFile = $this->docDir.DIRECTORY_SEPARATOR.($paths['docs_json'] ?? 'api-docs.json');
+        $this->yamlDocsFile = $this->docDir.DIRECTORY_SEPARATOR.($paths['docs_yaml'] ?? 'api-docs.yaml');
         $this->excludedDirs = $paths['excludes'];
         $this->basePath = $paths['base'];
         $this->constants = $constants;

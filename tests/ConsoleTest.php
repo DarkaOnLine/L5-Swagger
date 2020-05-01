@@ -26,7 +26,9 @@ class ConsoleTest extends TestCase
     {
         Artisan::call('vendor:publish', ['--provider' => 'L5Swagger\L5SwaggerServiceProvider']);
 
+        $config = $this->configFactory->documentationConfig();
+
         $this->assertTrue(file_exists(config_path('l5-swagger.php')));
-        $this->assertTrue(file_exists(config('l5-swagger.documentations.default.paths.views').'/index.blade.php'));
+        $this->assertTrue(file_exists($config['paths']['views'].'/index.blade.php'));
     }
 }

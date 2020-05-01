@@ -23,11 +23,9 @@ class L5SwaggerServiceProvider extends ServiceProvider
             $configPath => config_path('l5-swagger.php'),
         ], 'config');
 
-        $default = config('l5-swagger.default');
-
         //Publish views
         $this->publishes([
-            __DIR__.'/../resources/views' => config('l5-swagger.documentations.'.$default.'.paths.views'),
+            __DIR__.'/../resources/views' => config('l5-swagger.defaults.paths.views'),
         ], 'views');
 
         //Include routes

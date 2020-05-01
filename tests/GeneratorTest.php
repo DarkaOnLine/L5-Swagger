@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Support\Facades\Request;
 use L5Swagger\Exceptions\L5SwaggerException;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
@@ -13,15 +14,18 @@ class GeneratorTest extends TestCase
     {
         $this->setAnnotationsPath();
 
-        mkdir(config('l5-swagger.documentations.default.paths.docs'), 0555);
-        chmod(config('l5-swagger.documentations.default.paths.docs'), 0555);
+        $config = $this->configFactory->documentationConfig();
+        $docs = $config['paths']['docs'];
+
+        mkdir($docs, 0555);
+        chmod($docs, 0555);
 
         $this->expectException(L5SwaggerException::class);
         $this->expectExceptionMessage('Documentation storage directory is not writable');
 
         $this->generator->generateDocs();
 
-        chmod(config('l5-swagger.documentations.default.paths.docs'), 0777);
+        chmod($docs, 0777);
     }
 
     /** @test */
@@ -39,7 +43,8 @@ class GeneratorTest extends TestCase
             ->assertSee('my-default-host.com')
             ->assertStatus(200);
 
-        $jsonFile = config('l5-swagger.documentations.default.paths.docs_yaml');
+        $config = $this->configFactory->documentationConfig();
+        $jsonFile = $config['paths']['docs_yaml'];
         $this->get(route('l5-swagger.default.docs', ['jsonFile' => $jsonFile]))
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
@@ -58,6 +63,7 @@ class GeneratorTest extends TestCase
             'documentations' => [
                 'default' => $cfg,
             ],
+            'defaults' => config('l5-swagger.defaults'),
         ]]);
 
         $this->generator->generateDocs();
@@ -70,7 +76,8 @@ class GeneratorTest extends TestCase
             ->assertDontSee('basePath')
             ->assertStatus(200);
 
-        $jsonFile = config('l5-swagger.documentations.default.paths.docs_yaml');
+        $config = $this->configFactory->documentationConfig();
+        $jsonFile = $config['paths']['docs_yaml'];
         $this->get(route('l5-swagger.default.docs', ['jsonFile' => $jsonFile]))
             ->assertSee('https://test-server.url')
             ->assertSee('https://projects.dev/api/v1')
@@ -91,12 +98,13 @@ class GeneratorTest extends TestCase
             'documentations' => [
                 'default' => $cfg,
             ],
+            'defaults' => config('l5-swagger.defaults'),
         ]]);
 
         $this->get(route('l5-swagger.default.api'))
             ->assertStatus(200);
 
-        $this->assertEquals(\Request::getTrustedProxies()[0], $proxy);
+        $this->assertEquals(Request::getTrustedProxies()[0], $proxy);
 
         $this->get(route('l5-swagger.default.docs'))
             ->assertStatus(200);
@@ -117,13 +125,15 @@ class GeneratorTest extends TestCase
             'documentations' => [
                 'default' => $cfg,
             ],
+            'defaults' => config('l5-swagger.defaults'),
         ]]);
 
         $this->get(route('l5-swagger.default.api'))
             ->assertSee('validator-url.dev')
             ->assertStatus(200);
 
-        $jsonFile = config('l5-swagger.documentations.default.paths.docs_yaml');
+        $config = $this->configFactory->documentationConfig();
+        $jsonFile = $config['paths']['docs_yaml'];
         $this->get(route('l5-swagger.default.api', ['jsonFile' => $jsonFile]))
             ->assertSee('validator-url.dev')
             ->assertStatus(200);
