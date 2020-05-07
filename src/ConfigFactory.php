@@ -26,9 +26,7 @@ class ConfigFactory
             throw new L5SwaggerException('Documentation config not found');
         }
 
-        $config = $this->mergeConfig($defaults, $documentations[$documentation]);
-
-        return $config;
+        return $this->mergeConfig($defaults, $documentations[$documentation]);
     }
 
     private function mergeConfig(array $defaults, array $config): array
