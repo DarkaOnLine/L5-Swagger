@@ -47,7 +47,9 @@ class SecurityDefinitionsTest extends TestCase
 
         $this->get(route('l5-swagger.default.docs'))
              ->assertSee('new_api_key_securitye')
+             ->assertSee('oauth2')  // From annotations
              ->assertSee('read:projects')
+             ->assertSee('read:oauth2') // From annotations
              ->assertJsonFragment($securitySchemes)
              ->isOk();
     }

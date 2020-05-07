@@ -46,6 +46,15 @@
  */
 
 /**
+ * @OA\OpenApi(
+ *   security={
+ *     {
+ *       "oauth2": {"read:oauth2"},
+ *     }
+ *   }
+ * )
+
+/**
  * @OA\Tag(
  *     name="project",
  *     description="Everything about your Projects",
