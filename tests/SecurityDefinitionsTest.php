@@ -16,14 +16,23 @@ class SecurityDefinitionsTest extends TestCase
         $this->setAnnotationsPath();
 
         $cfg = config('l5-swagger.documentations.default');
-        $security = [
+
+        $securitySchemes = [
             'new_api_key_securitye' => [
                 'type' => 'apiKey',
                 'name' => 'api_key_name',
                 'in' => 'query',
             ],
         ];
-        $cfg['security'] = $security;
+        $cfg['securityDefinitions']['securitySchemes'] = $securitySchemes;
+
+        $security = [
+            'new_api_key_securitye' => [
+                'read:projects',
+            ],
+        ];
+        $cfg['securityDefinitions']['security'] = $security;
+
         config(['l5-swagger' => [
             'default' => 'default',
             'documentations' => [
@@ -38,7 +47,8 @@ class SecurityDefinitionsTest extends TestCase
 
         $this->get(route('l5-swagger.default.docs'))
              ->assertSee('new_api_key_securitye')
-             ->assertJsonFragment($security)
+             ->assertSee('read:projects')
+             ->assertJsonFragment($securitySchemes)
              ->isOk();
     }
 }

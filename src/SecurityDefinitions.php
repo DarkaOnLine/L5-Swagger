@@ -9,14 +9,21 @@ class SecurityDefinitions
     /**
      * @var array
      */
+    protected $securitySchemesConfig;
+
+    /**
+     * @var array
+     */
     protected $securityConfig;
 
     /**
      * SecurityDefinitions constructor.
+     * @param array $securitySchemesConfig
      * @param array $securityConfig
      */
-    public function __construct(array $securityConfig = [])
+    public function __construct(array $securitySchemesConfig = [], array $securityConfig = [])
     {
+        $this->securitySchemesConfig = $securitySchemesConfig;
         $this->securityConfig = $securityConfig;
     }
 
@@ -27,31 +34,33 @@ class SecurityDefinitions
      */
     public function generate($filename)
     {
-        $securityConfig = $this->securityConfig;
+        $documentation = collect(
+            json_decode(file_get_contents($filename))
+        );
 
-        if (is_array($securityConfig) && ! empty($securityConfig)) {
-            $documentation = collect(
-                json_decode(file_get_contents($filename))
-            );
-
-            $documentation = $this->generateOpenApi($documentation, $securityConfig);
-
-            file_put_contents(
-                $filename,
-                $documentation->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
-            );
+        if (is_array($this->securitySchemesConfig) && ! empty($this->securitySchemesConfig)) {
+            $documentation = $this->injectSecuritySchemes($documentation, $this->securitySchemesConfig);
         }
+
+        if (is_array($this->securityConfig) && ! empty($this->securityConfig)) {
+            $documentation = $this->injectSecurity($documentation, $this->securityConfig);
+        }
+
+        file_put_contents(
+            $filename,
+            $documentation->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+        );
     }
 
     /**
-     * Inject security settings for OpenApi 3.
+     * Inject security schemes settings.
      *
      * @param Collection $documentation The parse json
-     * @param array $securityConfig The security settings from l5-swagger
+     * @param array $securitySchemesConfig The securityScheme settings from l5-swagger
      *
      * @return Collection
      */
-    protected function generateOpenApi(Collection $documentation, array $securityConfig)
+    protected function injectSecuritySchemes(Collection $documentation, array $securitySchemesConfig)
     {
         $components = collect();
         if ($documentation->has('components')) {
@@ -63,13 +72,37 @@ class SecurityDefinitions
             $securitySchemes = collect($components->get('securitySchemes'));
         }
 
-        foreach ($securityConfig as $key => $cfg) {
+        foreach ($securitySchemesConfig as $key => $cfg) {
             $securitySchemes->offsetSet($key, self::arrayToObject($cfg));
         }
 
         $components->offsetSet('securitySchemes', $securitySchemes);
 
         $documentation->offsetSet('components', $components);
+
+        return $documentation;
+    }
+
+    /**
+     * Inject security settings.
+     *
+     * @param Collection $documentation The parse json
+     * @param array $securityConfig The security settings from l5-swagger
+     *
+     * @return Collection
+     */
+    protected function injectSecurity(Collection $documentation, array $securityConfig)
+    {
+        $security = collect();
+        if ($documentation->has('security')) {
+            $security = collect($documentation->get('security'));
+        }
+
+        foreach ($securityConfig as $key => $cfg) {
+            $security->offsetSet($key, self::arrayToObject($cfg));
+        }
+
+        $documentation->offsetSet('security', $security);
 
         return $documentation;
     }
