@@ -17,8 +17,7 @@ class SecurityDefinitionsTest extends TestCase
     public function canGenerateApiJsonFileWithSecurityDefinition(
         array $securitySchemes,
         array $security
-    ): void
-    {
+    ): void {
         $this->setAnnotationsPath();
 
         $config = config('l5-swagger.documentations.default');
@@ -69,7 +68,7 @@ class SecurityDefinitionsTest extends TestCase
 
         yield 'default config' => [
             'securitySchemes' => $securitySchemes,
-            'security' => $security
+            'security' => $security,
         ];
     }
 }
