@@ -34,8 +34,7 @@ class ConfigFactory
         $merged = $defaults;
 
         foreach ($config as $key => &$value) {
-            if (
-                isset($defaults[$key])
+            if (isset($defaults[$key])
                 && $this->isAssociativeArray($defaults[$key])
                 && $this->isAssociativeArray($value)
             ) {

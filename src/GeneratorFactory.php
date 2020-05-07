@@ -31,10 +31,10 @@ class GeneratorFactory
         $constants = $config['constants'] ?? [];
         $yamlCopyRequired = $config['generate_yaml_copy'] ?? false;
 
-        $securitySchemesConfig = $config['securityDefinitions']['securitySchemes'] ?? [];
-        $securityConfig = $config['securityDefinitions']['security'] ?? [];
+        $secSchemesConfig = $config['securityDefinitions']['securitySchemes'] ?? [];
+        $secConfig = $config['securityDefinitions']['security'] ?? [];
 
-        $security = new SecurityDefinitions($securitySchemesConfig, $securityConfig);
+        $security = new SecurityDefinitions($secSchemesConfig, $secConfig);
 
         return new Generator(
             $paths,

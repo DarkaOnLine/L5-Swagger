@@ -56,11 +56,11 @@ class SecurityDefinitions
      * Inject security schemes settings.
      *
      * @param Collection $documentation The parse json
-     * @param array $securitySchemesConfig The securityScheme settings from l5-swagger
+     * @param array $config The securityScheme settings from l5-swagger
      *
      * @return Collection
      */
-    protected function injectSecuritySchemes(Collection $documentation, array $securitySchemesConfig)
+    protected function injectSecuritySchemes(Collection $documentation, array $config)
     {
         $components = collect();
         if ($documentation->has('components')) {
@@ -72,7 +72,7 @@ class SecurityDefinitions
             $securitySchemes = collect($components->get('securitySchemes'));
         }
 
-        foreach ($securitySchemesConfig as $key => $cfg) {
+        foreach ($config as $key => $cfg) {
             $securitySchemes->offsetSet($key, self::arrayToObject($cfg));
         }
 
@@ -87,18 +87,18 @@ class SecurityDefinitions
      * Inject security settings.
      *
      * @param Collection $documentation The parse json
-     * @param array $securityConfig The security settings from l5-swagger
+     * @param array $config The security settings from l5-swagger
      *
      * @return Collection
      */
-    protected function injectSecurity(Collection $documentation, array $securityConfig)
+    protected function injectSecurity(Collection $documentation, array $config)
     {
         $security = collect();
         if ($documentation->has('security')) {
             $security = collect($documentation->get('security'));
         }
 
-        foreach ($securityConfig as $key => $cfg) {
+        foreach ($config as $key => $cfg) {
             $security->offsetSet($key, self::arrayToObject($cfg));
         }
 

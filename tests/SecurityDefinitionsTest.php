@@ -8,35 +8,28 @@ class SecurityDefinitionsTest extends TestCase
 {
     /**
      * @test
+     * @dataProvider provideConfigAndSchemes
      *
+     * @param array $securitySchemes
+     * @param array $security
      * @throws L5SwaggerException
      */
-    public function canGenerateApiJsonFileWithSecurityDefinitionOpenApi3(): void
+    public function canGenerateApiJsonFileWithSecurityDefinition(
+        array $securitySchemes,
+        array $security
+    ): void
     {
         $this->setAnnotationsPath();
 
-        $cfg = config('l5-swagger.documentations.default');
+        $config = config('l5-swagger.documentations.default');
 
-        $securitySchemes = [
-            'new_api_key_securitye' => [
-                'type' => 'apiKey',
-                'name' => 'api_key_name',
-                'in' => 'query',
-            ],
-        ];
-        $cfg['securityDefinitions']['securitySchemes'] = $securitySchemes;
-
-        $security = [
-            'new_api_key_securitye' => [
-                'read:projects',
-            ],
-        ];
-        $cfg['securityDefinitions']['security'] = $security;
+        $config['securityDefinitions']['securitySchemes'] = $securitySchemes;
+        $config['securityDefinitions']['security'] = $security;
 
         config(['l5-swagger' => [
             'default' => 'default',
             'documentations' => [
-                'default' => $cfg,
+                'default' => $config,
             ],
             'defaults' => config('l5-swagger.defaults'),
         ]]);
@@ -51,6 +44,32 @@ class SecurityDefinitionsTest extends TestCase
              ->assertSee('read:projects')
              ->assertSee('read:oauth2') // From annotations
              ->assertJsonFragment($securitySchemes)
+             ->assertJsonFragment($security)
              ->isOk();
+    }
+
+    /**
+     * @return iterable
+     */
+    public function provideConfigAndSchemes(): iterable
+    {
+        $securitySchemes = [
+            'new_api_key_securitye' => [
+                'type' => 'apiKey',
+                'name' => 'api_key_name',
+                'in' => 'query',
+            ],
+        ];
+
+        $security = [
+            'new_api_key_securitye' => [
+                'read:projects',
+            ],
+        ];
+
+        yield 'default config' => [
+            'securitySchemes' => $securitySchemes,
+            'security' => $security
+        ];
     }
 }
