@@ -18,7 +18,8 @@
     "laravel/framework": "^7.0",
     "zircote/swagger-php": "3.*",
     "swagger-api/swagger-ui": "^3.0",
-    "symfony/yaml": "^5.0"
+    "symfony/yaml": "^5.0",
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "8.*",

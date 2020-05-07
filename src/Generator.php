@@ -2,10 +2,14 @@
 
 namespace L5Swagger;
 
+use Exception;
 use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
+use OpenApi\Annotations\OpenApi;
+use OpenApi\Annotations\Server;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use Symfony\Component\Yaml\Yaml;
+use function OpenApi\scan as openApiScan;
 
 class Generator
 {
@@ -40,9 +44,9 @@ class Generator
     protected $constants;
 
     /**
-     * @var \OpenApi\Annotations\OpenApi
+     * @var OpenApi
      */
-    protected $swagger;
+    protected $openApi;
 
     /**
      * @var bool
@@ -59,6 +63,13 @@ class Generator
      */
     protected $security;
 
+    /**
+     * Generator constructor.
+     * @param array $paths
+     * @param array $constants
+     * @param bool $yamlCopyRequired
+     * @param SecurityDefinitions $security
+     */
     public function __construct(
         array $paths,
         array $constants,
@@ -76,6 +87,9 @@ class Generator
         $this->security = $security;
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function generateDocs(): void
     {
         $this->prepareDirectory()
@@ -136,7 +150,7 @@ class Generator
      */
     protected function scanFilesForDocumentation(): self
     {
-        $this->swagger = \OpenApi\scan(
+        $this->openApi = openApiScan(
             $this->annotationsDir,
             ['exclude' => $this->excludedDirs]
         );
@@ -152,11 +166,11 @@ class Generator
     protected function populateServers(): self
     {
         if ($this->basePath !== null) {
-            if (! is_array($this->swagger->servers)) {
-                $this->swagger->servers = [];
+            if (! is_array($this->openApi->servers)) {
+                $this->openApi->servers = [];
             }
 
-            $this->swagger->servers[] = new \OpenApi\Annotations\Server(['url' => $this->basePath]);
+            $this->openApi->servers[] = new Server(['url' => $this->basePath]);
         }
 
         return $this;
@@ -165,13 +179,13 @@ class Generator
     /**
      * Save documentation as json file.
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return Generator
      */
     protected function saveJson(): self
     {
-        $this->swagger->saveAs($this->docsFile);
+        $this->openApi->saveAs($this->docsFile);
 
         $this->security->generate($this->docsFile);
 
@@ -184,14 +198,16 @@ class Generator
     protected function makeYamlCopy(): void
     {
         if ($this->yamlCopyRequired) {
+            $yamlDocs = (new YamlDumper(2))->dump(
+                json_decode(file_get_contents($this->docsFile), true),
+                20,
+                0,
+                Yaml::DUMP_OBJECT_AS_MAP ^ Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE
+            );
+
             file_put_contents(
                 $this->yamlDocsFile,
-                (new YamlDumper(2))->dump(
-                    json_decode(file_get_contents($this->docsFile), true),
-                    20,
-                    0,
-                    Yaml::DUMP_OBJECT_AS_MAP ^ Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE
-                )
+                $yamlDocs
             );
         }
     }
