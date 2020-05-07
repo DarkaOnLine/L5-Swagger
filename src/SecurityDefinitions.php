@@ -6,8 +6,15 @@ use Illuminate\Support\Collection;
 
 class SecurityDefinitions
 {
+    /**
+     * @var array
+     */
     protected $securityConfig;
 
+    /**
+     * SecurityDefinitions constructor.
+     * @param array $securityConfig
+     */
     public function __construct(array $securityConfig = [])
     {
         $this->securityConfig = $securityConfig;
