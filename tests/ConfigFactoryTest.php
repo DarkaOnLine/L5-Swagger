@@ -19,8 +19,8 @@ class ConfigFactoryTest extends TestCase
         $this->expectExceptionMessage('Documentation config not found');
 
         $this->configFactory->documentationConfig();
-
     }
+
     /**
      * @test
      * @dataProvider configDataProvider

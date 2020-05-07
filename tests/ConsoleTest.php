@@ -31,10 +31,10 @@ class ConsoleTest extends TestCase
     public function provideGenerateCommands()
     {
         yield 'default' => [
-            'artisanCommand' => 'l5-swagger:generate'
+            'artisanCommand' => 'l5-swagger:generate',
         ];
         yield 'all' => [
-            'artisanCommand' => 'l5-swagger:generate --all'
+            'artisanCommand' => 'l5-swagger:generate --all',
         ];
     }
 

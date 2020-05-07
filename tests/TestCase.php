@@ -52,7 +52,8 @@ class TestCase extends OrchestraTestCase
             if (file_exists($config['paths']['docs'])) {
                 rmdir($config['paths']['docs']);
             }
-        } catch (L5SwaggerException $e) {}
+        } catch (L5SwaggerException $e) {
+        }
 
         parent::tearDown();
     }
