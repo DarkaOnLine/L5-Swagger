@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use L5Swagger\Exceptions\L5SwaggerException;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;

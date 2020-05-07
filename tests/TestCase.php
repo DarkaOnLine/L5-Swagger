@@ -2,7 +2,9 @@
 
 namespace Tests;
 
+use Illuminate\Foundation\Application;
 use L5Swagger\ConfigFactory;
+use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
@@ -36,25 +38,27 @@ class TestCase extends OrchestraTestCase
 
     public function tearDown(): void
     {
-        $config = $this->configFactory->documentationConfig();
+        try {
+            $config = $this->configFactory->documentationConfig();
 
-        if (file_exists($this->jsonDocsFile())) {
-            unlink($this->jsonDocsFile());
-        }
+            if (file_exists($this->jsonDocsFile())) {
+                unlink($this->jsonDocsFile());
+            }
 
-        if (file_exists($this->yamlDocsFile())) {
-            unlink($this->yamlDocsFile());
-        }
+            if (file_exists($this->yamlDocsFile())) {
+                unlink($this->yamlDocsFile());
+            }
 
-        if (file_exists($config['paths']['docs'])) {
-            rmdir($config['paths']['docs']);
-        }
+            if (file_exists($config['paths']['docs'])) {
+                rmdir($config['paths']['docs']);
+            }
+        } catch (L5SwaggerException $e) {}
 
         parent::tearDown();
     }
 
     /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param Application $app
      * @return array
      */
     protected function getPackageProviders($app): array
@@ -66,6 +70,8 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Create json docs file.
+     *
+     * @throws L5SwaggerException
      */
     protected function crateJsonDocumentationFile(): void
     {
@@ -76,6 +82,7 @@ class TestCase extends OrchestraTestCase
      * Get path for json docs file.
      *
      * @return string
+     * @throws L5SwaggerException
      */
     protected function jsonDocsFile(): string
     {
@@ -93,6 +100,8 @@ class TestCase extends OrchestraTestCase
      * Get path for yaml docs file.
      *
      * @return string
+     *
+     * @throws L5SwaggerException
      */
     protected function yamlDocsFile(): string
     {

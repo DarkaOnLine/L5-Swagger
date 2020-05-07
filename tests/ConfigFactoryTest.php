@@ -2,13 +2,33 @@
 
 namespace Tests;
 
+use L5Swagger\Exceptions\L5SwaggerException;
+
 class ConfigFactoryTest extends TestCase
 {
     /**
      * @test
-     * @dataProvider configDataProvider
      */
-    public function canMergeConfigurationDeep($data, $assert): void
+    public function ifThrowsExceptionIfDocumentationConfigNotFound(): void
+    {
+        $config = config('l5-swagger');
+        unset($config['documentations']['default']);
+        config(['l5-swagger' => $config]);
+
+        $this->expectException(\L5Swagger\Exceptions\L5SwaggerException::class);
+        $this->expectExceptionMessage('Documentation config not found');
+
+        $this->configFactory->documentationConfig();
+
+    }
+    /**
+     * @test
+     * @dataProvider configDataProvider
+     * @param array $data
+     * @param array $assert
+     * @throws L5SwaggerException
+     */
+    public function canMergeConfigurationDeep(array $data, array $assert): void
     {
         config(['l5-swagger' => array_merge(
             $data,
@@ -24,7 +44,7 @@ class ConfigFactoryTest extends TestCase
                     ],
                     'proxy' => false,
                 ],
-            ],
+            ]
         )]);
 
         $config = $this->configFactory->documentationConfig();

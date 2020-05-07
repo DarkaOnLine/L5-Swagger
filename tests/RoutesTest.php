@@ -42,7 +42,11 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
-    /** @test */
+    /**
+     * @test
+     *
+     * @throws L5SwaggerException
+     */
     public function userCanAccessDocumentationInterface(): void
     {
         $config = $this->configFactory->documentationConfig();
@@ -54,7 +58,11 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
-    /** @test */
+    /**
+     * @test
+     *
+     * @throws L5SwaggerException
+     */
     public function itCanServeAssets(): void
     {
         $this->get(l5_swagger_asset('default', 'swagger-ui.css'))

@@ -2,9 +2,15 @@
 
 namespace Tests;
 
+use L5Swagger\Exceptions\L5SwaggerException;
+
 class SecurityDefinitionsTest extends TestCase
 {
-    /** @test */
+    /**
+     * @test
+     *
+     * @throws L5SwaggerException
+     */
     public function canGenerateApiJsonFileWithSecurityDefinitionOpenApi3(): void
     {
         $this->setAnnotationsPath();
