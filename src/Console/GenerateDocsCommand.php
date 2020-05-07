@@ -29,6 +29,8 @@ class GenerateDocsCommand extends Command
     /**
      * Execute the console command.
      *
+     * @param GeneratorFactory $generatorFactory
+     *
      * @return void
      */
     public function handle(GeneratorFactory $generatorFactory)
