@@ -3,6 +3,7 @@
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use L5Swagger\ConfigFactory;
+use L5Swagger\Http\Middleware\Config as L5SwaggerConfig;
 
 Route::group(['namespace' => 'L5Swagger'], function (Router $router) {
     $configFactory = resolve(ConfigFactory::class);
@@ -27,7 +28,7 @@ Route::group(['namespace' => 'L5Swagger'], function (Router $router) {
         }
 
         $groupOptions['l5-swagger.documentation'] = $name;
-        $groupOptions['middleware'][] = \L5Swagger\Http\Middleware\Config::class;
+        $groupOptions['middleware'][] = L5SwaggerConfig::class;
 
         Route::group($groupOptions, function (Router $router) use ($name, $config) {
             if (isset($config['routes']['api'])) {
