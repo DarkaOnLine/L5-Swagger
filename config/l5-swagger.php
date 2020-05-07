@@ -189,7 +189,7 @@ return [
          * Uncomment to add constants which can be used in annotations
          */
         // 'constants' => [
-        src/Generator.php// 'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
+        // 'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://my-default-host.com'),
         // ],
     ],
 ];
