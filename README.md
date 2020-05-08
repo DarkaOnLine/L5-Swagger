@@ -16,7 +16,7 @@ Installation
 
  Laravel          | Swagger UI| OpenAPI Spec compatibility | L5-Swagger
 :-----------------|:----------|:---------------------------|:----------
- 7.0.x            | 3         | 3.0                        | `composer require "darkaonline/l5-swagger"`<br><br>Multi API documentation support<br><br>[See changes](#changes-in-80)<br><br>[See migration instructions](#migrate-from-<70-to-80)
+ 7.0.x            | 3         | 3.0                        | `composer require "darkaonline/l5-swagger"`<br><br>Multi API documentation support<br><br>[See changes](#changes-in-80)<br><br>[See migration instructions](#migrate-from-70-to-80)
  7.0.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger:7.*"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
  6.0.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger:6.*"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
  5.8.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger:5.8.*"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
