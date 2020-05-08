@@ -2,8 +2,12 @@
 
 namespace L5Swagger;
 
+use Exception;
 use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
+use OpenApi\Annotations\OpenApi;
+use OpenApi\Annotations\Server;
+use function OpenApi\scan as openApiScan;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use Symfony\Component\Yaml\Yaml;
 
@@ -40,9 +44,9 @@ class Generator
     protected $constants;
 
     /**
-     * @var \OpenApi\Annotations\OpenApi
+     * @var OpenApi
      */
-    protected $swagger;
+    protected $openApi;
 
     /**
      * @var bool
@@ -55,32 +59,37 @@ class Generator
     protected $basePath;
 
     /**
-     * @var string
+     * @var SecurityDefinitions
      */
-    protected $swaggerVersion;
+    protected $security;
 
+    /**
+     * Generator constructor.
+     * @param array $paths
+     * @param array $constants
+     * @param bool $yamlCopyRequired
+     * @param SecurityDefinitions $security
+     */
     public function __construct(
-        $annotationsDir,
-        string $docDir,
-        string $docsFile,
-        string $yamlDocsFile,
-        array $excludedDirs,
+        array $paths,
         array $constants,
         bool $yamlCopyRequired,
-        ?string $basePath,
-        string $swaggerVersion
+        SecurityDefinitions $security
     ) {
-        $this->annotationsDir = $annotationsDir;
-        $this->docDir = $docDir;
-        $this->docsFile = $docsFile;
-        $this->yamlDocsFile = $yamlDocsFile;
-        $this->excludedDirs = $excludedDirs;
+        $this->annotationsDir = $paths['annotations'];
+        $this->docDir = $paths['docs'];
+        $this->docsFile = $this->docDir.DIRECTORY_SEPARATOR.($paths['docs_json'] ?? 'api-docs.json');
+        $this->yamlDocsFile = $this->docDir.DIRECTORY_SEPARATOR.($paths['docs_yaml'] ?? 'api-docs.yaml');
+        $this->excludedDirs = $paths['excludes'];
+        $this->basePath = $paths['base'];
         $this->constants = $constants;
         $this->yamlCopyRequired = $yamlCopyRequired;
-        $this->basePath = $basePath;
-        $this->swaggerVersion = $swaggerVersion;
+        $this->security = $security;
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function generateDocs(): void
     {
         $this->prepareDirectory()
@@ -141,19 +150,10 @@ class Generator
      */
     protected function scanFilesForDocumentation(): self
     {
-        if ($this->isOpenApi()) {
-            $this->swagger = \OpenApi\scan(
-                $this->annotationsDir,
-                ['exclude' => $this->excludedDirs]
-            );
-        }
-
-        if (! $this->isOpenApi()) {
-            $this->swagger = \Swagger\scan(
-                $this->annotationsDir,
-                ['exclude' => $this->excludedDirs]
-            );
-        }
+        $this->openApi = openApiScan(
+            $this->annotationsDir,
+            ['exclude' => $this->excludedDirs]
+        );
 
         return $this;
     }
@@ -166,17 +166,11 @@ class Generator
     protected function populateServers(): self
     {
         if ($this->basePath !== null) {
-            if ($this->isOpenApi()) {
-                if (! is_array($this->swagger->servers)) {
-                    $this->swagger->servers = [];
-                }
-
-                $this->swagger->servers[] = new \OpenApi\Annotations\Server(['url' => $this->basePath]);
+            if (! is_array($this->openApi->servers)) {
+                $this->openApi->servers = [];
             }
 
-            if (! $this->isOpenApi()) {
-                $this->swagger->basePath = $this->basePath;
-            }
+            $this->openApi->servers[] = new Server(['url' => $this->basePath]);
         }
 
         return $this;
@@ -185,16 +179,15 @@ class Generator
     /**
      * Save documentation as json file.
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return Generator
      */
     protected function saveJson(): self
     {
-        $this->swagger->saveAs($this->docsFile);
+        $this->openApi->saveAs($this->docsFile);
 
-        $security = new SecurityDefinitions();
-        $security->generate($this->docsFile);
+        $this->security->generate($this->docsFile);
 
         return $this;
     }
@@ -205,25 +198,17 @@ class Generator
     protected function makeYamlCopy(): void
     {
         if ($this->yamlCopyRequired) {
+            $yamlDocs = (new YamlDumper(2))->dump(
+                json_decode(file_get_contents($this->docsFile), true),
+                20,
+                0,
+                Yaml::DUMP_OBJECT_AS_MAP ^ Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE
+            );
+
             file_put_contents(
                 $this->yamlDocsFile,
-                (new YamlDumper(2))->dump(
-                    json_decode(file_get_contents($this->docsFile), true),
-                    20,
-                    0,
-                    Yaml::DUMP_OBJECT_AS_MAP ^ Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE
-                )
+                $yamlDocs
             );
         }
-    }
-
-    /**
-     * Check which documentation version is used.
-     *
-     * @return bool
-     */
-    protected function isOpenApi(): bool
-    {
-        return version_compare($this->swaggerVersion, '3.0', '>=');
     }
 }

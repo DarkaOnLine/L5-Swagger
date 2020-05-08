@@ -2,48 +2,57 @@
 
 namespace L5Swagger\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Request as RequestFacade;
+use Illuminate\Support\Facades\Response as ResponseFacade;
 use L5Swagger\Exceptions\L5SwaggerException;
-use L5Swagger\Generator;
+use L5Swagger\GeneratorFactory;
 
 class SwaggerController extends BaseController
 {
     /**
-     * @var L5Swagger\Generator
+     * @var GeneratorFactory
      */
-    protected $generator;
+    protected $generatorFactory;
 
-    public function __construct(Generator $generator)
+    public function __construct(GeneratorFactory $generatorFactory)
     {
-        $this->generator = $generator;
+        $this->generatorFactory = $generatorFactory;
     }
 
     /**
      * Dump api-docs content endpoint. Supports dumping a json, or yaml file.
      *
+     * @param Request $request
      * @param string $file
      *
-     * @return \Response
+     * @return Response
+     * @throws L5SwaggerException
      */
-    public function docs(string $file = null)
+    public function docs(Request $request, string $file = null)
     {
+        $documentation = $request->offsetGet('documentation');
+        $config = $request->offsetGet('config');
+
         $extension = 'json';
-        $targetFile = config('l5-swagger.paths.docs_json', 'api-docs.json');
+        $targetFile = $config['paths']['docs_json'] ?? 'api-docs.json';
 
         if (! is_null($file)) {
             $targetFile = $file;
             $extension = explode('.', $file)[1];
         }
 
-        $filePath = config('l5-swagger.paths.docs').'/'.$targetFile;
+        $filePath = $config['paths']['docs'].'/'.$targetFile;
 
-        if (config('l5-swagger.generate_always') || ! File::exists($filePath)) {
+        if ($config['generate_always'] || ! File::exists($filePath)) {
+            $generator = $this->generatorFactory->make($documentation);
+
             try {
-                $this->generator->generateDocs();
+                $generator->generateDocs();
             } catch (\Exception $e) {
                 Log::error($e);
 
@@ -61,13 +70,13 @@ class SwaggerController extends BaseController
         $content = File::get($filePath);
 
         if ($extension === 'yaml') {
-            return Response::make($content, 200, [
+            return ResponseFacade::make($content, 200, [
                 'Content-Type' => 'application/yaml',
                 'Content-Disposition' => 'inline',
             ]);
         }
 
-        return Response::make($content, 200, [
+        return ResponseFacade::make($content, 200, [
             'Content-Type' => 'application/json',
         ]);
     }
@@ -75,40 +84,50 @@ class SwaggerController extends BaseController
     /**
      * Display Swagger API page.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     *
+     * @return Response
      */
-    public function api()
+    public function api(Request $request)
     {
-        if ($proxy = config('l5-swagger.proxy')) {
+        $documentation = $request->offsetGet('documentation');
+        $config = $request->offsetGet('config');
+
+        if ($proxy = $config['proxy']) {
             if (! is_array($proxy)) {
                 $proxy = [$proxy];
             }
-            \Illuminate\Http\Request::setTrustedProxies($proxy, \Illuminate\Http\Request::HEADER_X_FORWARDED_ALL);
+            Request::setTrustedProxies($proxy, Request::HEADER_X_FORWARDED_ALL);
         }
 
+        $urlToDocs = route('l5-swagger.'.$documentation.'.docs', $config['paths']['docs_json'] ?? 'api-docs.json');
+
         // Need the / at the end to avoid CORS errors on Homestead systems.
-        $response = Response::make(
+        return ResponseFacade::make(
             view('l5-swagger::index', [
-                'secure' => Request::secure(),
-                'urlToDocs' => route('l5-swagger.docs', config('l5-swagger.paths.docs_json', 'api-docs.json')),
-                'operationsSorter' => config('l5-swagger.operations_sort'),
-                'configUrl' => config('l5-swagger.additional_config_url'),
-                'validatorUrl' => config('l5-swagger.validator_url'),
+                'documentation' => $documentation,
+                'secure' => RequestFacade::secure(),
+                'urlToDocs' => $urlToDocs,
+                'operationsSorter' => $config['operations_sort'],
+                'configUrl' => $config['additional_config_url'],
+                'validatorUrl' => $config['validator_url'],
             ]),
             200
         );
-
-        return $response;
     }
 
     /**
      * Display Oauth2 callback pages.
      *
+     * @param Request $request
+     *
      * @return string
      * @throws L5SwaggerException
      */
-    public function oauth2Callback()
+    public function oauth2Callback(Request $request)
     {
-        return File::get(swagger_ui_dist_path('oauth2-redirect.html'));
+        $documentation = $request->offsetGet('documentation');
+
+        return File::get(swagger_ui_dist_path($documentation, 'oauth2-redirect.html'));
     }
 }

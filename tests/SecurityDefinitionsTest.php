@@ -2,65 +2,73 @@
 
 namespace Tests;
 
+use L5Swagger\Exceptions\L5SwaggerException;
+
 class SecurityDefinitionsTest extends TestCase
 {
-    /** @test */
-    public function canGenerateApiJsonFileWithSecurityDefinition(): void
-    {
-        if ($this->isOpenApi()) {
-            $this->markTestSkipped('only for openApi 2.0');
-        }
+    /**
+     * @test
+     * @dataProvider provideConfigAndSchemes
+     *
+     * @param array $securitySchemes
+     * @param array $security
+     * @throws L5SwaggerException
+     */
+    public function canGenerateApiJsonFileWithSecurityDefinition(
+        array $securitySchemes,
+        array $security
+    ): void {
         $this->setAnnotationsPath();
 
-        $cfg = config('l5-swagger');
-        $security = [
-            'new_api_key_securitye' => [
-                'type' => 'apiKey',
-                'name' => 'api_key_name',
-                'in' => 'query',
+        $config = config('l5-swagger.documentations.default');
+
+        $config['securityDefinitions']['securitySchemes'] = $securitySchemes;
+        $config['securityDefinitions']['security'] = $security;
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => [
+                'default' => $config,
             ],
-        ];
-        $cfg['security'] = $security;
-        $cfg['swagger_version'] = '2.0';
-        config(['l5-swagger' => $cfg]);
+            'defaults' => config('l5-swagger.defaults'),
+        ]]);
 
         $this->generator->generateDocs();
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
-        $this->get(route('l5-swagger.docs'))
+        $this->get(route('l5-swagger.default.docs'))
              ->assertSee('new_api_key_securitye')
+             ->assertSee('oauth2')  // From annotations
+             ->assertSee('read:projects')
+             ->assertSee('read:oauth2') // From annotations
+             ->assertJsonFragment($securitySchemes)
              ->assertJsonFragment($security)
              ->isOk();
     }
 
-    /** @test */
-    public function canGenerateApiJsonFileWithSecurityDefinitionOpenApi3(): void
+    /**
+     * @return iterable
+     */
+    public function provideConfigAndSchemes(): iterable
     {
-        if (! $this->isOpenApi()) {
-            $this->markTestSkipped('only for openApi 3.0');
-        }
-        $this->setAnnotationsPath();
-
-        $cfg = config('l5-swagger');
-        $security = [
+        $securitySchemes = [
             'new_api_key_securitye' => [
                 'type' => 'apiKey',
                 'name' => 'api_key_name',
                 'in' => 'query',
             ],
         ];
-        $cfg['security'] = $security;
-        $cfg['swagger_version'] = '3.0';
-        config(['l5-swagger' => $cfg]);
 
-        $this->generator->generateDocs();
+        $security = [
+            'new_api_key_securitye' => [
+                'read:projects',
+            ],
+        ];
 
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
-
-        $this->get(route('l5-swagger.docs'))
-             ->assertSee('new_api_key_securitye')
-             ->assertJsonFragment($security)
-             ->isOk();
+        yield 'default config' => [
+            'securitySchemes' => $securitySchemes,
+            'security' => $security,
+        ];
     }
 }

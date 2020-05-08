@@ -16,6 +16,7 @@ Installation
 
  Laravel          | Swagger UI| OpenAPI Spec compatibility | L5-Swagger
 :-----------------|:----------|:---------------------------|:----------
+ 7.0.x            | 3         | 3.0                        | `composer require "darkaonline/l5-swagger"`
  7.0.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
  6.0.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger:6.*"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
  5.8.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger:5.8.*"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
@@ -52,22 +53,6 @@ In order to generate the Swagger/OpenApi documentation for your API, Swagger off
 
 After the annotiations have been added you can run `php artisan l5-swagger:generate` to generate the documentation. Alternatively, you can set `L5_SWAGGER_GENERATE_ALWAYS` to `true` in your `.env` file so that your documentation will automatically be generated. Make sure your settings in `config/l5-swagger.php` are complete.
 
-I am still using Swagger @SWG annotation
-============
-If still using Swagger @SWG annotations in you project you should:
-- Explicitly require `swagger-php` version 2.* in your projects composer by running:
-```bash
-composer require 'zircote/swagger-php:2.*'
-```
-- Set environment variable `SWAGGER_VERSION` to **2.0** in your `.env` file:
-```
-SWAGGER_VERSION=2.0
-```
-or in your `config/l5-swagger.php`:
-```php
-'swagger_version' => env('SWAGGER_VERSION', '2.0'),
-```
-
 Using Swagger UI with Passport
 ============
 The easiest way to build and test your Laravel-based API using Swagger-php is to use Passport's `CreateFreshApiToken` middleware. This middleware, built into Laravel's core, adds a cookie to all responses, and the cookie authenticates all subsequent requests through Passport's `TokenGuard`.
@@ -78,7 +63,7 @@ To get started, first publish L5-Swagger's config and view files into your own p
 $ php artisan vendor:publish --provider "L5Swagger\L5SwaggerServiceProvider"
 ```
 
-Next, edit your `config/l5-swagger.php` configuration file. Locate the `l5-swagger.routes.middleware` section, and add the following middleware list to the `api` route:
+Next, edit your `config/l5-swagger.php` configuration file. Locate the `l5-swagger.defaults.routes.middleware` section, and add the following middleware list to the `api` route:
 
 ```php
 'api' => [
@@ -98,10 +83,18 @@ TIPS
 
 ## L5_SWAGGER_GENERATE_ALWAYS
 
-One of the setting I find useful to enable is `l5-swagger.generate_always`, which will cause your Swagger doc to be regenerated each time you load the Swagger UI (<span style="color:OrangeRed">not intended for production use!</span>). All you have to do to enable this in your dev environment is add an environment variable to `.env` named `L5_SWAGGER_GENERATE_ALWAYS` and set it to `true`.
+One of the setting I find useful to enable is `l5-swagger.defaults.generate_always`, which will cause your Swagger doc to be regenerated each time you load the Swagger UI (<span style="color:OrangeRed">not intended for production use!</span>). All you have to do to enable this in your dev environment is add an environment variable to `.env` named `L5_SWAGGER_GENERATE_ALWAYS` and set it to `true`.
 
 ## oauth2 + passport = Bearer \<token\>
 Follow instruction in [issue #57](https://github.com/DarkaOnLine/L5-Swagger/issues/57).
+
+Changes in 8.0
+============
+- Multi documentation support.
+- Configuration changes.
+- Blade View change.
+- Drop OpenAPI Spec 2.0 compatibility.
+- [See migration](#migrate-from-<70-to-80)
 
 Changes in 5.0
 ============
@@ -150,6 +143,13 @@ Migrate from 3.0|4.0 to 5.0
 ============
 - Remove `config/l5-swagger.php` file (make a copy if needed)
 - Remove `public/vendor/l5-swagger` directory
+- Remove `resources/views/vendor/l5-swagger` directory
+- Run `l5-swagger:publish` to publish new swagger-ui view and configuration
+- Edit your `config/l5-swagger.php` file
+
+Migrate from <7.0 to 8.0
+============
+- Remove `config/l5-swagger.php` file (make a copy if needed)
 - Remove `resources/views/vendor/l5-swagger` directory
 - Run `l5-swagger:publish` to publish new swagger-ui view and configuration
 - Edit your `config/l5-swagger.php` file

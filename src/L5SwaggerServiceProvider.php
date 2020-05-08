@@ -25,7 +25,7 @@ class L5SwaggerServiceProvider extends ServiceProvider
 
         //Publish views
         $this->publishes([
-            __DIR__.'/../resources/views' => config('l5-swagger.paths.views'),
+            __DIR__.'/../resources/views' => config('l5-swagger.defaults.paths.views'),
         ], 'views');
 
         //Include routes
@@ -46,33 +46,15 @@ class L5SwaggerServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($configPath, 'l5-swagger');
 
         $this->app->singleton('command.l5-swagger.generate', function ($app) {
-            return new GenerateDocsCommand(
-                $app->make(Generator::class)
-            );
+            return $app->make(GenerateDocsCommand::class);
         });
 
         $this->app->bind(Generator::class, function ($app) {
-            $annotationsDir = config('l5-swagger.paths.annotations');
-            $docDir = config('l5-swagger.paths.docs');
-            $docsFile = $docDir.'/'.config('l5-swagger.paths.docs_json', 'api-docs.json');
-            $yamlDocsFile = $docDir.'/'.config('l5-swagger.paths.docs_yaml', 'api-docs.yaml');
-            $excludedDirs = config('l5-swagger.paths.excludes');
-            $constants = config('l5-swagger.constants') ?: [];
-            $yamlCopyRequired = config('l5-swagger.generate_yaml_copy', false);
-            $basePath = config('l5-swagger.paths.base');
-            $swaggerVersion = config('l5-swagger.swagger_version');
+            $documentation = config('l5-swagger.default');
 
-            return new Generator(
-                $annotationsDir,
-                $docDir,
-                $docsFile,
-                $yamlDocsFile,
-                $excludedDirs,
-                $constants,
-                $yamlCopyRequired,
-                $basePath,
-                $swaggerVersion
-            );
+            $factory = $app->make(GeneratorFactory::class);
+
+            return $factory->make($documentation);
         });
     }
 

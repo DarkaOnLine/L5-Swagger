@@ -2,12 +2,25 @@
 
 namespace Tests;
 
+use Illuminate\Foundation\Application;
+use L5Swagger\ConfigFactory;
+use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
+    /**
+     * @var ConfigFactory
+     */
+    protected $configFactory;
+
+    /**
+     * @var array
+     */
+    protected $defaultConfig;
+
     /**
      * @var Generator
      */
@@ -17,6 +30,7 @@ class TestCase extends OrchestraTestCase
     {
         parent::setUp();
 
+        $this->makeConfigFactory();
         $this->makeGenerator();
 
         $this->copyAssets();
@@ -24,31 +38,28 @@ class TestCase extends OrchestraTestCase
 
     public function tearDown(): void
     {
-        if (file_exists($this->jsonDocsFile())) {
-            unlink($this->jsonDocsFile());
-        }
+        try {
+            $config = $this->configFactory->documentationConfig();
 
-        if (file_exists($this->yamlDocsFile())) {
-            unlink($this->yamlDocsFile());
-        }
+            if (file_exists($this->jsonDocsFile())) {
+                unlink($this->jsonDocsFile());
+            }
 
-        if (file_exists(config('l5-swagger.paths.docs'))) {
-            rmdir(config('l5-swagger.paths.docs'));
+            if (file_exists($this->yamlDocsFile())) {
+                unlink($this->yamlDocsFile());
+            }
+
+            if (file_exists($config['paths']['docs'])) {
+                rmdir($config['paths']['docs']);
+            }
+        } catch (L5SwaggerException $e) {
         }
 
         parent::tearDown();
     }
 
     /**
-     * @return bool
-     */
-    protected function isOpenApi(): bool
-    {
-        return version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
-    }
-
-    /**
-     * @param \Illuminate\Foundation\Application $app
+     * @param Application $app
      * @return array
      */
     protected function getPackageProviders($app): array
@@ -60,6 +71,8 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Create json docs file.
+     *
+     * @throws L5SwaggerException
      */
     protected function crateJsonDocumentationFile(): void
     {
@@ -70,28 +83,37 @@ class TestCase extends OrchestraTestCase
      * Get path for json docs file.
      *
      * @return string
+     * @throws L5SwaggerException
      */
     protected function jsonDocsFile(): string
     {
-        if (! is_dir(config('l5-swagger.paths.docs'))) {
-            mkdir(config('l5-swagger.paths.docs'));
+        $config = $this->configFactory->documentationConfig();
+        $docs = $config['paths']['docs'];
+
+        if (! is_dir($docs)) {
+            mkdir($docs);
         }
 
-        return config('l5-swagger.paths.docs').'/'.config('l5-swagger.paths.docs_json');
+        return $docs.DIRECTORY_SEPARATOR.$config['paths']['docs_json'];
     }
 
     /**
      * Get path for yaml docs file.
      *
      * @return string
+     *
+     * @throws L5SwaggerException
      */
     protected function yamlDocsFile(): string
     {
-        if (! is_dir(config('l5-swagger.paths.docs'))) {
-            mkdir(config('l5-swagger.paths.docs'));
+        $config = $this->configFactory->documentationConfig();
+        $docs = $config['paths']['docs'];
+
+        if (! is_dir($docs)) {
+            mkdir($docs);
         }
 
-        return config('l5-swagger.paths.docs').'/'.config('l5-swagger.paths.docs_yaml');
+        return $docs.DIRECTORY_SEPARATOR.$config['paths']['docs_yaml'];
     }
 
     /**
@@ -99,22 +121,31 @@ class TestCase extends OrchestraTestCase
      */
     protected function setAnnotationsPath(): void
     {
-        $cfg = config('l5-swagger');
-        $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/Swagger';
-
-        if ($this->isOpenApi()) {
-            $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/OpenApi';
-        }
-
+        $cfg = config('l5-swagger.documentations.default');
+        $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/OpenApi';
         $cfg['generate_always'] = true;
         $cfg['generate_yaml_copy'] = true;
 
         //Adding constants which will be replaced in generated json file
         $cfg['constants']['L5_SWAGGER_CONST_HOST'] = 'http://my-default-host.com';
 
-        config(['l5-swagger' => $cfg]);
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => [
+                'default' => $cfg,
+            ],
+            'defaults' => config('l5-swagger.defaults'),
+        ]]);
 
         $this->makeGenerator();
+    }
+
+    /**
+     * Make Config Factory.
+     */
+    protected function makeConfigFactory(): void
+    {
+        $this->configFactory = $this->app->make(ConfigFactory::class);
     }
 
     /**
@@ -130,9 +161,15 @@ class TestCase extends OrchestraTestCase
      */
     protected function setCustomDocsFileName(string $fileName): void
     {
-        $cfg = config('l5-swagger');
+        $cfg = config('l5-swagger.documentations.default');
         $cfg['paths']['docs_json'] = $fileName;
-        config(['l5-swagger' => $cfg]);
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => [
+                'default' => $cfg,
+            ],
+            'defaults' => config('l5-swagger.defaults'),
+        ]]);
     }
 
     /**
