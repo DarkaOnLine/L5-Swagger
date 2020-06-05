@@ -7,14 +7,14 @@ use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 class TestCase extends OrchestraTestCase
 {
-    public function setUp() :void
+    public function setUp(): void
     {
         parent::setUp();
 
         $this->copyAssets();
     }
 
-    public function tearDown() :void
+    public function tearDown(): void
     {
         if (file_exists($this->jsonDocsFile())) {
             unlink($this->jsonDocsFile());
