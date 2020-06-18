@@ -42,6 +42,20 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
+    /** @test */
+    public function itDoesNotThrowExceptionOnDocsFileWithoutExtension(): void
+    {
+        $fileWithoutExtension = 'docs';
+
+        $jsonUrl = route('l5-swagger.default.docs', $fileWithoutExtension);
+
+        $this->crateJsonDocumentationFile();
+
+        $this->get($jsonUrl)
+            ->assertNotFound()
+            ->isOk();
+    }
+
     /**
      * @test
      *
