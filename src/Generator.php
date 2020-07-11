@@ -113,11 +113,11 @@ class Generator
             throw new L5SwaggerException('Documentation storage directory is not writable');
         }
 
-        if (!File::exists($this->docDir)) {
+        if (! File::exists($this->docDir)) {
             File::makeDirectory($this->docDir);
         }
 
-        if (!File::exists($this->docDir)) {
+        if (! File::exists($this->docDir)) {
             throw new L5SwaggerException('Documentation storage directory could not be created');
         }
 
