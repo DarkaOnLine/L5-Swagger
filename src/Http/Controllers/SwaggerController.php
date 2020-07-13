@@ -38,12 +38,17 @@ class SwaggerController extends BaseController
         $documentation = $request->offsetGet('documentation');
         $config = $request->offsetGet('config');
 
-        $extension = 'json';
         $targetFile = $config['paths']['docs_json'] ?? 'api-docs.json';
+        $yaml = false;
 
         if (! is_null($file)) {
             $targetFile = $file;
-            $extension = explode('.', $file)[1];
+            $parts = explode('.', $file);
+
+            if (! empty($parts)) {
+                $extension = array_pop($parts);
+                $yaml = strtolower($extension) === 'yaml';
+            }
         }
 
         $filePath = $config['paths']['docs'].'/'.$targetFile;
@@ -69,7 +74,7 @@ class SwaggerController extends BaseController
 
         $content = File::get($filePath);
 
-        if ($extension === 'yaml') {
+        if ($yaml) {
             return ResponseFacade::make($content, 200, [
                 'Content-Type' => 'application/yaml',
                 'Content-Disposition' => 'inline',
