@@ -43,7 +43,12 @@ class SwaggerController extends BaseController
 
         if (! is_null($file)) {
             $targetFile = $file;
-            $yaml = explode('.', $file)[1] ?? '' === 'yaml';
+            $parts = explode('.', $file);
+
+            if (! empty($parts)) {
+                $extension = array_pop($parts);
+                $yaml = strtolower($extension) === 'yaml';
+            }
         }
 
         $filePath = $config['paths']['docs'].'/'.$targetFile;
