@@ -44,7 +44,6 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
-
     /** @test */
     public function userCanAccessAndGenerateYamlFile(): void
     {
@@ -59,8 +58,6 @@ class RoutesTest extends TestCase
             ->assertHeader('Content-Type', 'application/yaml')
             ->isOk();
     }
-
-
 
     /** @test */
     public function userCanAccessDocumentationFileWithoutExtensionIfItExists(): void
