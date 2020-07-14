@@ -24,6 +24,7 @@ class RoutesTest extends TestCase
 
         $this->get($jsonUrl)
             ->assertSee('{}')
+            ->assertHeader('Content-Type', 'application/json')
             ->isOk();
     }
 
@@ -39,6 +40,51 @@ class RoutesTest extends TestCase
 
         $this->get($jsonUrl)
             ->assertSee('{}')
+            ->assertHeader('Content-Type', 'application/json')
+            ->isOk();
+    }
+
+    /** @test */
+    public function userCanAccessAndGenerateYamlFile(): void
+    {
+        $customYamlFileName = 'docs.yaml';
+
+        $jsonUrl = route('l5-swagger.default.docs', $customYamlFileName);
+
+        $this->setCustomDocsFileName($customYamlFileName, 'yaml');
+        $this->createYamlDocumentationFile();
+
+        $this->get($jsonUrl)
+            ->assertHeader('Content-Type', 'application/yaml')
+            ->isOk();
+    }
+
+    /** @test */
+    public function userCanAccessDocumentationFileWithoutExtensionIfItExists(): void
+    {
+        $customYamlFileName = 'docs-file-without-extension';
+
+        $jsonUrl = route('l5-swagger.default.docs', $customYamlFileName);
+
+        $this->setCustomDocsFileName($customYamlFileName);
+        $this->crateJsonDocumentationFile();
+
+        $this->get($jsonUrl)
+            ->assertHeader('Content-Type', 'application/json')
+            ->isOk();
+    }
+
+    /** @test */
+    public function itDoesNotThrowExceptionOnDocsFileWithoutExtension(): void
+    {
+        $fileWithoutExtension = 'docs';
+
+        $jsonUrl = route('l5-swagger.default.docs', $fileWithoutExtension);
+
+        $this->crateJsonDocumentationFile();
+
+        $this->get($jsonUrl)
+            ->assertNotFound()
             ->isOk();
     }
 

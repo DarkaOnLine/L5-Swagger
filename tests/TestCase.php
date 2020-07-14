@@ -80,6 +80,16 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
+     * Create json docs file.
+     *
+     * @throws L5SwaggerException
+     */
+    protected function createYamlDocumentationFile(): void
+    {
+        file_put_contents($this->yamlDocsFile(), '');
+    }
+
+    /**
      * Get path for json docs file.
      *
      * @return string
@@ -158,11 +168,20 @@ class TestCase extends OrchestraTestCase
 
     /**
      * @param string $fileName
+     * @param string $type
      */
-    protected function setCustomDocsFileName(string $fileName): void
+    protected function setCustomDocsFileName(string $fileName, string $type = 'json'): void
     {
         $cfg = config('l5-swagger.documentations.default');
-        $cfg['paths']['docs_json'] = $fileName;
+
+        if ($type === 'json') {
+            $cfg['paths']['docs_json'] = $fileName;
+        }
+
+        if ($type === 'yaml') {
+            $cfg['paths']['docs_yaml'] = $fileName;
+        }
+
         config(['l5-swagger' => [
             'default' => 'default',
             'documentations' => [
