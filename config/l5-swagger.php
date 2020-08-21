@@ -137,15 +137,18 @@ return [
             ],
             'security' => [
                 /*
-                 * Examples of Security
+                 * Examples of Securities
                 */
-                /*
-                'oauth2_security_example' => [
-                    'read',
-                    'write'
-                ],
-                'passport' => []
-                */
+                [
+                    /*
+                    'oauth2_security_example' => [
+                        'read',
+                        'write'
+                    ],
+
+                    'passport' => []
+                    */
+                ]
             ],
         ],
 
