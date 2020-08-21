@@ -3,10 +3,10 @@
 namespace L5Swagger\Http\Controllers;
 
 use File;
+use Illuminate\Routing\Controller as BaseController;
+use L5Swagger\Generator;
 use Request;
 use Response;
-use L5Swagger\Generator;
-use Illuminate\Routing\Controller as BaseController;
 
 class SwaggerController extends BaseController
 {
