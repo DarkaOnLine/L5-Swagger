@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use L5Swagger\Generator;
 use L5Swagger\Exceptions\L5SwaggerException;
+use L5Swagger\Generator;
 
 class GeneratorTest extends TestCase
 {

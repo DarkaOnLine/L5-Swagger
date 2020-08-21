@@ -2,12 +2,12 @@
 
 namespace L5Swagger\Http\Controllers;
 
-use L5Swagger\Generator;
+use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Response;
 use L5Swagger\Exceptions\L5SwaggerException;
-use Illuminate\Routing\Controller as BaseController;
+use L5Swagger\Generator;
 
 class SwaggerController extends BaseController
 {
