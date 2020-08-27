@@ -94,7 +94,7 @@ Changes in 8.0
 - Configuration changes.
 - Blade View change.
 - Drop OpenAPI Spec 2.0 compatibility.
-- [See migration](#migrate-from-<70-to-80)
+- [See migration](#migrate-from-70-to-80)
 
 Changes in 5.0
 ============
