@@ -18,6 +18,7 @@ cache:
   directories:
   - "$HOME/.composer/cache"
 install:
+  - travis_retry composer update $DEFAULT_COMPOSER_FLAGS
   - composer require 'zircote/swagger-php:3.*'
   - composer info -D | sort
 before_script:
