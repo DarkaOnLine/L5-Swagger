@@ -7,8 +7,6 @@
 L5 Swagger - OpenApi or Swagger Specification for your Laravel project made easy.
 ==========
 
-Swagger 2.0 for Laravel >=5.1
-
 This package is a wrapper of [Swagger-php](https://github.com/zircote/swagger-php) and [swagger-ui](https://github.com/swagger-api/swagger-ui) adapted to work with Laravel 5.
 
 Installation

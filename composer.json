@@ -1,10 +1,15 @@
 {
   "name": "darkaonline/l5-swagger",
-  "description": "Swagger integration to Laravel 5",
+  "description": "OpenApi or Swagger integration to Laravel",
   "keywords": [
     "laravel",
     "swagger",
-    "api"
+    "api",
+    "OpenApi",
+    "specification",
+    "documentation",
+    "API",
+    "UI"
   ],
   "license": "MIT",
   "authors": [
