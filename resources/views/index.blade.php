@@ -99,6 +99,23 @@ window.onload = function() {
   })
 
   window.ui = ui
+  
+  ui.getConfigs().requestInterceptor = function (request) {
+    if (ui.authSelectors.authorized().size){
+      var authObject = ui.authSelectors.authorized()._root.entries[0];
+      var securityConfig = authObject[1]._root.entries[1][1]._list._tail.array;
+      if (securityConfig[0][1] === 'apiKey' && securityConfig[3][1] === 'header') {
+        var token = authObject[1]._root.entries[2][1];
+        if (authObject[0] === 'Bearer' && !token.startsWith('Bearer ')){
+          token = 'Bearer ' + token;
+        }
+        request.headers[securityConfig[2][1]] = token;
+      }
+    }
+
+    request.headers['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
+    return request;
+  }
 }
 </script>
 </body>
