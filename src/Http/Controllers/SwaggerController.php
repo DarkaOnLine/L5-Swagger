@@ -147,8 +147,7 @@ class SwaggerController extends BaseController
     {
         $fileUsedForDocs = $config['paths']['docs_json'] ?? 'api-docs.json';
 
-        if (
-            ! empty($config['paths']['format_to_use_for_docs'])
+        if (! empty($config['paths']['format_to_use_for_docs'])
             && $config['paths']['format_to_use_for_docs'] === 'yaml'
             && $config['paths']['docs_yaml']
         ) {
