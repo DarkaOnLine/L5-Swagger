@@ -105,7 +105,7 @@ class SwaggerController extends BaseController
             Request::setTrustedProxies($proxy, Request::HEADER_X_FORWARDED_ALL);
         }
 
-        $urlToDocs = route('l5-swagger.'.$documentation.'.docs', $config['paths']['docs_json'] ?? 'api-docs.json');
+        $urlToDocs = $this->generateDocumentationFileURL($documentation);
 
         // Need the / at the end to avoid CORS errors on Homestead systems.
         return ResponseFacade::make(
@@ -134,5 +134,29 @@ class SwaggerController extends BaseController
         $documentation = $request->offsetGet('documentation');
 
         return File::get(swagger_ui_dist_path($documentation, 'oauth2-redirect.html'));
+    }
+
+    /**
+     * Generate URL for documentation file.
+     *
+     * @param string $documentation
+     *
+     * @return string
+     */
+    protected function generateDocumentationFileURL(string $documentation)
+    {
+        $fileUsedForDocs = $config['paths']['docs_json'] ?? 'api-docs.json';
+
+        if (! empty($config['paths']['format_to_use_for_docs'])
+            && $config['paths']['format_to_use_for_docs'] === 'yaml'
+            && $config['paths']['docs_yaml']
+        ) {
+            $fileUsedForDocs = $config['paths']['docs_yaml'];
+        }
+
+        return route(
+            'l5-swagger.'.$documentation.'.docs',
+            $fileUsedForDocs
+        );
     }
 }

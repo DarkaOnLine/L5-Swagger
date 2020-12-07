@@ -19,7 +19,7 @@
     }
   ],
   "require": {
-    "php": "^7.2",
+    "php": "^7.2 || ^8.0",
     "laravel/framework": "^8.0 || ^7.0",
     "zircote/swagger-php": "3.*",
     "swagger-api/swagger-ui": "^3.0",
