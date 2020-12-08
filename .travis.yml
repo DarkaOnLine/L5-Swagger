@@ -13,7 +13,9 @@ matrix:
   - php: 7.2
   - php: 7.3
   - php: 7.4
-    env: REPORT_TESTS_COVERAGE=1
+    env:
+    - REPORT_TESTS_COVERAGE=1
+    - XDEBUG_MODE=coverage
   - php: 8.0
 cache:
   directories:
