@@ -105,7 +105,7 @@ class SwaggerController extends BaseController
             Request::setTrustedProxies($proxy, Request::HEADER_X_FORWARDED_ALL);
         }
 
-        $urlToDocs = $this->generateDocumentationFileURL($documentation);
+        $urlToDocs = $this->generateDocumentationFileURL($documentation, $config);
 
         // Need the / at the end to avoid CORS errors on Homestead systems.
         return ResponseFacade::make(
@@ -140,10 +140,11 @@ class SwaggerController extends BaseController
      * Generate URL for documentation file.
      *
      * @param string $documentation
+     * @param array $config
      *
      * @return string
      */
-    protected function generateDocumentationFileURL(string $documentation)
+    protected function generateDocumentationFileURL(string $documentation, array $config)
     {
         $fileUsedForDocs = $config['paths']['docs_json'] ?? 'api-docs.json';
 
