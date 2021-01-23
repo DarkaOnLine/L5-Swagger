@@ -3,13 +3,14 @@
 namespace L5Swagger;
 
 use Exception;
-use Illuminate\Support\Facades\File;
-use L5Swagger\Exceptions\L5SwaggerException;
-use OpenApi\Annotations\OpenApi;
+use Illuminate\Support\Arr;
 use OpenApi\Annotations\Server;
-use function OpenApi\scan as openApiScan;
-use Symfony\Component\Yaml\Dumper as YamlDumper;
+use OpenApi\Annotations\OpenApi;
 use Symfony\Component\Yaml\Yaml;
+use Illuminate\Support\Facades\File;
+use function OpenApi\scan as openApiScan;
+use L5Swagger\Exceptions\L5SwaggerException;
+use Symfony\Component\Yaml\Dumper as YamlDumper;
 
 class Generator
 {
@@ -64,17 +65,24 @@ class Generator
     protected $security;
 
     /**
+     * @var array
+     */
+    protected $scanOptions;
+
+    /**
      * Generator constructor.
      * @param array $paths
      * @param array $constants
      * @param bool $yamlCopyRequired
      * @param SecurityDefinitions $security
+     * @param array $scanOptions
      */
     public function __construct(
         array $paths,
         array $constants,
         bool $yamlCopyRequired,
-        SecurityDefinitions $security
+        SecurityDefinitions $security,
+        array $scanOptions
     ) {
         $this->annotationsDir = $paths['annotations'];
         $this->docDir = $paths['docs'];
@@ -85,6 +93,7 @@ class Generator
         $this->constants = $constants;
         $this->yamlCopyRequired = $yamlCopyRequired;
         $this->security = $security;
+        $this->scanOptions = $scanOptions;
     }
 
     /**
@@ -149,10 +158,43 @@ class Generator
     {
         $this->openApi = openApiScan(
             $this->annotationsDir,
-            ['exclude' => $this->excludedDirs]
+            $this->getScanOptions()
         );
 
         return $this;
+    }
+
+    /**
+     * Prepares options array for scanning files
+     *
+     * @return array
+     */
+    protected function getScanOptions() : array
+    {
+        $options['exclude'] = $this->excludedDirs;
+
+        $paterns = Arr::get($this->scanOptions, 'pattern', []);
+        if (!empty($paterns)) {
+            $options['pattern'] = $paterns;
+        }
+
+        $processorClasses = Arr::get($this->scanOptions, 'processors', [] );
+        $processors = [];
+
+        foreach (\OpenApi\Analysis::processors() as $processor) {
+            $processors[] = $processor;
+            if ($processor instanceof \OpenApi\Processors\BuildPaths) {
+                foreach ($processorClasses as $customProcessor) {
+                    $processors[] = new $customProcessor();
+                }
+            }
+        }
+
+        if (!empty($processors)) {
+            $options['processors'] = $processors;
+        }
+
+        return $options;
     }
 
     /**
