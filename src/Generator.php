@@ -4,13 +4,13 @@ namespace L5Swagger;
 
 use Exception;
 use Illuminate\Support\Arr;
-use OpenApi\Annotations\Server;
-use OpenApi\Annotations\OpenApi;
-use Symfony\Component\Yaml\Yaml;
 use Illuminate\Support\Facades\File;
-use function OpenApi\scan as openApiScan;
 use L5Swagger\Exceptions\L5SwaggerException;
+use OpenApi\Annotations\OpenApi;
+use OpenApi\Annotations\Server;
+use function OpenApi\scan as openApiScan;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
+use Symfony\Component\Yaml\Yaml;
 
 class Generator
 {
@@ -165,20 +165,20 @@ class Generator
     }
 
     /**
-     * Prepares options array for scanning files
+     * Prepares options array for scanning files.
      *
      * @return array
      */
-    protected function getScanOptions() : array
+    protected function getScanOptions(): array
     {
         $options['exclude'] = $this->excludedDirs;
 
         $paterns = Arr::get($this->scanOptions, 'pattern', []);
-        if (!empty($paterns)) {
+        if (! empty($paterns)) {
             $options['pattern'] = $paterns;
         }
 
-        $processorClasses = Arr::get($this->scanOptions, 'processors', [] );
+        $processorClasses = Arr::get($this->scanOptions, 'processors', []);
         $processors = [];
 
         foreach (\OpenApi\Analysis::processors() as $processor) {
@@ -190,7 +190,7 @@ class Generator
             }
         }
 
-        if (!empty($processors)) {
+        if (! empty($processors)) {
             $options['processors'] = $processors;
         }
 
