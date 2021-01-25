@@ -173,11 +173,6 @@ class Generator
     {
         $options['exclude'] = $this->excludedDirs;
 
-        $paterns = Arr::get($this->scanOptions, 'pattern', []);
-        if (! empty($paterns)) {
-            $options['pattern'] = $paterns;
-        }
-
         $processorClasses = Arr::get($this->scanOptions, 'processors', []);
         $processors = [];
 
@@ -190,8 +185,15 @@ class Generator
             }
         }
 
-        if (! empty($processors)) {
+        if (!empty($processors)) {
             $options['processors'] = $processors;
+        }
+
+        foreach (['pattern', 'analyser', 'analysis'] as $key) {
+            $option = Arr::get($this->scanOptions, $key);
+            if (!empty($option)) {
+                $option[$key] = $option;
+            }
         }
 
         return $options;
