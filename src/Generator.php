@@ -185,13 +185,13 @@ class Generator
             }
         }
 
-        if (!empty($processors)) {
+        if (! empty($processors)) {
             $options['processors'] = $processors;
         }
 
         foreach (['pattern', 'analyser', 'analysis'] as $key) {
             $option = Arr::get($this->scanOptions, $key);
-            if (!empty($option)) {
+            if (! empty($option)) {
                 $option[$key] = $option;
             }
         }
