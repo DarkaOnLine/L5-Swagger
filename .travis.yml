@@ -31,10 +31,9 @@ before_script:
 script:
   - pwd
   - ls -al | grep $USER
-  - sudo chown -Rv root:$USER .
-  - sudo chmod -Rv g+rw .
+  - sudo chown -R $USER:$USER .
+  - sudo chmod -R g+rw .
   - ls -al | grep $USER
-  - chown -R travis:travis /home/travis/build/DarkaOnLine/L5-Swagger
   - mkdir -p tests/storage/logs/test-reports
   - chmod -R 777 /home/travis/build/DarkaOnLine/L5-Swagger
   - if [ $REPORT_TESTS_COVERAGE != 1 ]; then vendor/bin/phpunit --no-coverage; fi
