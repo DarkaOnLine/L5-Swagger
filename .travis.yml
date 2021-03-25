@@ -29,6 +29,11 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
+  - pwd
+  - ls -al | grep $USER
+  - sudo chown -Rv root:$USER .
+  - sudo chmod -Rv g+rw .
+  - ls -al | grep $USER
   - chown -R travis:travis /home/travis/build/DarkaOnLine/L5-Swagger
   - mkdir -p tests/storage/logs/test-reports
   - chmod -R 777 /home/travis/build/DarkaOnLine/L5-Swagger
