@@ -200,7 +200,7 @@ class Generator
         }
 
         // `scanOptions.exclude` option overwrites `paths.excludes` option but fallbacks to old config if not set
-        $options[self::SCAN_OPTION_EXCLUDE] = !empty($options[self::SCAN_OPTION_EXCLUDE]) ? $options[self::SCAN_OPTION_EXCLUDE] : $this->excludedDirs;
+        $options[self::SCAN_OPTION_EXCLUDE] = ! empty($options[self::SCAN_OPTION_EXCLUDE]) ? $options[self::SCAN_OPTION_EXCLUDE] : $this->excludedDirs;
 
         return $options;
     }

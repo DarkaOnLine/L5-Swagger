@@ -64,7 +64,7 @@ class GeneratorTest extends TestCase
 
         $cfg = config('l5-swagger.documentations.default');
         $cfg['paths']['excludes'] = [
-            __DIR__ . '/storage/annotations/OpenApi/Clients'
+            __DIR__.'/storage/annotations/OpenApi/Clients',
         ];
         config(['l5-swagger' => [
             'default' => 'default',
@@ -90,11 +90,10 @@ class GeneratorTest extends TestCase
     /** @test */
     public function canGenerateWithScanOptions(): void
     {
-
         $cfg = config('l5-swagger.documentations.default');
 
         $cfg['scanOptions']['exclude'] = [
-            __DIR__ . '/storage/annotations/OpenApi/Clients'
+            __DIR__.'/storage/annotations/OpenApi/Clients',
         ];
 
         $cfg['scanOptions']['pattern'] = 'Anotations.*';
