@@ -91,27 +91,13 @@ return [
 
             /*
              * Absolute path to directories that should be exclude from scanning
+             * @deprecated Please use `scanOptions.exclude`
+             * `scanOptions.exclude` overwrites this
             */
             'excludes' => [],
         ],
 
         'scanOptions' => [
-            /**
-             * Custom query path processors classes.
-             *
-             * @link https://github.com/zircote/swagger-php/tree/master/Examples/schema-query-parameter-processor
-             * @see \OpenApi\scan
-             */
-            'processors' => [
-                // \App\SwaggerProcessors\SchemaQueryParameter::class,
-            ],
-
-            /**
-             * pattern: string       $pattern File pattern(s) to scan (default: *.php) .
-             * @see \OpenApi\scan
-             */
-            'pattern' => null,
-
             /**
              * analyser: defaults to \OpenApi\StaticAnalyser .
              * @see \OpenApi\scan
@@ -123,6 +109,32 @@ return [
              * @see \OpenApi\scan
              */
             'analysis' => null,
+
+            /**
+             * Custom query path processors classes.
+             *
+             * @link https://github.com/zircote/swagger-php/tree/master/Examples/schema-query-parameter-processor
+             * @see \OpenApi\scan
+             */
+            'processors' => array_merge(
+                \OpenApi\Analysis::processors(),
+                [
+                    // new \App\SwaggerProcessors\SchemaQueryParameter(),
+                ]
+            ),
+
+            /**
+             * pattern: string       $pattern File pattern(s) to scan (default: *.php) .
+             * @see \OpenApi\scan
+             */
+            'pattern' => null,
+
+            /*
+             * Absolute path to directories that should be exclude from scanning
+             * @note This option overwrites `paths.excludes`
+             * @see \OpenApi\scan
+            */
+            'exclude' => [],
         ],
 
         /*

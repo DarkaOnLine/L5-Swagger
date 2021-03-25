@@ -41,6 +41,9 @@ class GeneratorTest extends TestCase
         $this->get(route('l5-swagger.default.docs'))
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
+            ->assertSee('getProjectsList')
+            ->assertSee('getProductsList')
+            ->assertSee('getClientsList')
             ->assertStatus(200);
 
         $config = $this->configFactory->documentationConfig();
@@ -48,6 +51,74 @@ class GeneratorTest extends TestCase
         $this->get(route('l5-swagger.default.docs', ['jsonFile' => $jsonFile]))
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
+            ->assertSee('getProjectsList')
+            ->assertSee('getProductsList')
+            ->assertSee('getClientsList')
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    public function canGenerateWithLegacyExcludedDirectories(): void
+    {
+        $this->setAnnotationsPath();
+
+        $cfg = config('l5-swagger.documentations.default');
+        $cfg['paths']['excludes'] = [
+            __DIR__ . '/storage/annotations/OpenApi/Clients'
+        ];
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => [
+                'default' => $cfg,
+            ],
+            'defaults' => config('l5-swagger.defaults'),
+        ]]);
+
+        $this->generator->generateDocs();
+
+        $this->assertTrue(file_exists($this->jsonDocsFile()));
+
+        $this->get(route('l5-swagger.default.docs'))
+            ->assertSee('L5 Swagger')
+            ->assertSee('my-default-host.com')
+            ->assertSee('getProjectsList')
+            ->assertSee('getProductsList')
+            ->assertDontSee('getClientsList')
+            ->assertStatus(200);
+    }
+
+    /** @test */
+    public function canGenerateWithScanOptions(): void
+    {
+
+        $cfg = config('l5-swagger.documentations.default');
+
+        $cfg['scanOptions']['exclude'] = [
+            __DIR__ . '/storage/annotations/OpenApi/Clients'
+        ];
+
+        $cfg['scanOptions']['pattern'] = 'Anotations.*';
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => [
+                'default' => $cfg,
+            ],
+            'defaults' => config('l5-swagger.defaults'),
+        ]]);
+
+        $this->setAnnotationsPath();
+
+        $this->generator->generateDocs();
+
+        $this->assertTrue(file_exists($this->jsonDocsFile()));
+
+        $this->get(route('l5-swagger.default.docs'))
+            ->assertSee('L5 Swagger')
+            ->assertSee('my-default-host.com')
+            ->assertSee('getProjectsList')
+            ->assertDontSee('getProductsList')
+            ->assertDontSee('getClientsList')
             ->assertStatus(200);
     }
 

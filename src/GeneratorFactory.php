@@ -28,7 +28,7 @@ class GeneratorFactory
         $config = $this->configFactory->documentationConfig($documentation);
 
         $paths = $config['paths'];
-        $scanOptions = $config['scanOptions'];
+        $scanOptions = $config['scanOptions'] ?? [];
         $constants = $config['constants'] ?? [];
         $yamlCopyRequired = $config['generate_yaml_copy'] ?? false;
 
