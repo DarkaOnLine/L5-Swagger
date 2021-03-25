@@ -3,6 +3,7 @@
 namespace L5Swagger;
 
 use Exception;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Annotations\OpenApi;
@@ -64,17 +65,24 @@ class Generator
     protected $security;
 
     /**
+     * @var array
+     */
+    protected $scanOptions;
+
+    /**
      * Generator constructor.
      * @param array $paths
      * @param array $constants
      * @param bool $yamlCopyRequired
      * @param SecurityDefinitions $security
+     * @param array $scanOptions
      */
     public function __construct(
         array $paths,
         array $constants,
         bool $yamlCopyRequired,
-        SecurityDefinitions $security
+        SecurityDefinitions $security,
+        array $scanOptions
     ) {
         $this->annotationsDir = $paths['annotations'];
         $this->docDir = $paths['docs'];
@@ -85,6 +93,7 @@ class Generator
         $this->constants = $constants;
         $this->yamlCopyRequired = $yamlCopyRequired;
         $this->security = $security;
+        $this->scanOptions = $scanOptions;
     }
 
     /**
@@ -149,10 +158,45 @@ class Generator
     {
         $this->openApi = openApiScan(
             $this->annotationsDir,
-            ['exclude' => $this->excludedDirs]
+            $this->getScanOptions()
         );
 
         return $this;
+    }
+
+    /**
+     * Prepares options array for scanning files.
+     *
+     * @return array
+     */
+    protected function getScanOptions(): array
+    {
+        $options['exclude'] = $this->excludedDirs;
+
+        $processorClasses = Arr::get($this->scanOptions, 'processors', []);
+        $processors = [];
+
+        foreach (\OpenApi\Analysis::processors() as $processor) {
+            $processors[] = $processor;
+            if ($processor instanceof \OpenApi\Processors\BuildPaths) {
+                foreach ($processorClasses as $customProcessor) {
+                    $processors[] = new $customProcessor();
+                }
+            }
+        }
+
+        if (! empty($processors)) {
+            $options['processors'] = $processors;
+        }
+
+        foreach (['pattern', 'analyser', 'analysis'] as $key) {
+            $option = Arr::get($this->scanOptions, $key);
+            if (! empty($option)) {
+                $option[$key] = $option;
+            }
+        }
+
+        return $options;
     }
 
     /**
