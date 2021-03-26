@@ -71,7 +71,11 @@ class SwaggerController extends BaseController
                 );
             }
         }
-
+        
+        if (!File::exists($filePath)) {
+            abort(404);
+        }
+        
         $content = File::get($filePath);
 
         if ($yaml) {
