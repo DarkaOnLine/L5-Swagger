@@ -238,7 +238,8 @@ return [
         /*
          * Persist authorization login after refresh browser
          */
-        'persist_authorization' => false,
+        'persist_authorization' => true,
+
         /*
          * Uncomment to add constants which can be used in annotations
          */

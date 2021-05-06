@@ -97,7 +97,7 @@ window.onload = function() {
 
     layout: "StandaloneLayout",
 
-    persistAuthorization: {!! config('l5-swagger.defaults.persist_authorization') ? 'true', 'false' !!},
+    persistAuthorization: {!! config('l5-swagger.defaults.persist_authorization') ? 'true' : 'false' !!},
   })
 
   window.ui = ui
