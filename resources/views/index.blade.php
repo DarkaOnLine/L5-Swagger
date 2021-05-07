@@ -95,7 +95,9 @@ window.onload = function() {
       SwaggerUIBundle.plugins.DownloadUrl
     ],
 
-    layout: "StandaloneLayout"
+    layout: "StandaloneLayout",
+
+    persistAuthorization: {!! config('l5-swagger.defaults.persist_authorization') ? 'true' : 'false' !!},
   })
 
   window.ui = ui

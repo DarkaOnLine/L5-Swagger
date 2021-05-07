@@ -236,6 +236,11 @@ return [
         'validator_url' => null,
 
         /*
+         * Persist authorization login after refresh browser
+         */
+        'persist_authorization' => true,
+
+        /*
          * Uncomment to add constants which can be used in annotations
          */
         // 'constants' => [
