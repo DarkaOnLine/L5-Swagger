@@ -116,12 +116,9 @@ return [
              * @link https://github.com/zircote/swagger-php/tree/master/Examples/schema-query-parameter-processor
              * @see \OpenApi\scan
              */
-            'processors' => array_merge(
-                \OpenApi\Analysis::processors(),
-                [
-                    // new \App\SwaggerProcessors\SchemaQueryParameter(),
-                ]
-            ),
+            'processors' => [
+                // new \App\SwaggerProcessors\SchemaQueryParameter(),
+            ],
 
             /**
              * pattern: string       $pattern File pattern(s) to scan (default: *.php) .
