@@ -186,7 +186,17 @@ class Generator
     {
         $options = [];
 
-        $processors = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
+        $processorClasses = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
+        $processors = [];
+
+        foreach (\OpenApi\Analysis::processors() as $processor) {
+            $processors[] = $processor;
+            if ($processor instanceof \OpenApi\Processors\BuildPaths) {
+                foreach ($processorClasses as $customProcessor) {
+                    $processors[] = new $customProcessor();
+                }
+            }
+        }
 
         if (! empty($processors)) {
             $options[self::SCAN_OPTION_PROCESSORS] = $processors;
