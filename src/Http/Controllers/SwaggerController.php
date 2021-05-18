@@ -53,7 +53,7 @@ class SwaggerController extends BaseController
 
         $filePath = $config['paths']['docs'].'/'.$targetFile;
 
-        if ($config['generate_always'] || ! File::exists($filePath)) {
+        if ($config['generate_always']) {
             $generator = $this->generatorFactory->make($documentation);
 
             try {
@@ -70,6 +70,10 @@ class SwaggerController extends BaseController
                     )
                 );
             }
+        }
+
+        if (! File::exists($filePath)) {
+            abort(404, sprintf('Unable to locate documentation file at: "%s"', $filePath));
         }
 
         $content = File::get($filePath);
