@@ -72,7 +72,7 @@ class SwaggerController extends BaseController
             }
         }
 
-        if (! File::exists($filePath)) {
+        if (! file_exists($filePath)) {
             abort(404, sprintf('Unable to locate documentation file at: "%s"', $filePath));
         }
 
