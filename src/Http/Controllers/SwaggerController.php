@@ -73,7 +73,7 @@ class SwaggerController extends BaseController
         }
 
         if (! File::exists($filePath)) {
-            abort(404, trans('Documentation not found');
+            abort(404, trans('Documentation not found'));
         }
 
         $content = File::get($filePath);
