@@ -3,6 +3,9 @@
 namespace Tests;
 
 use L5Swagger\Exceptions\L5SwaggerException;
+use L5Swagger\Generator;
+use L5Swagger\GeneratorFactory;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class RoutesTest extends TestCase
 {
@@ -139,5 +142,60 @@ class RoutesTest extends TestCase
             ->assertSee('swaggerUIRedirectOauth2')
             ->assertSee('oauth2.auth.code')
             ->isOk();
+    }
+
+    /** @test */
+    public function itWillReturn404ForIncorrectJsonFile(): void
+    {
+        $jsonUrl = route('l5-swagger.default.docs', 'invalid.json');
+
+        $this->get($jsonUrl)->assertNotFound();
+    }
+
+    /** @test */
+    public function itWillNotAttemptDocGenerationWhenAlwaysGenerateIsDisabled(): void
+    {
+        $jsonUrl = route('l5-swagger.default.docs', 'unknown_file.json');
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['generate_always' => false]),
+        ]]);
+
+        $mockGenerator = $this->mockGenerator();
+        $mockGenerator->expects($this->never())->method('generateDocs');
+
+        $this->get($jsonUrl)->assertNotFound();
+    }
+
+    /** @test */
+    public function itWillReturn404WhenDocGenerationFails(): void
+    {
+        $jsonUrl = route('l5-swagger.default.docs', 'docs');
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['generate_always' => true]),
+        ]]);
+
+        $mockGenerator = $this->mockGenerator();
+        $mockGenerator->expects($this->once())->method('generateDocs')->will($this->throwException(new \Exception));
+
+        $this->get($jsonUrl)->assertNotFound();
+    }
+
+    /**
+     * @return MockObject&Generator
+     */
+    private function mockGenerator()
+    {
+        $mockGenerator = $this->createMock(Generator::class);
+        $mockGeneratorFactory = $this->createMock(GeneratorFactory::class);
+        $mockGeneratorFactory->expects($this->any())->method('make')->willReturn($mockGenerator);
+        app()->extend(GeneratorFactory::class, function () use ($mockGeneratorFactory) {
+            return $mockGeneratorFactory;
+        });
+
+        return $mockGenerator;
     }
 }
