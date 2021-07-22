@@ -114,6 +114,7 @@ class Generator
     protected function scanFilesForDocumentation()
     {
         if ($this->isOpenApi()) {
+            $this->fixOpenApiAnalysisProcessors();
             $this->swagger = \OpenApi\scan(
                 $this->annotationsDir,
                 ['exclude' => $this->excludedDirs]
@@ -192,5 +193,24 @@ class Generator
     protected function isOpenApi()
     {
         return version_compare(config('l5-swagger.swagger_version'), '3.0', '>=');
+    }
+
+    /**
+     * Adding the ability to activate and deactivate operationId hashing
+     * @throws \Exception
+     */
+    private function fixOpenApiAnalysisProcessors()
+    {
+        $processors = \OpenApi\Analysis::processors();
+        foreach ($processors as $processor){
+            if ($processor instanceof \OpenApi\Processors\OperationId){
+                \OpenApi\Analysis::unregisterProcessor($processor);
+            }
+        }
+        \OpenApi\Analysis::registerProcessor(
+            new \OpenApi\Processors\OperationId(
+                config('l5-swagger.constants.L5_SWAGGER_CONST_GENERATE_OPERATION_ID_HASH', true)
+            )
+        );
     }
 }
