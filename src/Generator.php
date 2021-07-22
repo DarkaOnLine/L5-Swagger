@@ -202,8 +202,8 @@ class Generator
     private function fixOpenApiAnalysisProcessors()
     {
         $processors = \OpenApi\Analysis::processors();
-        foreach ($processors as $processor){
-            if ($processor instanceof \OpenApi\Processors\OperationId){
+        foreach ($processors as $processor) {
+            if ($processor instanceof \OpenApi\Processors\OperationId) {
                 \OpenApi\Analysis::unregisterProcessor($processor);
             }
         }
