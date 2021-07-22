@@ -196,7 +196,7 @@ class Generator
     }
 
     /**
-     * Adding the ability to activate and deactivate operationId hashing
+     * Adding the ability to activate and deactivate operationId hashing.
      * @throws \Exception
      */
     private function fixOpenApiAnalysisProcessors()
