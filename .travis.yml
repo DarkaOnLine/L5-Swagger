@@ -30,9 +30,16 @@ before_script:
 script:
   - chown -R travis:travis /home/travis/build/DarkaOnLine/L5-Swagger
   - mkdir -p tests/storage/logs/test-reports
+  - mkdir -p vendor/orchestra/testbench-core/laravel/vendor/swagger-api
+  - mkdir -p vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui
+  - mkdir -p vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist
+  - sudo chown -R $USER:$USER vendor/orchestra/testbench-core/laravel/vendor/swagger-api
+  - chmod -R 777 vendor/orchestra/testbench-core/laravel/vendor/swagger-api
+  - ls -al vendor/orchestra/testbench-core/laravel/vendor/swagger-api
   - chmod -R 777 /home/travis/build/DarkaOnLine/L5-Swagger
   - if [ $REPORT_TESTS_COVERAGE != 1 ]; then vendor/bin/phpunit --no-coverage; fi
   - if [ $REPORT_TESTS_COVERAGE == 1 ]; then vendor/bin/phpunit; cp tests/storage/logs/test-reports/clover.xml clover.xml; fi
+  - ls -al vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist
 after_success:
   - if [ $REPORT_TESTS_COVERAGE == 1 ] && [ $TRAVIS_PULL_REQUEST == "false" ]; then ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT; fi
   - if [ $REPORT_TESTS_COVERAGE == 1 ]; then php vendor/bin/php-coveralls -v; fi
