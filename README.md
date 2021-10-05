@@ -11,12 +11,18 @@ Swagger 2.0 for Laravel >=5.1
 
 This package is a wrapper of [Swagger-php](https://github.com/zircote/swagger-php) and [swagger-ui](https://github.com/swagger-api/swagger-ui) adapted to work with Laravel 5.
 
+#Description
+I found critical bug in the branch 6.0.7. The maintainer of the original package ignored me for 2 months. I was created a new composer package for use as a dependence.
+
+Original package name: `darkaonline/l5-swagger`
+New package name: `smskin/l5-swagger`
+
 Installation
 ============
 
  Laravel          | Swagger UI| OpenAPI Spec compatibility | L5-Swagger
 :-----------------|:----------|:---------------------------|:----------
- 6.0.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
+ 6.0.x            | 3         | 3.0, 2.0                   | `composer require "smskin/l5-swagger"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
  5.8.x            | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger:5.8.*"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
  5.7.x OR 5.6.x   | 3         | 3.0, 2.0                   | `composer require "darkaonline/l5-swagger:5.7.*"`<br><br>:warning: !!! run `composer require 'zircote/swagger-php:2.*'` if you need old **@SWG (SWAGGER annotations)** support. !!!
  5.6.x            | 3         | 2.0                        | `composer require "darkaonline/l5-swagger:5.6.*"`
