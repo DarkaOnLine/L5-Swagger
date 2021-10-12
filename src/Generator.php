@@ -8,9 +8,10 @@ use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Server;
-use function OpenApi\scan as openApiScan;
+use OpenApi\Util;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use Symfony\Component\Yaml\Yaml;
+use OpenApi\Generator as OpenApiGenerator;
 
 class Generator
 {
@@ -170,9 +171,15 @@ class Generator
      */
     protected function scanFilesForDocumentation(): self
     {
-        $this->openApi = openApiScan(
-            $this->annotationsDir,
-            $this->getScanOptions()
+        $options = $this->getScanOptions();
+
+        $this->openApi = OpenApiGenerator::scan(
+            Util::finder(
+                $this->annotationsDir,
+                $options[self::SCAN_OPTION_EXCLUDE] ?? null,
+                $options[self::SCAN_OPTION_PATTERN] ?? null
+            ),
+            $options
         );
 
         return $this;
