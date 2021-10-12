@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Server;
+use OpenApi\Generator as OpenApiGenerator;
 use OpenApi\Util;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use Symfony\Component\Yaml\Yaml;
-use OpenApi\Generator as OpenApiGenerator;
 
 class Generator
 {
