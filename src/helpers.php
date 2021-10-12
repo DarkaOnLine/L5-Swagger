@@ -6,10 +6,10 @@ if (! function_exists('swagger_ui_dist_path')) {
     /**
      * Returns swagger-ui composer dist path.
      *
-     * @param string $documentation
-     * @param null $asset
-     *
+     * @param  string  $documentation
+     * @param  null  $asset
      * @return string
+     *
      * @throws L5SwaggerException
      */
     function swagger_ui_dist_path(string $documentation, $asset = null)
@@ -49,10 +49,10 @@ if (! function_exists('l5_swagger_asset')) {
     /**
      * Returns asset from swagger-ui composer package.
      *
-     * @param string $documentation
+     * @param  string  $documentation
      * @param $asset string
-     *
      * @return string
+     *
      * @throws L5SwaggerException
      */
     function l5_swagger_asset(string $documentation, $asset)

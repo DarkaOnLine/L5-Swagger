@@ -9,9 +9,10 @@ class ConfigFactory
     /**
      * Get documentation config.
      *
-     * @param string|null $documentation
-     * @throws L5SwaggerException
+     * @param  string|null  $documentation
      * @return array
+     *
+     * @throws L5SwaggerException
      */
     public function documentationConfig(?string $documentation = null): array
     {

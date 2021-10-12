@@ -24,8 +24,10 @@ class ConfigFactoryTest extends TestCase
     /**
      * @test
      * @dataProvider configDataProvider
-     * @param array $data
-     * @param array $assert
+     *
+     * @param  array  $data
+     * @param  array  $assert
+     *
      * @throws L5SwaggerException
      */
     public function canMergeConfigurationDeep(array $data, array $assert): void
@@ -128,8 +130,8 @@ class ConfigFactoryTest extends TestCase
      * Both arrays must have the same indexes with identical values
      * without respect to key ordering
      *
-     * @param array $expected
-     * @param array $array
+     * @param  array  $expected
+     * @param  array  $array
      */
     protected function assertArraySimilar(array $expected, array $array)
     {

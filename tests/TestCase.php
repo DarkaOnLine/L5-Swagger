@@ -59,7 +59,7 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * @param Application $app
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageProviders($app): array
@@ -93,6 +93,7 @@ class TestCase extends OrchestraTestCase
      * Get path for json docs file.
      *
      * @return string
+     *
      * @throws L5SwaggerException
      */
     protected function jsonDocsFile(): string
@@ -167,8 +168,8 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * @param string $fileName
-     * @param string $type
+     * @param  string  $fileName
+     * @param  string  $type
      */
     protected function setCustomDocsFileName(string $fileName, string $type = 'json'): void
     {

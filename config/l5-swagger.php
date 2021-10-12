@@ -105,12 +105,14 @@ return [
         'scanOptions' => [
             /**
              * analyser: defaults to \OpenApi\StaticAnalyser .
+             *
              * @see \OpenApi\scan
              */
             'analyser' => null,
 
             /**
              * analysis: defaults to a new \OpenApi\Analysis .
+             *
              * @see \OpenApi\scan
              */
             'analysis' => null,
@@ -127,6 +129,7 @@ return [
 
             /**
              * pattern: string       $pattern File pattern(s) to scan (default: *.php) .
+             *
              * @see \OpenApi\scan
              */
             'pattern' => null,

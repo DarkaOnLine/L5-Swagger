@@ -84,11 +84,12 @@ class Generator
 
     /**
      * Generator constructor.
-     * @param array $paths
-     * @param array $constants
-     * @param bool $yamlCopyRequired
-     * @param SecurityDefinitions $security
-     * @param array $scanOptions
+     *
+     * @param  array  $paths
+     * @param  array  $constants
+     * @param  bool  $yamlCopyRequired
+     * @param  SecurityDefinitions  $security
+     * @param  array  $scanOptions
      */
     public function __construct(
         array $paths,
@@ -125,9 +126,9 @@ class Generator
     /**
      * Check directory structure and permissions.
      *
-     * @throws L5SwaggerException
-     *
      * @return Generator
+     *
+     * @throws L5SwaggerException
      */
     protected function prepareDirectory(): self
     {
@@ -236,9 +237,9 @@ class Generator
     /**
      * Save documentation as json file.
      *
-     * @throws Exception
-     *
      * @return Generator
+     *
+     * @throws Exception
      */
     protected function saveJson(): self
     {

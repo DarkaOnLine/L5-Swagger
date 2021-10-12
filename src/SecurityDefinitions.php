@@ -18,8 +18,9 @@ class SecurityDefinitions
 
     /**
      * SecurityDefinitions constructor.
-     * @param array $securitySchemesConfig
-     * @param array $securityConfig
+     *
+     * @param  array  $securitySchemesConfig
+     * @param  array  $securityConfig
      */
     public function __construct(array $securitySchemesConfig = [], array $securityConfig = [])
     {
@@ -30,7 +31,7 @@ class SecurityDefinitions
     /**
      * Reads in the l5-swagger configuration and appends security settings to documentation.
      *
-     * @param string $filename The path to the generated json documentation
+     * @param  string  $filename  The path to the generated json documentation
      */
     public function generate($filename)
     {
@@ -55,9 +56,8 @@ class SecurityDefinitions
     /**
      * Inject security schemes settings.
      *
-     * @param Collection $documentation The parse json
-     * @param array $config The securityScheme settings from l5-swagger
-     *
+     * @param  Collection  $documentation  The parse json
+     * @param  array  $config  The securityScheme settings from l5-swagger
      * @return Collection
      */
     protected function injectSecuritySchemes(Collection $documentation, array $config)
@@ -86,9 +86,8 @@ class SecurityDefinitions
     /**
      * Inject security settings.
      *
-     * @param Collection $documentation The parse json
-     * @param array $config The security settings from l5-swagger
-     *
+     * @param  Collection  $documentation  The parse json
+     * @param  array  $config  The security settings from l5-swagger
      * @return Collection
      */
     protected function injectSecurity(Collection $documentation, array $config)
@@ -111,7 +110,6 @@ class SecurityDefinitions
      * Converts an array to an object.
      *
      * @param $array
-     *
      * @return object
      */
     public static function arrayToObject($array)

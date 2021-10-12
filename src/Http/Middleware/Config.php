@@ -15,7 +15,8 @@ class Config
 
     /**
      * Config constructor.
-     * @param ConfigFactory $configFactory
+     *
+     * @param  ConfigFactory  $configFactory
      */
     public function __construct(ConfigFactory $configFactory)
     {
@@ -24,8 +25,9 @@ class Config
 
     /**
      * @param $request
-     * @param Closure $next
+     * @param  Closure  $next
      * @return mixed
+     *
      * @throws L5SwaggerException
      */
     public function handle($request, Closure $next)

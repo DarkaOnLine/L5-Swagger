@@ -10,8 +10,9 @@ class SecurityDefinitionsTest extends TestCase
      * @test
      * @dataProvider provideConfigAndSchemes
      *
-     * @param array $securitySchemes
-     * @param array $security
+     * @param  array  $securitySchemes
+     * @param  array  $security
+     *
      * @throws L5SwaggerException
      */
     public function canGenerateApiJsonFileWithSecurityDefinition(

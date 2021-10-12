@@ -30,9 +30,9 @@ class GenerateDocsCommand extends Command
     /**
      * Execute the console command.
      *
-     * @param GeneratorFactory $generatorFactory
-     *
+     * @param  GeneratorFactory  $generatorFactory
      * @return void
+     *
      * @throws L5SwaggerException
      */
     public function handle(GeneratorFactory $generatorFactory)
@@ -59,8 +59,9 @@ class GenerateDocsCommand extends Command
     }
 
     /**
-     * @param GeneratorFactory $generatorFactory
-     * @param string $documentation
+     * @param  GeneratorFactory  $generatorFactory
+     * @param  string  $documentation
+     *
      * @throws L5SwaggerException
      */
     private function generateDocumentation(GeneratorFactory $generatorFactory, string $documentation)

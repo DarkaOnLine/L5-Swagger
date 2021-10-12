@@ -19,8 +19,9 @@ class GeneratorFactory
     /**
      * Make Generator Instance.
      *
-     * @param string $documentation
+     * @param  string  $documentation
      * @return Generator
+     *
      * @throws L5SwaggerException
      */
     public function make(string $documentation): Generator
