@@ -159,9 +159,12 @@ class SwaggerController extends BaseController
             $fileUsedForDocs = $config['paths']['docs_yaml'];
         }
 
+        $UseAbsolutePath = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
+
         return route(
             'l5-swagger.'.$documentation.'.docs',
-            $fileUsedForDocs
+            $fileUsedForDocs,
+            $UseAbsolutePath
         );
     }
 }
