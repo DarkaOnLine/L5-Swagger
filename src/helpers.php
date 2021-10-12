@@ -63,8 +63,8 @@ if (! function_exists('l5_swagger_asset')) {
             throw new L5SwaggerException(sprintf('Requested L5 Swagger asset file (%s) does not exists', $asset));
         }
 
-        $use_absolute_path = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
+        $UseAbsolutePath = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
 
-        return route('l5-swagger.'.$documentation.'.asset', $asset, $use_absolute_path).'?v='.md5_file($file);
+        return route('l5-swagger.'.$documentation.'.asset', $asset, $UseAbsolutePath).'?v='.md5_file($file);
     }
 }
