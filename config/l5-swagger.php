@@ -250,7 +250,7 @@ return [
                  *  If set to true, it persists authorization data, and it would not be lost on browser close/refresh
                  */
                 'persist_authorization' => true,
-            ]
+                ]
         ],
         /*
          * Uncomment to add constants which can be used in annotations
