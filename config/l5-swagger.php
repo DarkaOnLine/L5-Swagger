@@ -116,12 +116,9 @@ return [
              * @link https://github.com/zircote/swagger-php/tree/master/Examples/schema-query-parameter-processor
              * @see \OpenApi\scan
              */
-            'processors' => array_merge(
-                \OpenApi\Analysis::processors(),
-                [
-                    // new \App\SwaggerProcessors\SchemaQueryParameter(),
-                ]
-            ),
+            'processors' => [
+                // new \App\SwaggerProcessors\SchemaQueryParameter(),
+            ],
 
             /**
              * pattern: string       $pattern File pattern(s) to scan (default: *.php) .
@@ -235,6 +232,26 @@ return [
         */
         'validator_url' => null,
 
+        /*
+        * Swagger UI configuration parameters
+        */
+        'ui' => [
+            'display' => [
+                /*
+                 * Controls the default expansion setting for the operations and tags. It can be :
+                 * 'list' (expands only the tags),
+                 * 'full' (expands the tags and operations),
+                 * 'none' (expands nothing).
+                 * */
+                'doc_expansion' => 'list',
+            ],
+            'authorization' => [
+                /*
+                 *  If set to true, it persists authorization data, and it would not be lost on browser close/refresh
+                 */
+                'persist_authorization' => true,
+            ]
+        ],
         /*
          * Uncomment to add constants which can be used in annotations
          */
