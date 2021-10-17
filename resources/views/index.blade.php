@@ -11,15 +11,15 @@
   <style>
     html
     {
-        box-sizing: border-box;
-        overflow: -moz-scrollbars-vertical;
-        overflow-y: scroll;
+      box-sizing: border-box;
+      overflow: -moz-scrollbars-vertical;
+      overflow-y: scroll;
     }
     *,
     *:before,
     *:after
     {
-        box-sizing: inherit;
+      box-sizing: inherit;
     }
 
     body {
@@ -34,7 +34,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="position:absolute;width:0;height:0">
   <defs>
     <symbol viewBox="0 0 20 20" id="unlocked">
-          <path d="M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V6h2v-.801C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8z"></path>
+      <path d="M15.8 8H14V5.6C14 2.703 12.665 1 10 1 7.334 1 6 2.703 6 5.6V6h2v-.801C8 3.754 8.797 3 10 3c1.203 0 2 .754 2 2.199V8H4c-.553 0-1 .646-1 1.199V17c0 .549.428 1.139.951 1.307l1.197.387C5.672 18.861 6.55 19 7.1 19h5.8c.549 0 1.428-.139 1.951-.307l1.196-.387c.524-.167.953-.757.953-1.306V9.199C17 8.646 16.352 8 15.8 8z"></path>
     </symbol>
 
     <symbol viewBox="0 0 20 20" id="locked">
@@ -70,38 +70,39 @@
 <script src="{{ l5_swagger_asset($documentation, 'swagger-ui-bundle.js') }}"> </script>
 <script src="{{ l5_swagger_asset($documentation, 'swagger-ui-standalone-preset.js') }}"> </script>
 <script>
-window.onload = function() {
-  // Build a system
-  const ui = SwaggerUIBundle({
-    dom_id: '#swagger-ui',
+  window.onload = function() {
+    // Build a system
+    const ui = SwaggerUIBundle({
+      dom_id: '#swagger-ui',
 
-    url: "{!! $urlToDocs !!}",
-    operationsSorter: {!! isset($operationsSorter) ? '"' . $operationsSorter . '"' : 'null' !!},
-    configUrl: {!! isset($configUrl) ? '"' . $configUrl . '"' : 'null' !!},
-    validatorUrl: {!! isset($validatorUrl) ? '"' . $validatorUrl . '"' : 'null' !!},
-    oauth2RedirectUrl: "{{ route('l5-swagger.'.$documentation.'.oauth2_callback', $useAbsolutePath) }}",
+      url: "{!! $urlToDocs !!}",
+      operationsSorter: {!! isset($operationsSorter) ? '"' . $operationsSorter . '"' : 'null' !!},
+      configUrl: {!! isset($configUrl) ? '"' . $configUrl . '"' : 'null' !!},
+      validatorUrl: {!! isset($validatorUrl) ? '"' . $validatorUrl . '"' : 'null' !!},
+      oauth2RedirectUrl: "{{ route('l5-swagger.'.$documentation.'.oauth2_callback') }}",
 
-    requestInterceptor: function(request) {
-      request.headers['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
-      return request;
-    },
+      requestInterceptor: function(request) {
+        request.headers['X-CSRF-TOKEN'] = '{{ csrf_token() }}';
+        return request;
+      },
 
-    presets: [
-      SwaggerUIBundle.presets.apis,
-      SwaggerUIStandalonePreset
-    ],
+      presets: [
+        SwaggerUIBundle.presets.apis,
+        SwaggerUIStandalonePreset
+      ],
 
-    plugins: [
-      SwaggerUIBundle.plugins.DownloadUrl
-    ],
+      plugins: [
+        SwaggerUIBundle.plugins.DownloadUrl
+      ],
 
-    layout: "StandaloneLayout",
+      layout: "StandaloneLayout",
+      docExpansion : "{!! config('l5-swagger.defaults.ui.display.doc_expansion') !!}",
+      persistAuthorization: "{!! config('l5-swagger.defaults.ui.authorization.persist_authorization')!!}",
 
-    persistAuthorization: {!! config('l5-swagger.defaults.persist_authorization') ? 'true' : 'false' !!},
-  })
+    })
 
-  window.ui = ui
-}
+    window.ui = ui
+  }
 </script>
 </body>
 

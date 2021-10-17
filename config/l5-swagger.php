@@ -90,11 +90,6 @@ return [
             'swagger_ui_assets_path' => env('L5_SWAGGER_UI_ASSETS_PATH', 'vendor/swagger-api/swagger-ui/dist/'),
 
             /*
-             * Edit to include full URL in ui for assets
-            */
-            'use_absolute_path' => env('L5_SWAGGER_USE_ABSOLUTE_PATH', true),
-
-            /*
              * Absolute path to directories that should be exclude from scanning
              * @deprecated Please use `scanOptions.exclude`
              * `scanOptions.exclude` overwrites this
@@ -105,14 +100,12 @@ return [
         'scanOptions' => [
             /**
              * analyser: defaults to \OpenApi\StaticAnalyser .
-             *
              * @see \OpenApi\scan
              */
             'analyser' => null,
 
             /**
              * analysis: defaults to a new \OpenApi\Analysis .
-             *
              * @see \OpenApi\scan
              */
             'analysis' => null,
@@ -129,7 +122,6 @@ return [
 
             /**
              * pattern: string       $pattern File pattern(s) to scan (default: *.php) .
-             *
              * @see \OpenApi\scan
              */
             'pattern' => null,
@@ -241,10 +233,25 @@ return [
         'validator_url' => null,
 
         /*
-         * Persist authorization login after refresh browser
-         */
-        'persist_authorization' => true,
-
+        * Swagger UI configuration parameters
+        */
+        'ui' => [
+            'display' => [
+                /*
+                 * Controls the default expansion setting for the operations and tags. It can be :
+                 * 'list' (expands only the tags),
+                 * 'full' (expands the tags and operations),
+                 * 'none' (expands nothing).
+                 * */
+                'doc_expansion' => 'list',
+            ],
+            'authorization' => [
+                /*
+                 *  If set to true, it persists authorization data, and it would not be lost on browser close/refresh
+                 */
+                'persist_authorization' => true,
+            ]
+        ],
         /*
          * Uncomment to add constants which can be used in annotations
          */
