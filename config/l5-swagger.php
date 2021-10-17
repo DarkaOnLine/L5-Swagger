@@ -100,19 +100,20 @@ return [
         'scanOptions' => [
             /**
              * analyser: defaults to \OpenApi\StaticAnalyser .
+             *
              * @see \OpenApi\scan
              */
             'analyser' => null,
 
             /**
              * analysis: defaults to a new \OpenApi\Analysis .
+             *
              * @see \OpenApi\scan
              */
             'analysis' => null,
 
             /**
              * Custom query path processors classes.
-             *
              * @link https://github.com/zircote/swagger-php/tree/master/Examples/schema-query-parameter-processor
              * @see \OpenApi\scan
              */
@@ -122,6 +123,7 @@ return [
 
             /**
              * pattern: string       $pattern File pattern(s) to scan (default: *.php) .
+             *
              * @see \OpenApi\scan
              */
             'pattern' => null,
@@ -233,7 +235,7 @@ return [
         'validator_url' => null,
 
         /*
-        * Swagger UI configuration parameters
+         * Swagger UI configuration parameters
         */
         'ui' => [
             'display' => [
@@ -242,13 +244,13 @@ return [
                  * 'list' (expands only the tags),
                  * 'full' (expands the tags and operations),
                  * 'none' (expands nothing).
-                 * */
+                 */
                 'doc_expansion' => 'list',
             ],
 
             'authorization' => [
                 /*
-                 *  If set to true, it persists authorization data, and it would not be lost on browser close/refresh
+                 * If set to true, it persists authorization data, and it would not be lost on browser close/refresh
                  */
                 'persist_authorization' => true,
             ],
