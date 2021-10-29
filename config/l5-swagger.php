@@ -16,6 +16,11 @@ return [
             ],
             'paths' => [
                 /*
+                 * Edit to include full URL in ui for assets
+                */
+                'use_absolute_path' => env('L5_SWAGGER_USE_ABSOLUTE_PATH', true),
+
+                /*
                  * File name of the generated json documentation file
                 */
                 'docs_json' => 'api-docs.json',
