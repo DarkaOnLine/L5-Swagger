@@ -94,7 +94,7 @@ window.onload = function() {
     plugins: [
       SwaggerUIBundle.plugins.DownloadUrl
     ],
-
+    filter: {!! config('l5-swagger.defaults.ui.display.filter') ? 'true' : 'false' !!},
     layout: "StandaloneLayout",
 
     persistAuthorization: {!! config('l5-swagger.defaults.persist_authorization') ? 'true' : 'false' !!},

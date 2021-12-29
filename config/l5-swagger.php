@@ -240,6 +240,20 @@ return [
         */
         'validator_url' => null,
 
+        'ui' => [
+            'display' => [
+                /**
+                 * If set, enables filtering. The top bar will show an edit box that 
+                 * you can use to filter the tagged operations that are shown. Can be 
+                 * Boolean to enable or disable, or a string, in which case filtering 
+                 * will be enabled using that string as the filter expression. Filtering 
+                 * is case sensitive matching the filter expression anywhere inside 
+                 * the tag. 
+                 */
+                'filter' => true, // true | false
+            ],
+        ],
+
         /*
          * Persist authorization login after refresh browser
          */
