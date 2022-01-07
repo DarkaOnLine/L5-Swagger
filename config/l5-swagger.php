@@ -258,6 +258,7 @@ return [
                  * 'none' (expands nothing).
                  */
                 'doc_expansion' => env('L5_SWAGGER_UI_DOC_EXPANSION', 'none'),
+
                 /**
                  * If set, enables filtering. The top bar will show an edit box that
                  * you can use to filter the tagged operations that are shown. Can be
