@@ -72,6 +72,6 @@ jobs:
         CC_TEST_REPORTER_ID: d5b1b36d663604a8900fb8a586625a94eae6cdb6f6d7372aec8f066c174b4a5c
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
-        ./cc-test-reporter after-build -t clover
+        ./cc-test-reporter after-build -t clover --exit-code 0
         php vendor/bin/php-coveralls
       if: matrix.php == '8.0'
