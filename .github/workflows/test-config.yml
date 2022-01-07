@@ -28,6 +28,13 @@ jobs:
         ini-values: xdebug.mode="coverage"
         coverage: xdebug
 
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+
+    - name: Require Swagger PHP
+      run: composer require 'zircote/swagger-php:3.*' --no-interaction --no-update
+      if: matrix.php < 8
+
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v2
@@ -36,13 +43,6 @@ jobs:
         key: ${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
-
-    - name: Require Swagger PHP
-      run: composer require 'zircote/swagger-php:3.*' --no-interaction --no-update
-      if: matrix.php < 8
 
     - name: Prepare enviroment
       run: |
