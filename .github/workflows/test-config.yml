@@ -66,4 +66,4 @@ jobs:
         CC_TEST_REPORTER_ID: d5b1b36d663604a8900fb8a586625a94eae6cdb6f6d7372aec8f066c174b4a5c
       with:
         coverageLocations: ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml
-      if: matrix.php = '8.0'
+      if: matrix.php == '8.0'
