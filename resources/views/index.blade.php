@@ -96,9 +96,10 @@ window.onload = function() {
     ],
 
     layout: "StandaloneLayout",
+    docExpansion : "{!! config('l5-swagger.defaults.ui.display.doc_expansion') !!}",
+    persistAuthorization: "{!! config('l5-swagger.defaults.ui.authorization.persist_authorization')!!}",
 
-    persistAuthorization: {!! config('l5-swagger.defaults.persist_authorization') ? 'true' : 'false' !!},
-  })
+    })
 
   window.ui = ui
 }

@@ -247,10 +247,26 @@ return [
         'validator_url' => null,
 
         /*
-         * Persist authorization login after refresh browser
-         */
-        'persist_authorization' => true,
+         * Swagger UI configuration parameters
+        */
+        'ui' => [
+            'display' => [
+                /*
+                 * Controls the default expansion setting for the operations and tags. It can be :
+                 * 'list' (expands only the tags),
+                 * 'full' (expands the tags and operations),
+                 * 'none' (expands nothing).
+                 */
+                'doc_expansion' => 'list',
+            ],
 
+            'authorization' => [
+                /*
+                 * If set to true, it persists authorization data, and it would not be lost on browser close/refresh
+                 */
+                'persist_authorization' => true,
+            ],
+        ],
         /*
          * Uncomment to add constants which can be used in annotations
          */
