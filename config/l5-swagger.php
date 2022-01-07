@@ -257,14 +257,23 @@ return [
                  * 'full' (expands the tags and operations),
                  * 'none' (expands nothing).
                  */
-                'doc_expansion' => 'list',
+                'doc_expansion' => env('L5_SWAGGER_UI_DOC_EXPANSION', 'none'),
+                /**
+                 * If set, enables filtering. The top bar will show an edit box that
+                 * you can use to filter the tagged operations that are shown. Can be
+                 * Boolean to enable or disable, or a string, in which case filtering
+                 * will be enabled using that string as the filter expression. Filtering
+                 * is case-sensitive matching the filter expression anywhere inside
+                 * the tag.
+                 */
+                'filter' => env('L5_SWAGGER_UI_FILTERS', true), // true | false
             ],
 
             'authorization' => [
                 /*
                  * If set to true, it persists authorization data, and it would not be lost on browser close/refresh
                  */
-                'persist_authorization' => true,
+                'persist_authorization' => env('L5_SWAGGER_UI_PERSIST_AUTHORIZATION', false),
             ],
         ],
         /*

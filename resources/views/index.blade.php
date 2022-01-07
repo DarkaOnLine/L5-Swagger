@@ -96,8 +96,9 @@ window.onload = function() {
     ],
 
     layout: "StandaloneLayout",
-    docExpansion : "{!! config('l5-swagger.defaults.ui.display.doc_expansion') !!}",
-    persistAuthorization: "{!! config('l5-swagger.defaults.ui.authorization.persist_authorization')!!}",
+    docExpansion : "{!! config('l5-swagger.defaults.ui.display.doc_expansion', 'none') !!}",
+    filter: {!! config('l5-swagger.defaults.ui.display.filter') ? 'true' : 'false' !!},
+    persistAuthorization: "{!! config('l5-swagger.defaults.ui.authorization.persist_authorization') ? 'true' : 'false' !!}",
 
     })
 
