@@ -1,10 +1,6 @@
 name: Test package
 
-on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+on: ["push", "pull_request"]
   workflow_dispatch:
 
 jobs:
@@ -77,9 +73,7 @@ jobs:
 
 
     - name: Publish coveralls report
-      uses: coverallsapp/github-action@master
       env:
-        CC_TEST_REPORTER_ID: d5b1b36d663604a8900fb8a586625a94eae6cdb6f6d7372aec8f066c174b4a5c
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: vendor/bin/php-coveralls --coverage_clover=clover.xml -v
       if: matrix.php == '8.0'
