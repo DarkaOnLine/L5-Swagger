@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [ '7.3', '7.4', '8.0', '8.1' ]
+        php: [ '7.4', '8.0', '8.1' ]
         stability: [ prefer-stable ]
 
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
@@ -73,5 +73,13 @@ jobs:
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         ./cc-test-reporter after-build -t clover --exit-code 0
-        php vendor/bin/php-coveralls
+      if: matrix.php == '8.0'
+
+
+    - name: Publish coveralls report
+      uses: coverallsapp/github-action@master
+      env:
+        CC_TEST_REPORTER_ID: d5b1b36d663604a8900fb8a586625a94eae6cdb6f6d7372aec8f066c174b4a5c
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
       if: matrix.php == '8.0'
