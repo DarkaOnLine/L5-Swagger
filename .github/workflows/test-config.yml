@@ -5,6 +5,7 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -31,6 +32,21 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
+
+    - name: Prepare enviroment
+      run: |
+        pwd
+        ls -al | grep $USER
+        sudo chown -R $USER:$USER .
+        sudo chmod -R g+rw .
+        ls -al | grep $USER
+        mkdir -p tests/storage/logs/test-reports
+        mkdir -p vendor/orchestra/testbench-core/laravel/vendor/swagger-api
+        mkdir -p vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui
+        mkdir -p vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist
+        sudo chown -R $USER:$USER vendor/orchestra/testbench-core/laravel/vendor/swagger-api
+        chmod -R 777 vendor/orchestra/testbench-core/laravel/vendor/swagger-api
+        ls -al vendor/orchestra/testbench-core/laravel/vendor/swagger-api
 
     - name: Run test suite
       run: composer run-script phpunit
