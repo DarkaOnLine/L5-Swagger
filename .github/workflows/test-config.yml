@@ -16,7 +16,7 @@ jobs:
       fail-fast: true
       matrix:
         php: [ '7.3', '7.4', '8.0', '8.1' ]
-        stability: [ prefer-lowest, prefer-stable ]
+        stability: [ prefer-stable ]
 
     name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
 
@@ -57,13 +57,21 @@ jobs:
         sudo chown -R $USER:$USER vendor/orchestra/testbench-core/laravel/vendor/swagger-api
         chmod -R 777 vendor/orchestra/testbench-core/laravel/vendor/swagger-api
 
+    - name: Prepare code climate
+      run: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+        ./cc-test-reporter before-build
+      if: matrix.php == '8.0'
+
     - name: Run test suite
       run: composer run-script phpunit
 
     - name: Publish code coverage
-      uses: paambaati/codeclimate-action@v3.0.0
       env:
         CC_TEST_REPORTER_ID: d5b1b36d663604a8900fb8a586625a94eae6cdb6f6d7372aec8f066c174b4a5c
-      with:
-        coverageLocations: ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml
+      run: |
+        cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
+        ./cc-test-reporter after-build -t clover
+        php vendor/bin/php-coveralls
       if: matrix.php == '8.0'
