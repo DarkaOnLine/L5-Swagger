@@ -14,9 +14,9 @@ jobs:
       fail-fast: true
       matrix:
         php: [ '7.4', '8.0', '8.1' ]
-        stability: [ prefer-stable ]
+        composer_flags:  ['', '--prefer-lowest']
 
-    name: PHP ${{ matrix.php }} - ${{ matrix.stability }}
+    name: PHP ${{ matrix.php }} - ${{ matrix.composer_flags }}
 
     steps:
     - uses: actions/checkout@v2
@@ -38,7 +38,7 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
+      run: composer install --no-interaction --no-progress --prefer-dist ${{ matrix.composer_flags }}
 
     - name: Require Swagger PHP
       run: composer require 'zircote/swagger-php:3.*' --no-interaction --no-update
@@ -60,7 +60,7 @@ jobs:
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
-      if: matrix.php == '8.0'
+      if: matrix.php == '8.0' && matrix.composer_flags == ''
 
     - name: Run test suite
       run: composer run-script phpunit
@@ -71,11 +71,10 @@ jobs:
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         ./cc-test-reporter after-build -t clover --exit-code 0
-      if: matrix.php == '8.0'
-
+      if: matrix.php == '8.0' && matrix.composer_flags == ''
 
     - name: Publish coveralls report
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: vendor/bin/php-coveralls --coverage_clover=clover.xml -v
-      if: matrix.php == '8.0'
+      if: matrix.php == '8.0' && matrix.composer_flags == ''
