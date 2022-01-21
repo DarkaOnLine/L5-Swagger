@@ -38,7 +38,7 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer install --no-interaction --no-progress --prefer-dist ${{ matrix.composer_flags }}
+      run: composer update --no-interaction --no-progress --prefer-dist ${{ matrix.composer_flags }}
 
     - name: Require Swagger PHP
       run: composer require 'zircote/swagger-php:3.*' --no-interaction --no-update
