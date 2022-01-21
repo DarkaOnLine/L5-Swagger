@@ -10,6 +10,7 @@ use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Server;
 use OpenApi\Generator as OpenApiGenerator;
 use OpenApi\Util;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use Symfony\Component\Yaml\Yaml;
 
@@ -171,33 +172,28 @@ class Generator
      */
     protected function scanFilesForDocumentation(): self
     {
-        $options = $this->getScanOptions();
+        $generator = $this->createOpenApiGenerator();
+        $finder = $this->createScanFinder();
 
-        $this->openApi = OpenApiGenerator::scan(
-            Util::finder(
-                $this->annotationsDir,
-                $options[self::SCAN_OPTION_EXCLUDE] ?? null,
-                $options[self::SCAN_OPTION_PATTERN] ?? null
-            ),
-            $options
-        );
+        $this->openApi = $generator->generate($finder);
 
         return $this;
     }
 
     /**
-     * Prepares options array for scanning files.
+     * Prepares generator for generating the documentation.
      *
-     * @return array
+     * @return OpenApiGenerator $generator
      */
-    protected function getScanOptions(): array
+    protected function createOpenApiGenerator(): OpenApiGenerator
     {
-        $options = [];
+        $generator = new OpenApiGenerator();
 
+        // Processors.
         $processorClasses = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
         $processors = [];
 
-        foreach (\OpenApi\Analysis::processors() as $processor) {
+        foreach ($generator->getProcessors() as $processor) {
             $processors[] = $processor;
             if ($processor instanceof \OpenApi\Processors\BuildPaths) {
                 foreach ($processorClasses as $customProcessor) {
@@ -207,20 +203,39 @@ class Generator
         }
 
         if (! empty($processors)) {
-            $options[self::SCAN_OPTION_PROCESSORS] = $processors;
+            $generator->setProcessors($processors);
         }
 
-        foreach (self::AVAILABLE_SCAN_OPTIONS as $optionKey) {
-            $option = Arr::get($this->scanOptions, $optionKey);
-            if (! empty($option)) {
-                $options[$optionKey] = $option;
-            }
+        // Analyser.
+        $analyser = Arr::get($this->scanOptions, self::SCAN_OPTION_ANALYSER);
+
+        if (! empty($analyser)) {
+            $generator->setAnalyser($analyser);
         }
 
-        // `scanOptions.exclude` option overwrites `paths.excludes` option but fallbacks to old config if not set
-        $options[self::SCAN_OPTION_EXCLUDE] = ! empty($options[self::SCAN_OPTION_EXCLUDE]) ? $options[self::SCAN_OPTION_EXCLUDE] : $this->excludedDirs;
+        // Analysis.
+        $analysis = Arr::get($this->scanOptions, self::SCAN_OPTION_ANALYSIS);
 
-        return $options;
+        if (! empty($analysis)) {
+            $generator->setAnalysis($analysis);
+        }
+
+        return $generator;
+    }
+
+    /**
+     * Prepares finder for determining relevant files.
+     *
+     * @return Finder
+     */
+    protected function createScanFinder(): Finder
+    {
+        $pattern = Arr::get($this->scanOptions, self::SCAN_OPTION_PATTERN);
+        $exclude = Arr::get($this->scanOptions, self::SCAN_OPTION_EXCLUDE);
+
+        $exclude = ! empty($exclude) ? $exclude : $this->excludedDirs;
+
+        return Util::finder($this->annotationsDir, $exclude, $pattern);
     }
 
     /**
