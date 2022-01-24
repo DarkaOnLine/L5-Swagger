@@ -175,7 +175,10 @@ class Generator
         $generator = $this->createOpenApiGenerator();
         $finder = $this->createScanFinder();
 
-        $this->openApi = $generator->generate($finder);
+        // Analysis.
+        $analysis = Arr::get($this->scanOptions, self::SCAN_OPTION_ANALYSIS);
+
+        $this->openApi = $generator->generate($finder, $analysis);
 
         return $this;
     }
@@ -211,13 +214,6 @@ class Generator
 
         if (! empty($analyser)) {
             $generator->setAnalyser($analyser);
-        }
-
-        // Analysis.
-        $analysis = Arr::get($this->scanOptions, self::SCAN_OPTION_ANALYSIS);
-
-        if (! empty($analysis)) {
-            $generator->setAnalysis($analysis);
         }
 
         return $generator;
