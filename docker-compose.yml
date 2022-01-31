@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  l5-swagger-app:
+    image: l5-swagger-app
+    container_name: l5-swagger-app
+    restart: "no"
+    build:
+      args:
+        user: l5-swagger
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+      target: local
+    volumes:
+      - l5-swagger-app-volume:/app/l5-swagger-app:rw
+      - ./:/app:rw
+    ports:
+      - "7777:80"
+
+volumes:
+  l5-swagger-app-volume:
+
+networks:
+  default:
+    name: l5-swagger-app

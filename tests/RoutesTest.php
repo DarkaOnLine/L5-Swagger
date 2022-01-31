@@ -22,6 +22,11 @@ class RoutesTest extends TestCase
     public function userCanAccessJsonFileIfItIsGenerated(): void
     {
         $jsonUrl = route('l5-swagger.default.docs');
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['generate_always' => false]),
+        ]]);
 
         $this->crateJsonDocumentationFile();
 
@@ -39,6 +44,13 @@ class RoutesTest extends TestCase
         $jsonUrl = route('l5-swagger.default.docs', $customJsonFileName);
 
         $this->setCustomDocsFileName($customJsonFileName);
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['generate_always' => false]),
+        ]]);
+
         $this->crateJsonDocumentationFile();
 
         $this->get($jsonUrl)
@@ -55,10 +67,39 @@ class RoutesTest extends TestCase
         $jsonUrl = route('l5-swagger.default.docs', $customYamlFileName);
 
         $this->setCustomDocsFileName($customYamlFileName, 'yaml');
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['generate_always' => false]),
+        ]]);
+
         $this->createYamlDocumentationFile();
 
         $this->get($jsonUrl)
             ->assertHeader('Content-Type', 'application/yaml')
+            ->isOk();
+    }
+
+    /** @test */
+    public function itCanAccessAndGenerateYamlFile(): void
+    {
+        $customYamlFileName = 'docs.yaml';
+
+        $jsonUrl = route('l5-swagger.default.api');
+
+        $this->setCustomDocsFileName($customYamlFileName, 'yaml');
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['generate_always' => true]),
+        ]]);
+
+        $this->setAnnotationsPath();
+
+        $this->get($jsonUrl)
+            ->assertSeeText('http://localhost/docs/docs.yaml')
             ->isOk();
     }
 
@@ -70,6 +111,13 @@ class RoutesTest extends TestCase
         $jsonUrl = route('l5-swagger.default.docs', $customYamlFileName);
 
         $this->setCustomDocsFileName($customYamlFileName);
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['generate_always' => false]),
+        ]]);
+
         $this->crateJsonDocumentationFile();
 
         $this->get($jsonUrl)
