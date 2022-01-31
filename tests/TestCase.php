@@ -176,10 +176,12 @@ class TestCase extends OrchestraTestCase
         $cfg = config('l5-swagger.documentations.default');
 
         if ($type === 'json') {
+            $cfg['paths']['format_to_use_for_docs'] = $type;
             $cfg['paths']['docs_json'] = $fileName;
         }
 
         if ($type === 'yaml') {
+            $cfg['paths']['format_to_use_for_docs'] = $type;
             $cfg['paths']['docs_yaml'] = $fileName;
         }
 
