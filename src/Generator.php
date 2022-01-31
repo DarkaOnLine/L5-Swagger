@@ -134,7 +134,7 @@ class Generator
      */
     protected function prepareDirectory(): self
     {
-        if (File::exists($this->docDir) && ! is_writable($this->docDir)) {
+        if (File::exists($this->docDir) && ! File::isWritable($this->docDir)) {
             throw new L5SwaggerException('Documentation storage directory is not writable');
         }
 
