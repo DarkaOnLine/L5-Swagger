@@ -193,6 +193,20 @@ class Generator
         $generator = new OpenApiGenerator();
 
         // Processors.
+        $this->setProcessors($generator);
+
+        // Analyser.
+        $this->setAnalyser($generator);
+
+        return $generator;
+    }
+
+    /**
+     * @param OpenApiGenerator $generator
+     * @return void
+     */
+    protected function setProcessors(OpenApiGenerator $generator): void
+    {
         $processorClasses = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
         $processors = [];
 
@@ -205,18 +219,22 @@ class Generator
             }
         }
 
-        if (! empty($processors)) {
+        if (!empty($processors)) {
             $generator->setProcessors($processors);
         }
+    }
 
-        // Analyser.
+    /**
+     * @param OpenApiGenerator $generator
+     * @return void
+     */
+    protected function setAnalyser(OpenApiGenerator $generator): void
+    {
         $analyser = Arr::get($this->scanOptions, self::SCAN_OPTION_ANALYSER);
 
-        if (! empty($analyser)) {
+        if (!empty($analyser)) {
             $generator->setAnalyser($analyser);
         }
-
-        return $generator;
     }
 
     /**

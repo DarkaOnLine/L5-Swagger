@@ -19,6 +19,7 @@ class L5SwaggerAnnotationsExampleProducts
      *
      * Returns list of products
      */
-    public function getProductsList() {
+    public function getProductsList()
+    {
     }
 }

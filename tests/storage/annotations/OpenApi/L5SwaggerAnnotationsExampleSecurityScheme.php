@@ -19,5 +19,6 @@ namespace Tests\storage\annotations\OpenApi;
  *     )
  * )
  */
-class L5SwaggerAnnotationsExampleSecurityScheme {
+class L5SwaggerAnnotationsExampleSecurityScheme
+{
 }
