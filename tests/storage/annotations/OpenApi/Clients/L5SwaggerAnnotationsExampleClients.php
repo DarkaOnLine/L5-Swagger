@@ -1,6 +1,8 @@
 <?php
 
-class L5SwaggerAnnotationsExampleProjectsClients
+namespace Tests\storage\annotations\OpenApi\Clients;
+
+class L5SwaggerAnnotationsExampleClients
 {
     /**
      * @OA\Get(

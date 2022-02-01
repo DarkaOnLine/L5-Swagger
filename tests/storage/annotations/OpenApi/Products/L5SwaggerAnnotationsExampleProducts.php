@@ -1,6 +1,8 @@
 <?php
 
-class L5SwaggerAnnotationsExampleProjectsPost
+namespace Tests\storage\annotations\OpenApi\Products;
+
+class L5SwaggerAnnotationsExampleProducts
 {
     /**
      * @OA\Post(

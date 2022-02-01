@@ -157,7 +157,7 @@ class GeneratorTest extends TestCase
             __DIR__.'/storage/annotations/OpenApi/Clients',
         ];
 
-        $cfg['scanOptions']['pattern'] = 'Anotations.*';
+        $cfg['scanOptions']['pattern'] = 'L5SwaggerAnnotationsExample*.*';
 
         config(['l5-swagger' => [
             'default' => 'default',
@@ -177,7 +177,7 @@ class GeneratorTest extends TestCase
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
-            ->assertDontSee('getProductsList')
+            ->assertSee('getProductsList')
             ->assertDontSee('getClientsList')
             ->assertStatus(200);
     }
