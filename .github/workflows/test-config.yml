@@ -14,9 +14,9 @@ jobs:
       fail-fast: true
       matrix:
         php: [ '7.4', '8.0', '8.1' ]
-        composer_flags:  ['--prefer-stable', '--prefer-lowest']
+        l5-swagger-flags:  ['latest', 'swagger-php-3', 'swagger-ui-3']
 
-    name: PHP ${{ matrix.php }} - ${{ matrix.composer_flags }}
+    name: PHP ${{ matrix.php }} - ${{ matrix.l5-swagger-flags }}
 
     steps:
     - uses: actions/checkout@v2
@@ -38,7 +38,15 @@ jobs:
           ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer update --no-interaction --no-progress --prefer-dist ${{ matrix.composer_flags }}
+      run: composer update --no-interaction --no-progress --prefer-dist --prefer-stable
+
+    - name: Require Swagger PHP 3.*
+      run: composer require 'zircote/swagger-php:3.*' --no-interaction --no-update
+      if: matrix.l5-swagger-flags == 'swagger-php-3'
+
+    - name: Require Swagger UI 3.*
+      run: composer require 'swagger-api/swagger-ui:3.*' --no-interaction --no-update
+      if: matrix.l5-swagger-flags == 'swagger-ui-3'
 
     - name: Prepare enviroment
       run: |
@@ -56,7 +64,7 @@ jobs:
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
-      if: matrix.php == '8.0' && matrix.composer_flags == '--prefer-stable'
+      if: matrix.php == '8.1' && matrix.l5-swagger-flags == 'latest'
 
     - name: Run test suite
       run: composer run-script phpunit
@@ -67,10 +75,10 @@ jobs:
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         ./cc-test-reporter after-build -t clover --exit-code 0
-      if: matrix.php == '8.0' && matrix.composer_flags == '--prefer-stable'
+      if: matrix.php == '8.1' && matrix.l5-swagger-flags == 'latest'
 
     - name: Publish coveralls report
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: vendor/bin/php-coveralls --coverage_clover=clover.xml -v
-      if: matrix.php == '8.0' && matrix.composer_flags == '--prefer-stable'
+      if: matrix.php == '8.1' && matrix.l5-swagger-flags == 'latest'
