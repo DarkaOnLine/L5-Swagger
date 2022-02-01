@@ -56,7 +56,7 @@ jobs:
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
-      if: matrix.php == '8.0' && matrix.composer_flags == ''
+      if: matrix.php == '8.0' && matrix.composer_flags == '--prefer-stable'
 
     - name: Run test suite
       run: composer run-script phpunit
@@ -67,10 +67,10 @@ jobs:
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         ./cc-test-reporter after-build -t clover --exit-code 0
-      if: matrix.php == '8.0' && matrix.composer_flags == ''
+      if: matrix.php == '8.0' && matrix.composer_flags == '--prefer-stable'
 
     - name: Publish coveralls report
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: vendor/bin/php-coveralls --coverage_clover=clover.xml -v
-      if: matrix.php == '8.0' && matrix.composer_flags == ''
+      if: matrix.php == '8.0' && matrix.composer_flags == '--prefer-stable'
