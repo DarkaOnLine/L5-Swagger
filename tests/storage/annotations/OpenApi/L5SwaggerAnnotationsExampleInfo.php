@@ -22,4 +22,5 @@ namespace Tests\storage\annotations\OpenApi;
  * )
  */
 
-class L5SwaggerAnnotationsExampleInfo {}
+class L5SwaggerAnnotationsExampleInfo {
+}

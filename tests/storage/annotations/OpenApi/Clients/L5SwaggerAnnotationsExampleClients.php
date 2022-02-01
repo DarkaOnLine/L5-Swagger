@@ -19,5 +19,6 @@ class L5SwaggerAnnotationsExampleClients
      *
      * Returns list of clients
      */
-    public function getClientsList() {}
+    public function getClientsList() {
+    }
 }

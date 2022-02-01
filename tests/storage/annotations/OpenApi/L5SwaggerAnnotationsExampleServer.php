@@ -13,4 +13,5 @@ namespace Tests\storage\annotations\OpenApi;
  *      description="L5 Swagger OpenApi Server"
  * )
  */
-class L5SwaggerAnnotationsExampleServer {}
+class L5SwaggerAnnotationsExampleServer {
+}

@@ -25,4 +25,5 @@ namespace Tests\storage\annotations\OpenApi;
  *     url="https://swagger.io"
  * )
  */
-class L5SwaggerAnnotationsExampleTag {}
+class L5SwaggerAnnotationsExampleTag {
+}

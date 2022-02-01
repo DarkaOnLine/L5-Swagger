@@ -23,7 +23,8 @@ class L5SwaggerAnnotationsExampleProjects
      *
      * Returns list of projects
      */
-    public function getProjectsList() {}
+    public function getProjectsList() {
+    }
 
     /**
      * @OA\Get(
@@ -54,5 +55,6 @@ class L5SwaggerAnnotationsExampleProjects
      *     },
      * )
      */
-    public function getProjectById() {}
+    public function getProjectById() {
+    }
 }
