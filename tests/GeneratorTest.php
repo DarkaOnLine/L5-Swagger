@@ -5,6 +5,8 @@ namespace Tests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
+use OpenApi\Analysers\TokenAnalyser;
+use OpenApi\Processors\CleanUnmerged;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 
@@ -157,7 +159,11 @@ class GeneratorTest extends TestCase
             __DIR__.'/storage/annotations/OpenApi/Clients',
         ];
 
-        $cfg['scanOptions']['pattern'] = 'Anotations.*';
+        $cfg['scanOptions']['pattern'] = 'L5SwaggerAnnotationsExample*.*';
+        $cfg['scanOptions']['analyser'] = new TokenAnalyser;
+        $cfg['scanOptions']['processors'] = [
+            new CleanUnmerged,
+        ];
 
         config(['l5-swagger' => [
             'default' => 'default',
@@ -177,7 +183,7 @@ class GeneratorTest extends TestCase
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
-            ->assertDontSee('getProductsList')
+            ->assertSee('getProductsList')
             ->assertDontSee('getClientsList')
             ->assertStatus(200);
     }
