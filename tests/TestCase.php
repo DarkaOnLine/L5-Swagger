@@ -2,12 +2,14 @@
 
 namespace Tests;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 use L5Swagger\ConfigFactory;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class TestCase extends OrchestraTestCase
 {
@@ -26,6 +28,23 @@ class TestCase extends OrchestraTestCase
      */
     protected $generator;
 
+    /**
+     * @var MockObject|Filesystem
+     */
+    protected $fileSystem;
+
+    /**
+     * @before
+     * @return void
+     */
+    public function setUpFileSystem(): void
+    {
+        $this->fileSystem = $this->createMock(Filesystem::class);
+    }
+
+    /**
+     * @return void
+     */
     public function setUp(): void
     {
         parent::setUp();
@@ -38,19 +57,21 @@ class TestCase extends OrchestraTestCase
 
     public function tearDown(): void
     {
+        $fileSystem = new Filesystem();
+
         try {
             $config = $this->configFactory->documentationConfig();
 
-            if (file_exists($this->jsonDocsFile())) {
-                unlink($this->jsonDocsFile());
+            if ($fileSystem->exists($this->jsonDocsFile())) {
+                $fileSystem->delete($this->jsonDocsFile());
             }
 
-            if (file_exists($this->yamlDocsFile())) {
-                unlink($this->yamlDocsFile());
+            if ($fileSystem->exists($this->yamlDocsFile())) {
+                $fileSystem->delete($this->yamlDocsFile());
             }
 
-            if (file_exists($config['paths']['docs'])) {
-                rmdir($config['paths']['docs']);
+            if ($fileSystem->exists($config['paths']['docs'])) {
+                $fileSystem->deleteDirectory($config['paths']['docs']);
             }
         } catch (L5SwaggerException $e) {
         }
@@ -76,7 +97,8 @@ class TestCase extends OrchestraTestCase
      */
     protected function crateJsonDocumentationFile(): void
     {
-        file_put_contents($this->jsonDocsFile(), '{}');
+        $fileSystem = new Filesystem();
+        $fileSystem->put($this->jsonDocsFile(), '{}');
     }
 
     /**
@@ -86,7 +108,8 @@ class TestCase extends OrchestraTestCase
      */
     protected function createYamlDocumentationFile(): void
     {
-        file_put_contents($this->yamlDocsFile(), '');
+        $fileSystem = new Filesystem();
+        $fileSystem->put($this->yamlDocsFile(), '');
     }
 
     /**
@@ -98,11 +121,12 @@ class TestCase extends OrchestraTestCase
      */
     protected function jsonDocsFile(): string
     {
+        $fileSystem = new Filesystem();
         $config = $this->configFactory->documentationConfig();
         $docs = $config['paths']['docs'];
 
-        if (! is_dir($docs)) {
-            mkdir($docs);
+        if (! $fileSystem->isDirectory($docs)) {
+            $fileSystem->makeDirectory($docs);
         }
 
         return $docs.DIRECTORY_SEPARATOR.$config['paths']['docs_json'];
@@ -117,11 +141,12 @@ class TestCase extends OrchestraTestCase
      */
     protected function yamlDocsFile(): string
     {
+        $fileSystem = new Filesystem();
         $config = $this->configFactory->documentationConfig();
         $docs = $config['paths']['docs'];
 
-        if (! is_dir($docs)) {
-            mkdir($docs);
+        if (! $fileSystem->isDirectory($docs)) {
+            $fileSystem->makeDirectory($docs);
         }
 
         return $docs.DIRECTORY_SEPARATOR.$config['paths']['docs_yaml'];
@@ -168,6 +193,20 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
+     * @return void
+     */
+    protected function makeGeneratorWithMockedFileSystem(): void
+    {
+        $this->generator = $this->app->make(Generator::class);
+
+        $reflectionObject   = new \ReflectionObject($this->generator);
+        $reflectionProperty = $reflectionObject->getProperty('fileSystem');
+        $reflectionProperty->setAccessible(true);
+
+        $reflectionProperty->setValue($this->generator, $this->fileSystem);
+    }
+
+    /**
      * @param  string  $fileName
      * @param  string  $type
      */
@@ -199,27 +238,30 @@ class TestCase extends OrchestraTestCase
      */
     protected function copyAssets(): void
     {
+        $fileSystem = new Filesystem();
         $src = __DIR__.'/../vendor/swagger-api/swagger-ui/dist/';
         $destination = __DIR__.'/../vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist/';
 
-        if (! is_dir($destination)) {
+        if (! $fileSystem->isDirectory($destination)) {
             $base = realpath(
-                __DIR__.'/../vendor/orchestra/testbench-core/laravel/vendor'
+                __DIR__.'/../vendor/orchestra/testbench-core'
             );
 
-            mkdir($base = $base.'/swagger-api');
-            mkdir($base = $base.'/swagger-ui');
-            mkdir($base = $base.'/dist');
+            $fileSystem->makeDirectory(
+                $base.'/laravel/vendor/swagger-api/swagger-ui/dist'
+                ,0777,
+                true
+            );
         }
 
         foreach (scandir($src) as $file) {
             $filePath = $src.$file;
 
-            if (! is_readable($filePath) || is_dir($filePath)) {
+            if (! $fileSystem->isReadable($filePath) || $fileSystem->isDirectory($filePath)) {
                 continue;
             }
 
-            copy(
+            $fileSystem->copy(
                 $filePath,
                 $destination.$file
             );
