@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Analysers\TokenAnalyser;
 use OpenApi\Processors\CleanUnmerged;
@@ -77,7 +76,6 @@ class GeneratorTest extends TestCase
 
         $config = $this->configFactory->documentationConfig();
         $docs = $config['paths']['docs'];
-
 
         $this->fileSystem
             ->expects($this->exactly(3))
