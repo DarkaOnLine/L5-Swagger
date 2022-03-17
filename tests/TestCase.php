@@ -10,6 +10,7 @@ use L5Swagger\Generator;
 use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionObject;
 
 class TestCase extends OrchestraTestCase
 {
@@ -200,7 +201,7 @@ class TestCase extends OrchestraTestCase
     {
         $this->generator = $this->app->make(Generator::class);
 
-        $reflectionObject = new \ReflectionObject($this->generator);
+        $reflectionObject = new ReflectionObject($this->generator);
         $reflectionProperty = $reflectionObject->getProperty('fileSystem');
         $reflectionProperty->setAccessible(true);
 
@@ -249,7 +250,8 @@ class TestCase extends OrchestraTestCase
             );
 
             $fileSystem->makeDirectory(
-                $base.'/laravel/vendor/swagger-api/swagger-ui/dist', 0777,
+                $base.'/laravel/vendor/swagger-api/swagger-ui/dist',
+                0777,
                 true
             );
         }
