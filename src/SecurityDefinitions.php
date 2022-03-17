@@ -32,7 +32,7 @@ class SecurityDefinitions
     /**
      * Reads in the l5-swagger configuration and appends security settings to documentation.
      *
-     * @param string $filename The path to the generated json documentation
+     * @param  string  $filename  The path to the generated json documentation
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */

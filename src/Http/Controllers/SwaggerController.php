@@ -28,8 +28,8 @@ class SwaggerController extends BaseController
     /**
      * Dump api-docs content endpoint. Supports dumping a json, or yaml file.
      *
-     * @param Request $request
-     * @param ?string $file
+     * @param  Request  $request
+     * @param  ?string  $file
      * @return Response
      *
      * @throws L5SwaggerException
@@ -132,7 +132,7 @@ class SwaggerController extends BaseController
     /**
      * Display Oauth2 callback pages.
      *
-     * @param Request $request
+     * @param  Request  $request
      * @return string
      *
      * @throws L5SwaggerException
