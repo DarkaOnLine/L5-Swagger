@@ -3,8 +3,8 @@
 namespace L5Swagger;
 
 use Exception;
-use Illuminate\Support\Arr;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Arr;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Server;
