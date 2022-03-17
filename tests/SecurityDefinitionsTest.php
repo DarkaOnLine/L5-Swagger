@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Filesystem\Filesystem;
 use L5Swagger\Exceptions\L5SwaggerException;
 
 class SecurityDefinitionsTest extends TestCase
@@ -19,6 +20,8 @@ class SecurityDefinitionsTest extends TestCase
         array $securitySchemes,
         array $security
     ): void {
+        $fileSystem = new Filesystem();
+
         $this->setAnnotationsPath();
 
         $config = config('l5-swagger.documentations.default');
@@ -36,7 +39,7 @@ class SecurityDefinitionsTest extends TestCase
 
         $this->generator->generateDocs();
 
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
+        $this->assertTrue($fileSystem->exists($this->jsonDocsFile()));
 
         $this->get(route('l5-swagger.default.docs'))
              ->assertSee('new_api_key_securitye')

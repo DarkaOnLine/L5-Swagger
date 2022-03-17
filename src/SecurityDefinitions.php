@@ -2,6 +2,7 @@
 
 namespace L5Swagger;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 
 class SecurityDefinitions
@@ -31,12 +32,16 @@ class SecurityDefinitions
     /**
      * Reads in the l5-swagger configuration and appends security settings to documentation.
      *
-     * @param  string  $filename  The path to the generated json documentation
+     * @param string $filename The path to the generated json documentation
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function generate($filename)
     {
+        $fileSystem = new Filesystem();
+
         $documentation = collect(
-            json_decode(file_get_contents($filename))
+            json_decode($fileSystem->get($filename))
         );
 
         if (is_array($this->securitySchemesConfig) && ! empty($this->securitySchemesConfig)) {
@@ -47,7 +52,7 @@ class SecurityDefinitions
             $documentation = $this->injectSecurity($documentation, $this->securityConfig);
         }
 
-        file_put_contents(
+        $fileSystem->put(
             $filename,
             $documentation->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
         );
