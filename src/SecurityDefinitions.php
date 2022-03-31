@@ -104,7 +104,7 @@ class SecurityDefinitions
         }
 
         foreach ($config as $key => $cfg) {
-            if (!empty($cfg)) {
+            if (! empty($cfg)) {
                 $security->put($key, $this->arrayToObject($cfg));
             }
         }

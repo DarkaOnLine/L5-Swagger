@@ -12,7 +12,8 @@ class SecurityDefinitionsTest extends TestCase
      *
      * @throws L5SwaggerException
      */
-    public function itWillNotAddEmptySecurityItems(): void {
+    public function itWillNotAddEmptySecurityItems(): void
+    {
         $fileSystem = new Filesystem();
 
         $this->setAnnotationsPath();
