@@ -2,6 +2,7 @@
 
 namespace L5Swagger;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 
@@ -34,9 +35,9 @@ class SecurityDefinitions
      *
      * @param  string  $filename  The path to the generated json documentation
      *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws FileNotFoundException
      */
-    public function generate($filename)
+    public function generate(string $filename): void
     {
         $fileSystem = new Filesystem();
 
@@ -65,7 +66,7 @@ class SecurityDefinitions
      * @param  array  $config  The securityScheme settings from l5-swagger
      * @return Collection
      */
-    protected function injectSecuritySchemes(Collection $documentation, array $config)
+    protected function injectSecuritySchemes(Collection $documentation, array $config): Collection
     {
         $components = collect();
         if ($documentation->has('components')) {
@@ -78,7 +79,7 @@ class SecurityDefinitions
         }
 
         foreach ($config as $key => $cfg) {
-            $securitySchemes->offsetSet($key, self::arrayToObject($cfg));
+            $securitySchemes->offsetSet($key, $this->arrayToObject($cfg));
         }
 
         $components->offsetSet('securitySchemes', $securitySchemes);
@@ -95,7 +96,7 @@ class SecurityDefinitions
      * @param  array  $config  The security settings from l5-swagger
      * @return Collection
      */
-    protected function injectSecurity(Collection $documentation, array $config)
+    protected function injectSecurity(Collection $documentation, array $config): Collection
     {
         $security = collect();
         if ($documentation->has('security')) {
@@ -103,10 +104,14 @@ class SecurityDefinitions
         }
 
         foreach ($config as $key => $cfg) {
-            $security->offsetSet($key, self::arrayToObject($cfg));
+            if (!empty($cfg)) {
+                $security->put($key, $this->arrayToObject($cfg));
+            }
         }
 
-        $documentation->offsetSet('security', $security);
+        if ($security->count()) {
+            $documentation->offsetSet('security', $security);
+        }
 
         return $documentation;
     }
@@ -117,7 +122,7 @@ class SecurityDefinitions
      * @param $array
      * @return object
      */
-    public static function arrayToObject($array)
+    protected function arrayToObject($array)
     {
         return json_decode(json_encode($array));
     }

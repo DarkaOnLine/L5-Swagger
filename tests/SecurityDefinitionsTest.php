@@ -9,6 +9,45 @@ class SecurityDefinitionsTest extends TestCase
 {
     /**
      * @test
+     *
+     * @throws L5SwaggerException
+     */
+    public function itWillNotAddEmptySecurityItems(): void {
+        $fileSystem = new Filesystem();
+
+        $this->setAnnotationsPath();
+
+        $defaultConfig = config('l5-swagger.defaults');
+        $defaultConfig['securityDefinitions']['securitySchemes'] = [[]];
+        $defaultConfig['securityDefinitions']['security'] = [[]];
+
+        $config = config('l5-swagger.documentations.default');
+
+        $config['securityDefinitions']['securitySchemes'] = [[]];
+        $config['securityDefinitions']['security'] = [[]];
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => [
+                'default' => $config,
+            ],
+            'defaults' => $defaultConfig,
+        ]]);
+
+        $this->generator->generateDocs();
+
+        $this->assertTrue($fileSystem->exists($this->jsonDocsFile()));
+
+        $this->get(route('l5-swagger.default.docs'))
+            ->assertSee('oauth2')  // From annotations
+            ->assertSee('read:oauth2') // From annotations
+            ->assertJsonMissing(['securitySchemes' => []])
+            ->assertJsonMissing(['security' => []])
+            ->isOk();
+    }
+
+    /**
+     * @test
      * @dataProvider provideConfigAndSchemes
      *
      * @param  array  $securitySchemes
