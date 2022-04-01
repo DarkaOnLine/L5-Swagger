@@ -2,10 +2,51 @@
 
 namespace Tests;
 
+use Illuminate\Filesystem\Filesystem;
 use L5Swagger\Exceptions\L5SwaggerException;
 
 class SecurityDefinitionsTest extends TestCase
 {
+    /**
+     * @test
+     *
+     * @throws L5SwaggerException
+     */
+    public function itWillNotAddEmptySecurityItems(): void
+    {
+        $fileSystem = new Filesystem();
+
+        $this->setAnnotationsPath();
+
+        $defaultConfig = config('l5-swagger.defaults');
+        $defaultConfig['securityDefinitions']['securitySchemes'] = [[]];
+        $defaultConfig['securityDefinitions']['security'] = [[]];
+
+        $config = config('l5-swagger.documentations.default');
+
+        $config['securityDefinitions']['securitySchemes'] = [[]];
+        $config['securityDefinitions']['security'] = [[]];
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => [
+                'default' => $config,
+            ],
+            'defaults' => $defaultConfig,
+        ]]);
+
+        $this->generator->generateDocs();
+
+        $this->assertTrue($fileSystem->exists($this->jsonDocsFile()));
+
+        $this->get(route('l5-swagger.default.docs'))
+            ->assertSee('oauth2')  // From annotations
+            ->assertSee('read:oauth2') // From annotations
+            ->assertJsonMissing(['securitySchemes' => []])
+            ->assertJsonMissing(['security' => []])
+            ->isOk();
+    }
+
     /**
      * @test
      * @dataProvider provideConfigAndSchemes
@@ -19,6 +60,8 @@ class SecurityDefinitionsTest extends TestCase
         array $securitySchemes,
         array $security
     ): void {
+        $fileSystem = new Filesystem();
+
         $this->setAnnotationsPath();
 
         $config = config('l5-swagger.documentations.default');
@@ -36,7 +79,7 @@ class SecurityDefinitionsTest extends TestCase
 
         $this->generator->generateDocs();
 
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
+        $this->assertTrue($fileSystem->exists($this->jsonDocsFile()));
 
         $this->get(route('l5-swagger.default.docs'))
              ->assertSee('new_api_key_securitye')

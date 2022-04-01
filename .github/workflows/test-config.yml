@@ -71,10 +71,12 @@ jobs:
 
     - name: Publish code coverage
       env:
-        CC_TEST_REPORTER_ID: d5b1b36d663604a8900fb8a586625a94eae6cdb6f6d7372aec8f066c174b4a5c
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         ./cc-test-reporter after-build -t clover --exit-code 0
+        bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ${{github.workspace}}/clover.xml
       if: matrix.php == '8.1' && matrix.l5-swagger-flags == 'latest'
 
     - name: Publish coveralls report

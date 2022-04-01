@@ -2,6 +2,7 @@
 
 namespace L5Swagger\Http\Controllers;
 
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
@@ -11,13 +12,14 @@ class SwaggerAssetController extends BaseController
 {
     public function index(Request $request, $asset)
     {
+        $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
 
         try {
             $path = swagger_ui_dist_path($documentation, $asset);
 
             return (new Response(
-                file_get_contents($path),
+                $fileSystem->get($path),
                 200,
                 [
                     'Content-Type' => (pathinfo($asset))['extension'] == 'css'

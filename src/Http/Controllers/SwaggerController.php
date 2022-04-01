@@ -2,10 +2,11 @@
 
 namespace L5Swagger\Http\Controllers;
 
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request as RequestFacade;
 use Illuminate\Support\Facades\Response as ResponseFacade;
@@ -28,20 +29,22 @@ class SwaggerController extends BaseController
      * Dump api-docs content endpoint. Supports dumping a json, or yaml file.
      *
      * @param  Request  $request
-     * @param  string  $file
+     * @param  ?string  $file
      * @return Response
      *
      * @throws L5SwaggerException
+     * @throws FileNotFoundException
      */
     public function docs(Request $request, string $file = null)
     {
+        $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
         $config = $request->offsetGet('config');
 
         $targetFile = $config['paths']['docs_json'] ?? 'api-docs.json';
         $yaml = false;
 
-        if (! is_null($file)) {
+        if ($file !== null) {
             $targetFile = $file;
             $parts = explode('.', $file);
 
@@ -72,11 +75,11 @@ class SwaggerController extends BaseController
             }
         }
 
-        if (! file_exists($filePath)) {
+        if (! $fileSystem->exists($filePath)) {
             abort(404, sprintf('Unable to locate documentation file at: "%s"', $filePath));
         }
 
-        $content = File::get($filePath);
+        $content = $fileSystem->get($filePath);
 
         if ($yaml) {
             return ResponseFacade::make($content, 200, [
@@ -133,12 +136,14 @@ class SwaggerController extends BaseController
      * @return string
      *
      * @throws L5SwaggerException
+     * @throws FileNotFoundException
      */
     public function oauth2Callback(Request $request)
     {
+        $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
 
-        return File::get(swagger_ui_dist_path($documentation, 'oauth2-redirect.html'));
+        return $fileSystem->get(swagger_ui_dist_path($documentation, 'oauth2-redirect.html'));
     }
 
     /**

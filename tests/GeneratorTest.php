@@ -3,7 +3,6 @@
 namespace Tests;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Analysers\TokenAnalyser;
 use OpenApi\Processors\CleanUnmerged;
@@ -20,19 +19,22 @@ class GeneratorTest extends TestCase
         $config = $this->configFactory->documentationConfig();
         $docs = $config['paths']['docs'];
 
-        File::shouldReceive('exists')
-            ->once()
+        $this->fileSystem
+            ->expects($this->once())
+            ->method('exists')
             ->with($docs)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        File::shouldReceive('isWritable')
-            ->once()
+        $this->fileSystem
+            ->expects($this->once())
+            ->method('isWritable')
             ->with($docs)
-            ->andReturn(false);
+            ->willReturn(false);
 
         $this->expectException(L5SwaggerException::class);
         $this->expectExceptionMessage('Documentation storage directory is not writable');
 
+        $this->makeGeneratorWithMockedFileSystem();
         $this->generator->generateDocs();
     }
 
@@ -44,22 +46,26 @@ class GeneratorTest extends TestCase
         $config = $this->configFactory->documentationConfig();
         $docs = $config['paths']['docs'];
 
-        File::shouldReceive('exists')
-            ->times(3)
+        $this->fileSystem
+            ->expects($this->exactly(3))
+            ->method('exists')
             ->with($docs)
-            ->andReturnValues([true, false, true]);
+            ->willReturnOnConsecutiveCalls(true, false, true);
 
-        File::shouldReceive('isWritable')
-            ->once()
+        $this->fileSystem
+            ->expects($this->once())
+            ->method('isWritable')
             ->with($docs)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        File::shouldReceive('makeDirectory')
-            ->once()
+        $this->fileSystem
+            ->expects($this->once())
+            ->method('makeDirectory')
             ->with($docs);
 
         mkdir($docs, 0777);
 
+        $this->makeGeneratorWithMockedFileSystem();
         $this->generator->generateDocs();
     }
 
@@ -71,23 +77,27 @@ class GeneratorTest extends TestCase
         $config = $this->configFactory->documentationConfig();
         $docs = $config['paths']['docs'];
 
-        File::shouldReceive('exists')
-            ->times(3)
+        $this->fileSystem
+            ->expects($this->exactly(3))
+            ->method('exists')
             ->with($docs)
-            ->andReturnValues([true, false, false]);
+            ->willReturnOnConsecutiveCalls(true, false, false);
 
-        File::shouldReceive('isWritable')
-            ->once()
+        $this->fileSystem
+            ->expects($this->once())
+            ->method('isWritable')
             ->with($docs)
-            ->andReturn(true);
+            ->willReturn(true);
 
-        File::shouldReceive('makeDirectory')
-            ->once()
+        $this->fileSystem
+            ->expects($this->once())
+            ->method('makeDirectory')
             ->with($docs);
 
         $this->expectException(L5SwaggerException::class);
         $this->expectExceptionMessage('Documentation storage directory could not be created');
 
+        $this->makeGeneratorWithMockedFileSystem();
         $this->generator->generateDocs();
     }
 

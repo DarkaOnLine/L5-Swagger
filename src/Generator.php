@@ -3,8 +3,8 @@
 namespace L5Swagger;
 
 use Exception;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\File;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Server;
@@ -85,6 +85,11 @@ class Generator
     protected $scanOptions;
 
     /**
+     * @var ?Filesystem
+     */
+    protected $fileSystem;
+
+    /**
      * Generator constructor.
      *
      * @param  array  $paths
@@ -98,7 +103,8 @@ class Generator
         array $constants,
         bool $yamlCopyRequired,
         SecurityDefinitions $security,
-        array $scanOptions
+        array $scanOptions,
+        ?Filesystem $filesystem = null
     ) {
         $this->annotationsDir = $paths['annotations'];
         $this->docDir = $paths['docs'];
@@ -110,6 +116,8 @@ class Generator
         $this->yamlCopyRequired = $yamlCopyRequired;
         $this->security = $security;
         $this->scanOptions = $scanOptions;
+
+        $this->fileSystem = $filesystem ?? new Filesystem();
     }
 
     /**
@@ -134,15 +142,15 @@ class Generator
      */
     protected function prepareDirectory(): self
     {
-        if (File::exists($this->docDir) && ! File::isWritable($this->docDir)) {
+        if ($this->fileSystem->exists($this->docDir) && ! $this->fileSystem->isWritable($this->docDir)) {
             throw new L5SwaggerException('Documentation storage directory is not writable');
         }
 
-        if (! File::exists($this->docDir)) {
-            File::makeDirectory($this->docDir);
+        if (! $this->fileSystem->exists($this->docDir)) {
+            $this->fileSystem->makeDirectory($this->docDir);
         }
 
-        if (! File::exists($this->docDir)) {
+        if (! $this->fileSystem->exists($this->docDir)) {
             throw new L5SwaggerException('Documentation storage directory could not be created');
         }
 
@@ -293,13 +301,13 @@ class Generator
     {
         if ($this->yamlCopyRequired) {
             $yamlDocs = (new YamlDumper(2))->dump(
-                json_decode(file_get_contents($this->docsFile), true),
+                json_decode($this->fileSystem->get($this->docsFile), true),
                 20,
                 0,
                 Yaml::DUMP_OBJECT_AS_MAP ^ Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE
             );
 
-            file_put_contents(
+            $this->fileSystem->put(
                 $this->yamlDocsFile,
                 $yamlDocs
             );

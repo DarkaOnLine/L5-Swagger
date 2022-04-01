@@ -60,7 +60,7 @@ WORKDIR /app/l5-swagger-app
 
 RUN /usr/local/bin/php -dxdebug.mode=off /usr/local/bin/composer config repositories.l5-swagger path '../'
 
-RUN /usr/local/bin/php -dxdebug.mode=off /usr/local/bin/composer require 'DarkaOnLine/l5-swagger:dev-master'
+RUN /usr/local/bin/php -dxdebug.mode=off /usr/local/bin/composer require 'darkaonline/l5-swagger:dev-master'
 
 RUN ln -s /app/tests/storage/annotations/ app/annotations
 
