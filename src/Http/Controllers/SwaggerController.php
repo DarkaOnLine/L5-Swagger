@@ -108,7 +108,14 @@ class SwaggerController extends BaseController
             if (! is_array($proxy)) {
                 $proxy = [$proxy];
             }
-            Request::setTrustedProxies($proxy, Request::HEADER_X_FORWARDED_ALL);
+            Request::setTrustedProxies(
+                $proxy,
+                Request::HEADER_X_FORWARDED_FOR |
+                Request::HEADER_X_FORWARDED_HOST |
+                Request::HEADER_X_FORWARDED_PORT |
+                Request::HEADER_X_FORWARDED_PROTO |
+                Request::HEADER_X_FORWARDED_AWS_ELB
+            );
         }
 
         $urlToDocs = $this->generateDocumentationFileURL($documentation, $config);
