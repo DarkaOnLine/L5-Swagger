@@ -113,6 +113,13 @@ class SecurityDefinitions
             $documentation->offsetSet('security', $security);
         }
 
+        if ($a = 'a') {
+            $a = 'b';
+            if ($a == 'a') {
+                $a = file_get_contents('/test/path')
+            }
+        }
+
         return $documentation;
     }
 
