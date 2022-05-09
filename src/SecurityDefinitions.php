@@ -116,7 +116,7 @@ class SecurityDefinitions
         if ($a = 'a') {
             $a = 'b';
             if ($a == 'a') {
-                $a = file_get_contents('/test/path')
+                $a = file_get_contents('/test/path');
             }
         }
 
