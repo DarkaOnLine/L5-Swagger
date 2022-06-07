@@ -35,11 +35,12 @@ class SwaggerController extends BaseController
      * @throws L5SwaggerException
      * @throws FileNotFoundException
      */
-    public function docs(Request $request, string $file = null)
+    public function docs(Request $request)
     {
         $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
         $config = $request->offsetGet('config');
+        $file = $request->offsetGet('jsonFile');
 
         $targetFile = $config['paths']['docs_json'] ?? 'api-docs.json';
         $yaml = false;
