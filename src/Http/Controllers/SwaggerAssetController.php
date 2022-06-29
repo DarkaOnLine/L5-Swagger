@@ -10,10 +10,11 @@ use L5Swagger\Exceptions\L5SwaggerException;
 
 class SwaggerAssetController extends BaseController
 {
-    public function index(Request $request, $asset)
+    public function index(Request $request)
     {
         $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
+        $asset = $request->offsetGet('asset');
 
         try {
             $path = swagger_ui_dist_path($documentation, $asset);
