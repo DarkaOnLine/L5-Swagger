@@ -66,6 +66,10 @@
         })
 
         window.ui = ui
+
+        ui.initOAuth({
+            usePkceWithAuthorizationCodeGrant: "{!! (bool)config('l5-swagger.defaults.ui.authorization.use_pkce_with_authorization_code_grant') !!}"
+        })
     }
 </script>
 </body>
