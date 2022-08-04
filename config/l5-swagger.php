@@ -276,10 +276,12 @@ return [
                  */
                 'persist_authorization' => env('L5_SWAGGER_UI_PERSIST_AUTHORIZATION', false),
 
-                /*
-                 * If set to true, adds PKCE to AuthorizationCodeGrant flow
-                 */
-                'use_pkce_with_authorization_code_grant' => false,
+                'oauth2' => [
+                    /*
+                    * If set to true, adds PKCE to AuthorizationCodeGrant flow
+                    */
+                    'use_pkce_with_authorization_code_grant' => false,
+                ],
             ],
         ],
         /*
