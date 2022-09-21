@@ -200,6 +200,11 @@ class Generator
     {
         $generator = new OpenApiGenerator();
 
+        // OpenApi spec version.
+        $generator->setVersion(
+            $this->scanOptions['open_api_spec_version'] ?? OpenApi::DEFAULT_VERSION
+        );
+
         // Processors.
         $this->setProcessors($generator);
 

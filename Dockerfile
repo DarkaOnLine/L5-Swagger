@@ -62,7 +62,9 @@ RUN /usr/local/bin/php -dxdebug.mode=off /usr/local/bin/composer config reposito
 
 RUN /usr/local/bin/php -dxdebug.mode=off /usr/local/bin/composer require 'darkaonline/l5-swagger:dev-master'
 
-RUN ln -s /app/tests/storage/annotations/ app/annotations
+RUN cp -r /app/tests/storage/annotations /app/l5-swagger-app/app/Annotations
+
+RUN for f in $(find app/Annotations/* -name '*.php'); do sed -i 's/namespace Tests\\storage\\annotations/namespace App\\Annotations/' $f; done
 
 RUN chown -R $user:$user .
 #
