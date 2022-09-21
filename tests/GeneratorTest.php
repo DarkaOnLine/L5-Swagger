@@ -171,6 +171,7 @@ class GeneratorTest extends TestCase
 
         $cfg['scanOptions']['pattern'] = 'L5SwaggerAnnotationsExample*.*';
         $cfg['scanOptions']['analyser'] = new TokenAnalyser;
+        $cfg['scanOptions']['open_api_spec_version'] = '3.1.0';
         $cfg['scanOptions']['processors'] = [
             new CleanUnmerged,
         ];
@@ -189,8 +190,10 @@ class GeneratorTest extends TestCase
 
         $this->assertTrue(file_exists($this->jsonDocsFile()));
 
-        $this->get(route('l5-swagger.default.docs'))
-            ->assertSee('L5 Swagger')
+        $response = $this->get(route('l5-swagger.default.docs'));
+
+        $response->assertSee('L5 Swagger')
+            ->assertSee('3.1.0')
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
             ->assertSee('getProductsList')
