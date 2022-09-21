@@ -6,6 +6,9 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Artisan;
 use L5Swagger\Exceptions\L5SwaggerException;
 
+/**
+ * @testdox Console commands
+ */
 class ConsoleTest extends TestCase
 {
     /**
