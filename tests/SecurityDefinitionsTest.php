@@ -5,6 +5,9 @@ namespace Tests;
 use Illuminate\Filesystem\Filesystem;
 use L5Swagger\Exceptions\L5SwaggerException;
 
+/**
+ * @testdox Security definition
+ */
 class SecurityDefinitionsTest extends TestCase
 {
     /**

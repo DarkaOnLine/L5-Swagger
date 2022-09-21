@@ -4,6 +4,9 @@ namespace Tests;
 
 use L5Swagger\Exceptions\L5SwaggerException;
 
+/**
+ * @testdox Helpers
+ */
 class HelpersTest extends TestCase
 {
     /** @test */

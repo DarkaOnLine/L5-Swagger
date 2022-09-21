@@ -9,6 +9,9 @@ use OpenApi\Processors\CleanUnmerged;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * @testdox Generator
+ */
 class GeneratorTest extends TestCase
 {
     /** @test **/
