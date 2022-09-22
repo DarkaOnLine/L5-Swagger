@@ -16,6 +16,8 @@ use Symfony\Component\Yaml\Yaml;
 
 class Generator
 {
+    public const OPEN_API_DEFAULT_SPEC_VERSION = '3.0.0';
+
     protected const SCAN_OPTION_PROCESSORS = 'processors';
     protected const SCAN_OPTION_PATTERN = 'pattern';
     protected const SCAN_OPTION_ANALYSER = 'analyser';
@@ -202,7 +204,7 @@ class Generator
 
         // OpenApi spec version.
         $generator->setVersion(
-            $this->scanOptions['open_api_spec_version'] ?? OpenApi::DEFAULT_VERSION
+            $this->scanOptions['open_api_spec_version'] ?? self::OPEN_API_DEFAULT_SPEC_VERSION
         );
 
         // Processors.
