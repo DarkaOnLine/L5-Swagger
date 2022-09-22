@@ -92,6 +92,11 @@ class Generator
     protected $fileSystem;
 
     /**
+     * @var array
+     */
+    protected $config;
+
+    /**
      * Generator constructor.
      *
      * @param  array  $paths
@@ -106,7 +111,8 @@ class Generator
         bool $yamlCopyRequired,
         SecurityDefinitions $security,
         array $scanOptions,
-        ?Filesystem $filesystem = null
+        ?Filesystem $filesystem = null,
+        array $config
     ) {
         $this->annotationsDir = $paths['annotations'];
         $this->docDir = $paths['docs'];
@@ -118,6 +124,7 @@ class Generator
         $this->yamlCopyRequired = $yamlCopyRequired;
         $this->security = $security;
         $this->scanOptions = $scanOptions;
+        $this->config = $config;
 
         $this->fileSystem = $filesystem ?? new Filesystem();
     }
@@ -229,7 +236,9 @@ class Generator
             $processors[] = $processor;
             if ($processor instanceof \OpenApi\Processors\BuildPaths) {
                 foreach ($processorClasses as $customProcessor) {
-                    $processors[] = new $customProcessor();
+                    $customProcessorObj = new $customProcessor();
+                    $customProcessorObj->config = $this->config;
+                    $processors[] = $customProcessorObj;
                 }
             }
         }
