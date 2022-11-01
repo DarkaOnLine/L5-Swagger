@@ -14,7 +14,12 @@ class SwaggerAssetController extends BaseController
     {
         $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
+
         $asset = $request->offsetGet('asset');
+        if (! is_array($asset)) {
+            return abort(404, 'asset is not an array');
+        }
+        $asset = implode('.', $asset);
 
         try {
             $path = swagger_ui_dist_path($documentation, $asset);

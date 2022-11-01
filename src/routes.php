@@ -46,7 +46,7 @@ Route::group(['namespace' => 'L5Swagger'], function (Router $router) {
                     'uses' => '\L5Swagger\Http\Controllers\SwaggerController@docs',
                 ]);
 
-                $router->get($config['routes']['docs'].'/asset/{asset}', [
+                $router->get($config['routes']['docs'].'/formation/asset', [
                     'as' => 'l5-swagger.'.$name.'.asset',
                     'middleware' => $config['routes']['middleware']['asset'] ?? [],
                     'uses' => '\L5Swagger\Http\Controllers\SwaggerAssetController@index',

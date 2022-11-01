@@ -65,6 +65,9 @@ if (! function_exists('l5_swagger_asset')) {
 
         $useAbsolutePath = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
 
-        return route('l5-swagger.'.$documentation.'.asset', $asset, $useAbsolutePath).'?v='.md5_file($file);
+        return route('l5-swagger.'.$documentation.'.asset', [
+            'asset' => explode('.', $asset),
+            'v' => hash_file('md5', $file),
+        ], $useAbsolutePath);
     }
 }
