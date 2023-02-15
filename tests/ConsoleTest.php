@@ -16,7 +16,7 @@ class ConsoleTest extends TestCase
      * @test
      * @dataProvider provideGenerateCommands
      *
-     * @param string $artisanCommand
+     * @param  string  $artisanCommand
      *
      * @throws L5SwaggerException
      * @throws FileNotFoundException
