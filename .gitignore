@@ -8,6 +8,7 @@ composer-extra-assets.lock
 .env
 /tests/storage/api-docs/*
 /tests/storage/logs/*
+.phpunit.cache
 .bowerrc
 bower.json
 package.json

@@ -1,7 +1,7 @@
 #
 # Base install
 #
-FROM amd64/php:8.0-apache as base
+FROM amd64/php:8.1-apache as base
 
 LABEL vendor="L5 Swagger"
 
