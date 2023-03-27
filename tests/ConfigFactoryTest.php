@@ -26,6 +26,7 @@ class ConfigFactoryTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider configDataProvider
      *
      * @param  array  $data
