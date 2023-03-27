@@ -135,7 +135,7 @@ return [
             'pattern' => null,
 
             /*
-             * Absolute path to directories that should be exclude from scanning
+             * Absolute path to directories that should be excluded from scanning
              * @note This option overwrites `paths.excludes`
              * @see \OpenApi\scan
             */
