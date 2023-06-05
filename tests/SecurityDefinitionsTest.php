@@ -52,6 +52,7 @@ class SecurityDefinitionsTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider provideConfigAndSchemes
      *
      * @param  array  $securitySchemes

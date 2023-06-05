@@ -14,6 +14,7 @@ class ConsoleTest extends TestCase
 {
     /**
      * @test
+     *
      * @dataProvider provideGenerateCommands
      *
      * @param  string  $artisanCommand

@@ -23,7 +23,7 @@ class SwaggerAssetController extends BaseController
                 $fileSystem->get($path),
                 200,
                 [
-                    'Content-Type' => (pathinfo($asset))['extension'] == 'css'
+                    'Content-Type' => pathinfo($asset)['extension'] == 'css'
                         ? 'text/css'
                         : 'application/javascript',
                 ]
