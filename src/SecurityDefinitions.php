@@ -119,7 +119,7 @@ class SecurityDefinitions
     /**
      * Converts an array to an object.
      *
-     * @param $array
+     * @param  $array
      * @return object
      */
     protected function arrayToObject($array)

@@ -50,7 +50,7 @@ if (! function_exists('l5_swagger_asset')) {
      * Returns asset from swagger-ui composer package.
      *
      * @param  string  $documentation
-     * @param $asset string
+     * @param  $asset  string
      * @return string
      *
      * @throws L5SwaggerException
