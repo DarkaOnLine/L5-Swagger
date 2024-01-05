@@ -120,7 +120,7 @@ return [
             /**
              * Custom query path processors classes.
              *
-             * @link https://github.com/zircote/swagger-php/tree/master/Examples/schema-query-parameter-processor
+             * @link https://github.com/zircote/swagger-php/tree/master/Examples/processors/schema-query-parameter
              * @see \OpenApi\scan
              */
             'processors' => [
