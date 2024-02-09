@@ -8,6 +8,11 @@ return [
                 'title' => 'L5 Swagger UI',
             ],
 
+            /*
+             * Use your own generated json documentation file
+            */
+            'use_own_docs' => false,
+
             'routes' => [
                 /*
                  * Route for accessing api documentation interface
