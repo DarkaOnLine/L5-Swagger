@@ -70,6 +70,7 @@ class GenerateDocsCommand extends Command
 
         if (config('l5-swagger.documentations.'.$documentation.'.use_own_docs', false)) {
             $this->info('Using own docs - skipping doc generation');
+            
             return;
         }
 
