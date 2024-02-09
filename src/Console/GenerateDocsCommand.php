@@ -68,7 +68,11 @@ class GenerateDocsCommand extends Command
     {
         $this->info('Regenerating docs '.$documentation);
 
-        $generator = $generatorFactory->make($documentation);
-        $generator->generateDocs();
+        if(config('l5-swagger.documentations.'.$documentation.'.use_own_docs', false)) {
+            $this->info('Using own docs - skipping doc generation');
+        } else {
+            $generator = $generatorFactory->make($documentation);
+            $generator->generateDocs();
+        }
     }
 }
