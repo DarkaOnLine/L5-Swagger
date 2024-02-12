@@ -36,7 +36,7 @@ class GenerateDocsCommand extends Command
      *
      * @throws L5SwaggerException
      */
-    public function handle(GeneratorFactory $generatorFactory)
+    public function handle(GeneratorFactory $generatorFactory, ConfigFactory $configFactory)
     {
         $all = $this->option('all');
 
@@ -44,7 +44,7 @@ class GenerateDocsCommand extends Command
             $documentations = array_keys(config('l5-swagger.documentations', []));
 
             foreach ($documentations as $documentation) {
-                $this->generateDocumentation($generatorFactory, $documentation);
+                $this->generateDocumentation($generatorFactory, $documentation, $configFactory);
             }
 
             return;
@@ -56,7 +56,7 @@ class GenerateDocsCommand extends Command
             $documentation = config('l5-swagger.default');
         }
 
-        $this->generateDocumentation($generatorFactory, $documentation);
+        $this->generateDocumentation($generatorFactory, $documentation, $configFactory);
     }
 
     /**
@@ -65,11 +65,10 @@ class GenerateDocsCommand extends Command
      *
      * @throws L5SwaggerException
      */
-    private function generateDocumentation(GeneratorFactory $generatorFactory, string $documentation)
+    private function generateDocumentation(GeneratorFactory $generatorFactory, string $documentation, ConfigFactory $configFactory)
     {
         $this->info('Regenerating docs '.$documentation);
 
-        $configFactory = resolve(ConfigFactory::class);
         $config = $configFactory->documentationConfig($documentation);
 
         if (! $config['generate_always']) {
