@@ -3,6 +3,7 @@
 namespace L5Swagger\Console;
 
 use Illuminate\Console\Command;
+use L5Swagger\ConfigFactory;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\GeneratorFactory;
 
@@ -67,6 +68,15 @@ class GenerateDocsCommand extends Command
     private function generateDocumentation(GeneratorFactory $generatorFactory, string $documentation)
     {
         $this->info('Regenerating docs '.$documentation);
+
+        $configFactory = resolve(ConfigFactory::class);
+        $config = $configFactory->documentationConfig($documentation);
+
+        if (! $config['generate_always']) {
+            $this->info('Config generate_always false - skipping doc generation');
+
+            return;
+        }
 
         $generator = $generatorFactory->make($documentation);
         $generator->generateDocs();
