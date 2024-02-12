@@ -69,10 +69,9 @@ class GenerateDocsCommand extends Command
      */
     private function generateDocumentation(
         GeneratorFactory $generatorFactory,
-        string           $documentation,
-        ConfigFactory    $configFactory
-    )
-    {
+        string $documentation,
+        ConfigFactory $configFactory
+    ) {
         $this->info('Regenerating docs '.$documentation);
 
         $config = $configFactory->documentationConfig($documentation);
