@@ -32,6 +32,7 @@ class GenerateDocsCommand extends Command
      * Execute the console command.
      *
      * @param  GeneratorFactory  $generatorFactory
+     * @param  ConfigFactory  $configFactory
      * @return void
      *
      * @throws L5SwaggerException
@@ -62,10 +63,15 @@ class GenerateDocsCommand extends Command
     /**
      * @param  GeneratorFactory  $generatorFactory
      * @param  string  $documentation
+     * @param  ConfigFactory  $configFactory
      *
      * @throws L5SwaggerException
      */
-    private function generateDocumentation(GeneratorFactory $generatorFactory, string $documentation, ConfigFactory $configFactory)
+    private function generateDocumentation(
+        GeneratorFactory $generatorFactory,
+        string           $documentation,
+        ConfigFactory    $configFactory
+    )
     {
         $this->info('Regenerating docs '.$documentation);
 
