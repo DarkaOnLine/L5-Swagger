@@ -5,11 +5,11 @@ namespace Tests;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
+use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * @testdox Routes
- */
+#[TestDox('Routes')]
 class RoutesTest extends TestCase
 {
     public function testUserCantAccessJsonFileIfItIsNotGenerated(): void
@@ -20,6 +20,9 @@ class RoutesTest extends TestCase
         $this->assertTrue($response->isNotFound());
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testUserCanAccessJsonFileIfItIsGenerated(): void
     {
         $jsonUrl = route('l5-swagger.default.docs');
@@ -37,6 +40,9 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testUserCanAccessAndGenerateCustomJsonFile(): void
     {
         $customJsonFileName = 'docs.v1.json';
@@ -59,6 +65,9 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testUserCanAccessAndGenerateYamlFile(): void
     {
         $customYamlFileName = 'docs.yaml';
@@ -101,6 +110,9 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testUserCanAccessDocumentationFileWithoutExtensionIfItExists(): void
     {
         $customYamlFileName = 'docs-file-without-extension';
@@ -122,6 +134,9 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testItDoesNotThrowExceptionOnDocsFileWithoutExtension(): void
     {
         $fileWithoutExtension = 'docs';
@@ -219,9 +234,9 @@ class RoutesTest extends TestCase
     }
 
     /**
-     * @return MockObject&Generator
+     * @throws Exception
      */
-    private function mockGenerator()
+    private function mockGenerator(): Generator|MockObject
     {
         $mockGenerator = $this->createMock(Generator::class);
         $mockGeneratorFactory = $this->createMock(GeneratorFactory::class);

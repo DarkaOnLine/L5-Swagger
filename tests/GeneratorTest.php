@@ -6,14 +6,16 @@ use Illuminate\Http\Request;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Analysers\TokenAnalyser;
 use OpenApi\Processors\CleanUnmerged;
+use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @testdox Generator
- */
+#[TestDox('Generator')]
 class GeneratorTest extends TestCase
 {
+    /**
+     * @throws L5SwaggerException
+     */
     public function testItThrowsExceptionIfDocumentationDirIsNotWritable(): void
     {
         $this->setAnnotationsPath();
@@ -40,6 +42,9 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testItWillCreateDocumentationDirIfItIsWritable(): void
     {
         $this->setAnnotationsPath();
@@ -70,6 +75,9 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testItThrowsExceptionIfDocumentationDirWasNotCreated(): void
     {
         $this->setAnnotationsPath();
@@ -101,6 +109,9 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testCanGenerateApiJsonFile(): void
     {
         $this->setAnnotationsPath();
@@ -129,6 +140,9 @@ class GeneratorTest extends TestCase
             ->assertStatus(200);
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testCanGenerateWithLegacyExcludedDirectories(): void
     {
         $this->setAnnotationsPath();
@@ -158,6 +172,9 @@ class GeneratorTest extends TestCase
             ->assertStatus(200);
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testCanGenerateWithScanOptions(): void
     {
         $cfg = config('l5-swagger.documentations.default');
@@ -198,6 +215,9 @@ class GeneratorTest extends TestCase
             ->assertStatus(200);
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testCanGenerateApiJsonFileWithChangedBaseServer(): void
     {
         $this->setAnnotationsPath();
@@ -231,6 +251,9 @@ class GeneratorTest extends TestCase
             ->assertStatus(200);
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testCanSetProxy(): void
     {
         $this->setAnnotationsPath();
@@ -258,6 +281,9 @@ class GeneratorTest extends TestCase
         $this->assertFileExists($this->yamlDocsFile());
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testCanSetValidatorUrl(): void
     {
         $this->setAnnotationsPath();
@@ -289,6 +315,9 @@ class GeneratorTest extends TestCase
         $this->assertFileExists($this->yamlDocsFile());
     }
 
+    /**
+     * @throws L5SwaggerException
+     */
     public function testCanAppropriateYamlType(): void
     {
         $this->setAnnotationsPath();

@@ -10,6 +10,7 @@ use L5Swagger\Generator;
 use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionObject;
 
@@ -23,6 +24,9 @@ class TestCase extends OrchestraTestCase
 
     protected Filesystem|MockObject $fileSystem;
 
+    /**
+     * @throws Exception
+     */
     #[Before]
     public function setUpFileSystem(): void
     {
@@ -64,7 +68,8 @@ class TestCase extends OrchestraTestCase
     }
 
     /**
-     * @param  Application  $app
+     * @param Application $app
+     * @return string[]
      */
     protected function getPackageProviders($app): array
     {
@@ -98,7 +103,6 @@ class TestCase extends OrchestraTestCase
     /**
      * Get path for json docs file.
      *
-     *
      * @throws L5SwaggerException
      */
     protected function jsonDocsFile(): string
@@ -116,7 +120,6 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Get path for yaml docs file.
-     *
      *
      * @throws L5SwaggerException
      */

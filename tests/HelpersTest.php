@@ -3,10 +3,9 @@
 namespace Tests;
 
 use L5Swagger\Exceptions\L5SwaggerException;
+use PHPUnit\Framework\Attributes\TestDox;
 
-/**
- * @testdox Helpers
- */
+#[TestDox('Helpers')]
 class HelpersTest extends TestCase
 {
     public function testAssetFunctionThrowsExceptionIfFileDoesNotExists(): void

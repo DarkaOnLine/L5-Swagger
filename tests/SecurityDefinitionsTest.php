@@ -4,10 +4,10 @@ namespace Tests;
 
 use Illuminate\Filesystem\Filesystem;
 use L5Swagger\Exceptions\L5SwaggerException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 
-/**
- * @testdox Security definition
- */
+#[TestDox('Security definition')]
 class SecurityDefinitionsTest extends TestCase
 {
     /**
@@ -49,11 +49,9 @@ class SecurityDefinitionsTest extends TestCase
     }
 
     /**
-     *
-     * @dataProvider provideConfigAndSchemes
-     *
      * @throws L5SwaggerException
      */
+    #[DataProvider('provideConfigAndSchemes')]
     public function testCanGenerateApiJsonFileWithSecurityDefinition(
         array $securitySchemes,
         array $security
@@ -80,7 +78,7 @@ class SecurityDefinitionsTest extends TestCase
         $this->assertTrue($fileSystem->exists($this->jsonDocsFile()));
 
         $this->get(route('l5-swagger.default.docs'))
-             ->assertSee('new_api_key_securitye')
+             ->assertSee('new_api_key_security')
              ->assertSee('oauth2')  // From annotations
              ->assertSee('read:projects')
              ->assertSee('read:oauth2') // From annotations
@@ -92,7 +90,7 @@ class SecurityDefinitionsTest extends TestCase
     public static function provideConfigAndSchemes(): iterable
     {
         $securitySchemes = [
-            'new_api_key_securitye' => [
+            'new_api_key_security' => [
                 'type' => 'apiKey',
                 'name' => 'api_key_name',
                 'in' => 'query',
@@ -100,7 +98,7 @@ class SecurityDefinitionsTest extends TestCase
         ];
 
         $security = [
-            'new_api_key_securitye' => [
+            'new_api_key_security' => [
                 'read:projects',
             ],
         ];

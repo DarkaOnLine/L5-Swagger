@@ -6,20 +6,17 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Artisan;
 use L5Swagger\Exceptions\L5SwaggerException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 
-/**
- * @testdox Console commands
- */
+#[TestDox('Console commands')]
 class ConsoleTest extends TestCase
 {
     /**
-     *
-     * @dataProvider provideGenerateCommands
-     *
-     *
      * @throws L5SwaggerException
      * @throws FileNotFoundException
      */
+    #[DataProvider('provideGenerateCommands')]
     public function testCanGenerate(string $artisanCommand): void
     {
         $fileSystem = new Filesystem();

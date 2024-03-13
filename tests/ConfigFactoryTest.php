@@ -3,10 +3,10 @@
 namespace Tests;
 
 use L5Swagger\Exceptions\L5SwaggerException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 
-/**
- * @testdox Configuration factory
- */
+#[TestDox('Configuration factory')]
 class ConfigFactoryTest extends TestCase
 {
     public function testItThrowsExceptionIfDocumentationConfigNotFound(): void
@@ -22,11 +22,9 @@ class ConfigFactoryTest extends TestCase
     }
 
     /**
-     *
-     * @dataProvider configDataProvider
-     *
      * @throws L5SwaggerException
      */
+    #[DataProvider('configDataProvider')]
     public function testCanMergeConfigurationDeep(array $data, array $assert): void
     {
         config(['l5-swagger' => array_merge(
@@ -125,7 +123,7 @@ class ConfigFactoryTest extends TestCase
      * Both arrays must have the same indexes with identical values
      * without respect to key ordering
      */
-    protected function assertArraySimilar(array $expected, array $array)
+    protected function assertArraySimilar(array $expected, array $array): void
     {
         $this->assertSame([], array_diff_key($array, $expected));
 
