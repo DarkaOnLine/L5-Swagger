@@ -9,44 +9,26 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionObject;
 
 class TestCase extends OrchestraTestCase
 {
-    /**
-     * @var ConfigFactory
-     */
-    protected $configFactory;
+    protected ConfigFactory $configFactory;
 
-    /**
-     * @var array
-     */
-    protected $defaultConfig;
+    protected array $defaultConfig;
 
-    /**
-     * @var Generator
-     */
-    protected $generator;
+    protected Generator $generator;
 
-    /**
-     * @var MockObject|Filesystem
-     */
-    protected $fileSystem;
+    protected Filesystem|MockObject $fileSystem;
 
-    /**
-     * @before
-     *
-     * @return void
-     */
+    #[Before]
     public function setUpFileSystem(): void
     {
         $this->fileSystem = $this->createMock(Filesystem::class);
     }
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         parent::setUp();
