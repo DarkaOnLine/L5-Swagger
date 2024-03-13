@@ -43,7 +43,9 @@ class GeneratorFactory
             $constants,
             $yamlCopyRequired,
             $security,
-            $scanOptions
+            $scanOptions,
+            null,
+            $config
         );
     }
 }
