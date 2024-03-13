@@ -82,5 +82,7 @@ jobs:
     - name: Publish coveralls report
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: vendor/bin/php-coveralls --coverage_clover=clover.xml -v
+      run: |
+        cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
+        vendor/bin/php-coveralls --coverage_clover=clover.xml -v
       if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'latest'
