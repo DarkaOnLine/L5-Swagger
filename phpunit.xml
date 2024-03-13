@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd" bootstrap="vendor/autoload.php" colors="true" stopOnFailure="false" cacheDirectory=".phpunit.cache">
-  <coverage>
-    <report>
-      <clover outputFile="tests/storage/logs/test-reports/clover.xml"/>
-      <html outputDirectory="tests/storage/logs/test-reports" lowUpperBound="50" highLowerBound="80"/>
-    </report>
-  </coverage>
-  <testsuite name="L5-Swagger TestSuite">
-    <directory>tests/</directory>
-  </testsuite>
-  <logging/>
-  <php>
-    <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
-    <env name="SWAGGER_VERSION" value="3.0"/>
-  </php>
-  <source>
-    <include>
-      <directory suffix=".php">src/</directory>
-    </include>
-  </source>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.0/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+         stopOnFailure="false" 
+         cacheDirectory=".phpunit.cache"
+>
+    <coverage>
+        <report>
+            <clover outputFile="tests/storage/logs/test-reports/clover.xml"/>
+            <html outputDirectory="tests/storage/logs/test-reports" lowUpperBound="50" highLowerBound="80"/>
+        </report>
+    </coverage>
+    <testsuite name="L5-Swagger TestSuite">
+        <directory>tests/</directory>
+    </testsuite>
+    <logging/>
+    <php>
+        <env name="APP_KEY" value="AckfSECXIvnK5r28GVIWUAxmbBSjTsmF"/>
+        <env name="SWAGGER_VERSION" value="3.0"/>
+    </php>
+    <source>
+        <include>
+            <directory suffix=".php">src/</directory>
+        </include>
+    </source>
 </phpunit>
