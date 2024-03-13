@@ -77,10 +77,10 @@ jobs:
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         ./cc-test-reporter after-build -t clover --exit-code 0
         bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ${{github.workspace}}/clover.xml
-      if: secrets.CC_TEST_REPORTER_ID && matrix.php == '8.1' && matrix.l5-swagger-flags == 'latest'
+      if: secrets.CC_TEST_REPORTER_ID != '' && matrix.php == '8.1' && matrix.l5-swagger-flags == 'latest'
 
     - name: Publish coveralls report
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: vendor/bin/php-coveralls --coverage_clover=clover.xml -v
-      if: secrets.GITHUB_TOKEN && matrix.php == '8.1' && matrix.l5-swagger-flags == 'latest'
+      if: secrets.GITHUB_TOKEN != '' && matrix.php == '8.1' && matrix.l5-swagger-flags == 'latest'
