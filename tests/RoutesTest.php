@@ -7,7 +7,6 @@ use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 
 #[TestDox('Routes')]
 class RoutesTest extends TestCase

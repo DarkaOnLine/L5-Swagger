@@ -11,7 +11,6 @@ use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 use PHPUnit\Framework\Attributes\Before;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionObject;
 
 class TestCase extends OrchestraTestCase
