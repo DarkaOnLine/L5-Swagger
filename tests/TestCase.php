@@ -22,7 +22,7 @@ class TestCase extends OrchestraTestCase
 
     protected Generator $generator;
 
-    protected Filesystem|MockObject $fileSystem;
+    protected Filesystem $fileSystem;
 
     /**
      * @throws Exception

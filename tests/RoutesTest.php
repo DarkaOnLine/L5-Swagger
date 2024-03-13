@@ -236,7 +236,7 @@ class RoutesTest extends TestCase
     /**
      * @throws Exception
      */
-    private function mockGenerator(): Generator|MockObject
+    private function mockGenerator(): Generator
     {
         $mockGenerator = $this->createMock(Generator::class);
         $mockGeneratorFactory = $this->createMock(GeneratorFactory::class);
