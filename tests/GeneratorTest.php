@@ -14,8 +14,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class GeneratorTest extends TestCase
 {
-    /** @test **/
-    public function itThrowsExceptionIfDocumentationDirIsNotWritable(): void
+    public function testItThrowsExceptionIfDocumentationDirIsNotWritable(): void
     {
         $this->setAnnotationsPath();
 
@@ -41,8 +40,7 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
     }
 
-    /** @test **/
-    public function itWillCreateDocumentationDirIfItIsWritable(): void
+    public function testItWillCreateDocumentationDirIfItIsWritable(): void
     {
         $this->setAnnotationsPath();
 
@@ -72,8 +70,7 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
     }
 
-    /** @test **/
-    public function itThrowsExceptionIfDocumentationDirWasNotCreated(): void
+    public function testItThrowsExceptionIfDocumentationDirWasNotCreated(): void
     {
         $this->setAnnotationsPath();
 
@@ -104,15 +101,14 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
     }
 
-    /** @test */
-    public function canGenerateApiJsonFile(): void
+    public function testCanGenerateApiJsonFile(): void
     {
         $this->setAnnotationsPath();
 
         $this->generator->generateDocs();
 
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
-        $this->assertTrue(file_exists($this->yamlDocsFile()));
+        $this->assertFileExists($this->jsonDocsFile());
+        $this->assertFileExists($this->yamlDocsFile());
 
         $this->get(route('l5-swagger.default.docs'))
             ->assertSee('L5 Swagger')
@@ -133,8 +129,7 @@ class GeneratorTest extends TestCase
             ->assertStatus(200);
     }
 
-    /** @test */
-    public function canGenerateWithLegacyExcludedDirectories(): void
+    public function testCanGenerateWithLegacyExcludedDirectories(): void
     {
         $this->setAnnotationsPath();
 
@@ -152,7 +147,7 @@ class GeneratorTest extends TestCase
 
         $this->generator->generateDocs();
 
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
+        $this->assertFileExists($this->jsonDocsFile());
 
         $this->get(route('l5-swagger.default.docs'))
             ->assertSee('L5 Swagger')
@@ -163,8 +158,7 @@ class GeneratorTest extends TestCase
             ->assertStatus(200);
     }
 
-    /** @test */
-    public function canGenerateWithScanOptions(): void
+    public function testCanGenerateWithScanOptions(): void
     {
         $cfg = config('l5-swagger.documentations.default');
 
@@ -191,7 +185,7 @@ class GeneratorTest extends TestCase
 
         $this->generator->generateDocs();
 
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
+        $this->assertFileExists($this->jsonDocsFile());
 
         $response = $this->get(route('l5-swagger.default.docs'));
 
@@ -204,8 +198,7 @@ class GeneratorTest extends TestCase
             ->assertStatus(200);
     }
 
-    /** @test */
-    public function canGenerateApiJsonFileWithChangedBaseServer(): void
+    public function testCanGenerateApiJsonFileWithChangedBaseServer(): void
     {
         $this->setAnnotationsPath();
 
@@ -221,7 +214,7 @@ class GeneratorTest extends TestCase
 
         $this->generator->generateDocs();
 
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
+        $this->assertFileExists($this->jsonDocsFile());
 
         $this->get(route('l5-swagger.default.docs'))
             ->assertSee('https://test-server.url')
@@ -238,8 +231,7 @@ class GeneratorTest extends TestCase
             ->assertStatus(200);
     }
 
-    /** @test */
-    public function canSetProxy(): void
+    public function testCanSetProxy(): void
     {
         $this->setAnnotationsPath();
 
@@ -257,17 +249,16 @@ class GeneratorTest extends TestCase
         $this->get(route('l5-swagger.default.api'))
             ->assertStatus(200);
 
-        $this->assertEquals(Request::getTrustedProxies()[0], $proxy);
+        $this->assertSame(Request::getTrustedProxies()[0], $proxy);
 
         $this->get(route('l5-swagger.default.docs'))
             ->assertStatus(200);
 
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
-        $this->assertTrue(file_exists($this->yamlDocsFile()));
+        $this->assertFileExists($this->jsonDocsFile());
+        $this->assertFileExists($this->yamlDocsFile());
     }
 
-    /** @test */
-    public function canSetValidatorUrl(): void
+    public function testCanSetValidatorUrl(): void
     {
         $this->setAnnotationsPath();
 
@@ -294,12 +285,11 @@ class GeneratorTest extends TestCase
         $this->get(route('l5-swagger.default.docs'))
             ->assertStatus(200);
 
-        $this->assertTrue(file_exists($this->jsonDocsFile()));
-        $this->assertTrue(file_exists($this->yamlDocsFile()));
+        $this->assertFileExists($this->jsonDocsFile());
+        $this->assertFileExists($this->yamlDocsFile());
     }
 
-    /** @test */
-    public function canAppropriateYamlType(): void
+    public function testCanAppropriateYamlType(): void
     {
         $this->setAnnotationsPath();
 

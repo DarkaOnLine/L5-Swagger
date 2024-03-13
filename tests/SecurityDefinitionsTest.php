@@ -11,11 +11,9 @@ use L5Swagger\Exceptions\L5SwaggerException;
 class SecurityDefinitionsTest extends TestCase
 {
     /**
-     * @test
-     *
      * @throws L5SwaggerException
      */
-    public function itWillNotAddEmptySecurityItems(): void
+    public function testItWillNotAddEmptySecurityItems(): void
     {
         $fileSystem = new Filesystem();
 
@@ -51,16 +49,12 @@ class SecurityDefinitionsTest extends TestCase
     }
 
     /**
-     * @test
      *
      * @dataProvider provideConfigAndSchemes
      *
-     * @param  array  $securitySchemes
-     * @param  array  $security
-     *
      * @throws L5SwaggerException
      */
-    public function canGenerateApiJsonFileWithSecurityDefinition(
+    public function testCanGenerateApiJsonFileWithSecurityDefinition(
         array $securitySchemes,
         array $security
     ): void {
@@ -95,9 +89,6 @@ class SecurityDefinitionsTest extends TestCase
              ->isOk();
     }
 
-    /**
-     * @return iterable
-     */
     public static function provideConfigAndSchemes(): iterable
     {
         $securitySchemes = [

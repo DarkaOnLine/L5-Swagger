@@ -9,8 +9,7 @@ use L5Swagger\Exceptions\L5SwaggerException;
  */
 class HelpersTest extends TestCase
 {
-    /** @test */
-    public function assetFunctionThrowsExceptionIfFileDoesNotExists(): void
+    public function testAssetFunctionThrowsExceptionIfFileDoesNotExists(): void
     {
         $this->expectException(L5SwaggerException::class);
 

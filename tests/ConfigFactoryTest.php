@@ -9,10 +9,7 @@ use L5Swagger\Exceptions\L5SwaggerException;
  */
 class ConfigFactoryTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function itThrowsExceptionIfDocumentationConfigNotFound(): void
+    public function testItThrowsExceptionIfDocumentationConfigNotFound(): void
     {
         $config = config('l5-swagger');
         unset($config['documentations']['default']);
@@ -25,16 +22,12 @@ class ConfigFactoryTest extends TestCase
     }
 
     /**
-     * @test
      *
      * @dataProvider configDataProvider
      *
-     * @param  array  $data
-     * @param  array  $assert
-     *
      * @throws L5SwaggerException
      */
-    public function canMergeConfigurationDeep(array $data, array $assert): void
+    public function testCanMergeConfigurationDeep(array $data, array $assert): void
     {
         config(['l5-swagger' => array_merge(
             $data,
@@ -58,72 +51,70 @@ class ConfigFactoryTest extends TestCase
         $this->assertArraySimilar($config, $assert);
     }
 
-    public static function configDataProvider(): array
+    public static function configDataProvider(): \Iterator
     {
-        return [
+        yield [
             [
-                [
-                    'default' => 'v2',
-                    'documentations' => [
-                        'v2' => [
-                            'api' => [
-                                'title' => 'Api V2',
-                            ],
-                            'paths' => [
-                                'docs_json' => 'api-v2.json',
-                            ],
-                            'proxy' => true,
+                'default' => 'v2',
+                'documentations' => [
+                    'v2' => [
+                        'api' => [
+                            'title' => 'Api V2',
                         ],
+                        'paths' => [
+                            'docs_json' => 'api-v2.json',
+                        ],
+                        'proxy' => true,
                     ],
-                ],
-                [
-                    'api' => [
-                        'title' => 'Api V2',
-                    ],
-                    'routes' => [
-                        'api' => 'api/documentation',
-                        'docs' => 'docs',
-                    ],
-                    'paths' => [
-                        'docs_json' => 'api-v2.json',
-                        'docs' => 'docs/',
-                        'docs_yaml' => 'docs.yaml',
-                    ],
-                    'proxy' => true,
                 ],
             ],
             [
-                [
-                    'default' => 'v1',
-                    'documentations' => [
-                        'v1' => [
-                            'api' => [
-                                'title' => 'Api V1',
-                            ],
-                            'routes' => [
-                                'api' => 'api/v1',
-                            ],
-                            'paths' => [
-                                'docs_json' => 'api-v1.json',
-                            ],
+                'api' => [
+                    'title' => 'Api V2',
+                ],
+                'routes' => [
+                    'api' => 'api/documentation',
+                    'docs' => 'docs',
+                ],
+                'paths' => [
+                    'docs_json' => 'api-v2.json',
+                    'docs' => 'docs/',
+                    'docs_yaml' => 'docs.yaml',
+                ],
+                'proxy' => true,
+            ],
+        ];
+        yield [
+            [
+                'default' => 'v1',
+                'documentations' => [
+                    'v1' => [
+                        'api' => [
+                            'title' => 'Api V1',
+                        ],
+                        'routes' => [
+                            'api' => 'api/v1',
+                        ],
+                        'paths' => [
+                            'docs_json' => 'api-v1.json',
                         ],
                     ],
                 ],
-                [
-                    'api' => [
-                        'title' => 'Api V1',
-                    ],
-                    'routes' => [
-                        'api' => 'api/v1',
-                        'docs' => 'docs',
-                    ],
-                    'paths' => [
-                        'docs_json' => 'api-v1.json',
-                        'docs' => 'docs/',
-                        'docs_yaml' => 'docs.yaml',
-                    ],
-                    'proxy' => false,
+            ],
+            [
+                'api' => [
+                    'title' => 'Api V1',
                 ],
+                'routes' => [
+                    'api' => 'api/v1',
+                    'docs' => 'docs',
+                ],
+                'paths' => [
+                    'docs_json' => 'api-v1.json',
+                    'docs' => 'docs/',
+                    'docs_yaml' => 'docs.yaml',
+                ],
+                'proxy' => false,
             ],
         ];
     }
@@ -133,13 +124,10 @@ class ConfigFactoryTest extends TestCase
      *
      * Both arrays must have the same indexes with identical values
      * without respect to key ordering
-     *
-     * @param  array  $expected
-     * @param  array  $array
      */
     protected function assertArraySimilar(array $expected, array $array)
     {
-        $this->assertTrue(count(array_diff_key($array, $expected)) === 0);
+        $this->assertSame([], array_diff_key($array, $expected));
 
         foreach ($expected as $key => $value) {
             if (is_array($value)) {

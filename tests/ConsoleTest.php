@@ -13,16 +13,14 @@ use L5Swagger\Exceptions\L5SwaggerException;
 class ConsoleTest extends TestCase
 {
     /**
-     * @test
      *
      * @dataProvider provideGenerateCommands
      *
-     * @param  string  $artisanCommand
      *
      * @throws L5SwaggerException
      * @throws FileNotFoundException
      */
-    public function canGenerate(string $artisanCommand): void
+    public function testCanGenerate(string $artisanCommand): void
     {
         $fileSystem = new Filesystem();
 
@@ -38,9 +36,6 @@ class ConsoleTest extends TestCase
         $this->assertStringContainsString('L5 Swagger', $fileContent);
     }
 
-    /**
-     * @return iterable
-     */
     public static function provideGenerateCommands(): iterable
     {
         yield 'default' => [
@@ -52,11 +47,9 @@ class ConsoleTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws L5SwaggerException
      */
-    public function canPublish(): void
+    public function testCanPublish(): void
     {
         $fileSystem = new Filesystem();
         Artisan::call('vendor:publish', ['--provider' => 'L5Swagger\L5SwaggerServiceProvider']);

@@ -12,8 +12,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class RoutesTest extends TestCase
 {
-    /** @test */
-    public function userCantAccessJsonFileIfItIsNotGenerated(): void
+    public function testUserCantAccessJsonFileIfItIsNotGenerated(): void
     {
         $jsonUrl = route('l5-swagger.default.docs');
 
@@ -21,8 +20,7 @@ class RoutesTest extends TestCase
         $this->assertTrue($response->isNotFound());
     }
 
-    /** @test */
-    public function userCanAccessJsonFileIfItIsGenerated(): void
+    public function testUserCanAccessJsonFileIfItIsGenerated(): void
     {
         $jsonUrl = route('l5-swagger.default.docs');
         config(['l5-swagger' => [
@@ -39,8 +37,7 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
-    /** @test */
-    public function userCanAccessAndGenerateCustomJsonFile(): void
+    public function testUserCanAccessAndGenerateCustomJsonFile(): void
     {
         $customJsonFileName = 'docs.v1.json';
 
@@ -62,8 +59,7 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
-    /** @test */
-    public function userCanAccessAndGenerateYamlFile(): void
+    public function testUserCanAccessAndGenerateYamlFile(): void
     {
         $customYamlFileName = 'docs.yaml';
 
@@ -84,8 +80,7 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
-    /** @test */
-    public function itCanAccessAndGenerateYamlFile(): void
+    public function testItCanAccessAndGenerateYamlFile(): void
     {
         $customYamlFileName = 'docs.yaml';
 
@@ -106,8 +101,7 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
-    /** @test */
-    public function userCanAccessDocumentationFileWithoutExtensionIfItExists(): void
+    public function testUserCanAccessDocumentationFileWithoutExtensionIfItExists(): void
     {
         $customYamlFileName = 'docs-file-without-extension';
 
@@ -128,8 +122,7 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
-    /** @test */
-    public function itDoesNotThrowExceptionOnDocsFileWithoutExtension(): void
+    public function testItDoesNotThrowExceptionOnDocsFileWithoutExtension(): void
     {
         $fileWithoutExtension = 'docs';
 
@@ -143,11 +136,9 @@ class RoutesTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws L5SwaggerException
      */
-    public function userCanAccessDocumentationInterface(): void
+    public function testUserCanAccessDocumentationInterface(): void
     {
         $config = $this->configFactory->documentationConfig();
         $jsonFile = $config['paths']['docs_json'] ?? 'api-docs.json';
@@ -159,19 +150,16 @@ class RoutesTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws L5SwaggerException
      */
-    public function itCanServeAssets(): void
+    public function testItCanServeAssets(): void
     {
         $this->get(l5_swagger_asset('default', 'swagger-ui.css'))
             ->assertSee('.swagger-ui')
             ->isOk();
     }
 
-    /** @test */
-    public function itWillThrowExceptionForIncorrectAsset(): void
+    public function testItWillThrowExceptionForIncorrectAsset(): void
     {
         $this->expectException(L5SwaggerException::class);
         $this->expectExceptionMessage('(bad-swagger-ui.css) - this L5 Swagger asset is not allowed');
@@ -179,15 +167,13 @@ class RoutesTest extends TestCase
         l5_swagger_asset('default', 'bad-swagger-ui.css');
     }
 
-    /** @test */
-    public function itHandleBadAssetRequest(): void
+    public function testItHandleBadAssetRequest(): void
     {
         $this->get(route('l5-swagger.default.asset', 'file.css'))
             ->assertNotFound();
     }
 
-    /** @test */
-    public function userCanAccessOauth2Redirect(): void
+    public function testUserCanAccessOauth2Redirect(): void
     {
         $this->get(route('l5-swagger.default.oauth2_callback'))
             ->assertSee('swaggerUIRedirectOauth2')
@@ -195,16 +181,14 @@ class RoutesTest extends TestCase
             ->isOk();
     }
 
-    /** @test */
-    public function itWillReturn404ForIncorrectJsonFile(): void
+    public function testItWillReturn404ForIncorrectJsonFile(): void
     {
         $jsonUrl = route('l5-swagger.default.docs', 'invalid.json');
 
         $this->get($jsonUrl)->assertNotFound();
     }
 
-    /** @test */
-    public function itWillNotAttemptDocGenerationWhenAlwaysGenerateIsDisabled(): void
+    public function testItWillNotAttemptDocGenerationWhenAlwaysGenerateIsDisabled(): void
     {
         $jsonUrl = route('l5-swagger.default.docs', 'unknown_file.json');
         config(['l5-swagger' => [
@@ -219,8 +203,7 @@ class RoutesTest extends TestCase
         $this->get($jsonUrl)->assertNotFound();
     }
 
-    /** @test */
-    public function itWillReturn404WhenDocGenerationFails(): void
+    public function testItWillReturn404WhenDocGenerationFails(): void
     {
         $jsonUrl = route('l5-swagger.default.docs', 'docs');
         config(['l5-swagger' => [
@@ -230,7 +213,7 @@ class RoutesTest extends TestCase
         ]]);
 
         $mockGenerator = $this->mockGenerator();
-        $mockGenerator->expects($this->once())->method('generateDocs')->will($this->throwException(new \Exception));
+        $mockGenerator->expects($this->once())->method('generateDocs')->willThrowException(new \Exception);
 
         $this->get($jsonUrl)->assertNotFound();
     }
@@ -242,7 +225,7 @@ class RoutesTest extends TestCase
     {
         $mockGenerator = $this->createMock(Generator::class);
         $mockGeneratorFactory = $this->createMock(GeneratorFactory::class);
-        $mockGeneratorFactory->expects($this->any())->method('make')->willReturn($mockGenerator);
+        $mockGeneratorFactory->method('make')->willReturn($mockGenerator);
         app()->extend(GeneratorFactory::class, function () use ($mockGeneratorFactory) {
             return $mockGeneratorFactory;
         });
