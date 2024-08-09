@@ -2,7 +2,9 @@
 
 namespace Tests;
 
+use L5Swagger\ConfigFactory;
 use L5Swagger\Exceptions\L5SwaggerException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
@@ -10,6 +12,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * @covers \L5Swagger\ConfigFactory
  */
 #[TestDox('Configuration factory')]
+#[CoversClass(ConfigFactory::class)]
 class ConfigFactoryTest extends TestCase
 {
     public function testItThrowsExceptionIfDocumentationConfigNotFound(): void

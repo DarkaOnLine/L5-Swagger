@@ -5,7 +5,9 @@ namespace Tests;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Artisan;
+use L5Swagger\Console\GenerateDocsCommand;
 use L5Swagger\Exceptions\L5SwaggerException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
@@ -13,6 +15,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * @covers \L5Swagger\Console\GenerateDocsCommand
  */
 #[TestDox('Console commands')]
+#[CoversClass(GenerateDocsCommand::class)]
 class ConsoleTest extends TestCase
 {
     /**

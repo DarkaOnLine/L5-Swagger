@@ -3,12 +3,15 @@
 namespace Tests;
 
 use L5Swagger\Exceptions\L5SwaggerException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\TestDox;
 
 /**
  * @covers L5SwaggerException
  */
 #[TestDox('Helpers')]
+#[CoversFunction('l5_swagger_asset')]
 class HelpersTest extends TestCase
 {
     public function testAssetFunctionThrowsExceptionIfFileDoesNotExists(): void

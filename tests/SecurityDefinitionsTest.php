@@ -4,6 +4,8 @@ namespace Tests;
 
 use Illuminate\Filesystem\Filesystem;
 use L5Swagger\Exceptions\L5SwaggerException;
+use L5Swagger\SecurityDefinitions;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
@@ -11,6 +13,7 @@ use PHPUnit\Framework\Attributes\TestDox;
  * @covers \L5Swagger\SecurityDefinitions
  */
 #[TestDox('Security definition')]
+#[CoversClass(SecurityDefinitions::class)]
 class SecurityDefinitionsTest extends TestCase
 {
     /**

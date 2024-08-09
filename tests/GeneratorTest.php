@@ -4,8 +4,10 @@ namespace Tests;
 
 use Illuminate\Http\Request;
 use L5Swagger\Exceptions\L5SwaggerException;
+use L5Swagger\Generator;
 use OpenApi\Analysers\TokenAnalyser;
 use OpenApi\Processors\CleanUnmerged;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
@@ -14,6 +16,7 @@ use Symfony\Component\Yaml\Yaml;
  * @covers \L5Swagger\Generator
  */
 #[TestDox('Generator')]
+#[CoversClass(Generator::class)]
 class GeneratorTest extends TestCase
 {
     /**
