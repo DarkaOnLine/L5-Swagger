@@ -23,6 +23,7 @@ class ConfigFactoryTest extends TestCase
 
     /**
      * @throws L5SwaggerException
+     * @dataProvider configDataProvider
      */
     #[DataProvider('configDataProvider')]
     public function testCanMergeConfigurationDeep(array $data, array $assert): void
@@ -52,7 +53,7 @@ class ConfigFactoryTest extends TestCase
     public static function configDataProvider(): \Iterator
     {
         yield [
-            [
+            'data' => [
                 'default' => 'v2',
                 'documentations' => [
                     'v2' => [
@@ -66,7 +67,7 @@ class ConfigFactoryTest extends TestCase
                     ],
                 ],
             ],
-            [
+            'assert' => [
                 'api' => [
                     'title' => 'Api V2',
                 ],
@@ -83,7 +84,7 @@ class ConfigFactoryTest extends TestCase
             ],
         ];
         yield [
-            [
+            'data' => [
                 'default' => 'v1',
                 'documentations' => [
                     'v1' => [
@@ -99,7 +100,7 @@ class ConfigFactoryTest extends TestCase
                     ],
                 ],
             ],
-            [
+            'assert' => [
                 'api' => [
                     'title' => 'Api V1',
                 ],
