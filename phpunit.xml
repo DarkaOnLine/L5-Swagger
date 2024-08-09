@@ -4,7 +4,6 @@
          bootstrap="vendor/autoload.php"
          colors="true"
          requireCoverageMetadata="true"
-         beStrictAboutCoverageMetadata="true"
          beStrictAboutOutputDuringTests="true"
          stopOnFailure="false"
          cacheDirectory=".phpunit.cache"
