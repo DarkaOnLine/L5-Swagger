@@ -23,6 +23,7 @@ class ConfigFactoryTest extends TestCase
 
     /**
      * @throws L5SwaggerException
+     *
      * @dataProvider configDataProvider
      */
     #[DataProvider('configDataProvider')]
