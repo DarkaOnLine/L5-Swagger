@@ -72,7 +72,7 @@ jobs:
 
     - name: Run test suite
       run: composer run-script phpunit
-      if: matrix.php == '8.0'
+      if: matrix.php != '8.0'
 
     - name: Publish code coverage
       env:
