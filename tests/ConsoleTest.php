@@ -15,7 +15,6 @@ class ConsoleTest extends TestCase
     /**
      * @throws L5SwaggerException
      * @throws FileNotFoundException
-     * @dataProvider provideGenerateCommands
      */
     #[DataProvider('provideGenerateCommands')]
     public function testCanGenerate(string $artisanCommand): void
