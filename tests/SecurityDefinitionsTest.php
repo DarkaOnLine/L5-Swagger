@@ -7,6 +7,9 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
+/**
+ * @covers \L5Swagger\SecurityDefinitions
+ */
 #[TestDox('Security definition')]
 class SecurityDefinitionsTest extends TestCase
 {
@@ -49,6 +52,8 @@ class SecurityDefinitionsTest extends TestCase
     }
 
     /**
+     * @dataProvider provideConfigAndSchemes
+     *
      * @throws L5SwaggerException
      */
     #[DataProvider('provideConfigAndSchemes')]

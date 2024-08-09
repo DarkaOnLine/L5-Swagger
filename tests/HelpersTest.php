@@ -5,6 +5,9 @@ namespace Tests;
 use L5Swagger\Exceptions\L5SwaggerException;
 use PHPUnit\Framework\Attributes\TestDox;
 
+/**
+ * @covers L5SwaggerException
+ */
 #[TestDox('Helpers')]
 class HelpersTest extends TestCase
 {

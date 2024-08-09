@@ -6,6 +6,9 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
+/**
+ * @covers \L5Swagger\ConfigFactory
+ */
 #[TestDox('Configuration factory')]
 class ConfigFactoryTest extends TestCase
 {
@@ -22,6 +25,8 @@ class ConfigFactoryTest extends TestCase
     }
 
     /**
+     * @dataProvider configDataProvider
+     *
      * @throws L5SwaggerException
      */
     #[DataProvider('configDataProvider')]
@@ -51,7 +56,7 @@ class ConfigFactoryTest extends TestCase
 
     public static function configDataProvider(): \Iterator
     {
-        yield [
+        yield 'V1 configuration' => [
             'data' => [
                 'default' => 'v2',
                 'documentations' => [
@@ -82,7 +87,7 @@ class ConfigFactoryTest extends TestCase
                 'proxy' => true,
             ],
         ];
-        yield [
+        yield 'V2 configuration' => [
             'data' => [
                 'default' => 'v1',
                 'documentations' => [

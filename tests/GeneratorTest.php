@@ -10,6 +10,9 @@ use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 
+/**
+ * @covers \L5Swagger\Generator
+ */
 #[TestDox('Generator')]
 class GeneratorTest extends TestCase
 {

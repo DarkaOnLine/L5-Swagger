@@ -66,8 +66,13 @@ jobs:
         ./cc-test-reporter before-build
       if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'latest'
 
+    - name: Run PHP 8.0 test suite
+      run: vendor/bin/phpunit --testdox -c phpunit-php80.xml
+      if: matrix.php == '8.0'
+
     - name: Run test suite
       run: composer run-script phpunit
+      if: matrix.php == '8.0'
 
     - name: Publish code coverage
       env:

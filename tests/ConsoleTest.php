@@ -9,10 +9,15 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
+/**
+ * @covers \L5Swagger\Console\GenerateDocsCommand
+ */
 #[TestDox('Console commands')]
 class ConsoleTest extends TestCase
 {
     /**
+     * @dataProvider provideGenerateCommands
+     *
      * @throws L5SwaggerException
      * @throws FileNotFoundException
      */

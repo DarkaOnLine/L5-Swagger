@@ -8,6 +8,10 @@ use L5Swagger\GeneratorFactory;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\MockObject\Exception;
 
+/**
+ * @covers \L5Swagger\Http\Controllers\SwaggerController
+ * @covers \L5Swagger\Http\Controllers\SwaggerAssetController
+ */
 #[TestDox('Routes')]
 class RoutesTest extends TestCase
 {
