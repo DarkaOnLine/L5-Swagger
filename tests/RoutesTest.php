@@ -7,6 +7,7 @@ use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
 use L5Swagger\Http\Controllers\SwaggerAssetController;
 use L5Swagger\Http\Controllers\SwaggerController;
+use L5Swagger\Http\Middleware\Config;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\MockObject\Exception;
@@ -18,6 +19,8 @@ use PHPUnit\Framework\MockObject\Exception;
 #[TestDox('Routes')]
 #[CoversClass(SwaggerController::class)]
 #[CoversClass(SwaggerAssetController::class)]
+#[CoversClass(Config::class)]
+#[CoversClass(L5SwaggerException::class)]
 class RoutesTest extends TestCase
 {
     public function testUserCantAccessJsonFileIfItIsNotGenerated(): void

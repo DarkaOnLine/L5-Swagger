@@ -14,7 +14,7 @@ if (! function_exists('swagger_ui_dist_path')) {
      */
     function swagger_ui_dist_path(string $documentation, $asset = null)
     {
-        $allowed_files = [
+        $allowedFiles = [
             'favicon-16x16.png',
             'favicon-32x32.png',
             'oauth2-redirect.html',
@@ -37,7 +37,7 @@ if (! function_exists('swagger_ui_dist_path')) {
             return realpath($path);
         }
 
-        if (! in_array($asset, $allowed_files)) {
+        if (! in_array($asset, $allowedFiles, true)) {
             throw new L5SwaggerException(sprintf('(%s) - this L5 Swagger asset is not allowed', $asset));
         }
 
