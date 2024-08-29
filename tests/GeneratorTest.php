@@ -118,8 +118,8 @@ class GeneratorTest extends TestCase
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
-            ->assertSee('getClientsList')
             ->assertSee('Get list of products')
+            ->assertSee('getClientsList')
             ->assertStatus(200);
 
         $config = $this->configFactory->documentationConfig();
@@ -128,8 +128,8 @@ class GeneratorTest extends TestCase
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
-            ->assertSee('getClientsList')
             ->assertSee('Get list of products')
+            ->assertSee('getClientsList')
             ->assertStatus(200);
     }
 
