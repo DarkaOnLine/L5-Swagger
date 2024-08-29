@@ -203,11 +203,9 @@ class Generator
         $generator = new OpenApiGenerator();
 
         // Only from zircote/swagger-php 4
-        if (
-            ! empty($this->scanOptions['default_processors_configuration'])
+        if (! empty($this->scanOptions['default_processors_configuration'])
             && is_array($this->scanOptions['default_processors_configuration'])
-            && method_exists($generator, 'setConfig')
-        ) {
+            && method_exists($generator, 'setConfig')) {
             $generator->setConfig($this->scanOptions['default_processors_configuration']);
         }
 
