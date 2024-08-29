@@ -119,6 +119,7 @@ class GeneratorTest extends TestCase
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
             ->assertSee('getClientsList')
+            ->assertSee('Get list of products')
             ->assertStatus(200);
 
         $config = $this->configFactory->documentationConfig();
@@ -128,6 +129,7 @@ class GeneratorTest extends TestCase
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
             ->assertSee('getClientsList')
+            ->assertSee('Get list of products')
             ->assertStatus(200);
     }
 
@@ -156,6 +158,7 @@ class GeneratorTest extends TestCase
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
+            ->assertSee('Get list of products')
             ->assertDontSee('getClientsList')
             ->assertStatus(200);
     }
