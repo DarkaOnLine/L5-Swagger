@@ -52,6 +52,7 @@ class L5SwaggerServiceProvider extends ServiceProvider
         $this->app->bind(Generator::class, function ($app) {
             $documentation = config('l5-swagger.default');
 
+            /** @var GeneratorFactory $factory */
             $factory = $app->make(GeneratorFactory::class);
 
             return $factory->make($documentation);
