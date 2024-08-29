@@ -200,9 +200,7 @@ class GeneratorTest extends TestCase
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
             ->assertSee('operationId')
-            ->assertSee(
-                "POST::/products::Tests\\\storage\\\annotations\\\OpenApi\\\Products\\\L5SwaggerAnnotationsExampleProducts::getProductsList"
-            )
+            ->assertSee("POST::/products::Tests\\\storage\\\annotations\\\OpenApi\\\Products\\\L5SwaggerAnnotationsExampleProducts::getProductsList")
             ->assertDontSee('getClientsList')
             ->assertStatus(200);
     }
