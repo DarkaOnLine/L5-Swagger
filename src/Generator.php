@@ -202,6 +202,14 @@ class Generator
     {
         $generator = new OpenApiGenerator();
 
+        // Only from zircote/swagger-php 4
+        if (! empty($this->scanOptions['default_processors_configuration'])
+            && is_array($this->scanOptions['default_processors_configuration'])
+            && method_exists($generator, 'setConfig')
+        ) {
+            $generator->setConfig($this->scanOptions['default_processors_configuration']);
+        }
+
         // OpenApi spec version - only from zircote/swagger-php 4
         if (method_exists($generator, 'setVersion')) {
             $generator->setVersion(

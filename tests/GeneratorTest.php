@@ -118,7 +118,7 @@ class GeneratorTest extends TestCase
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
-            ->assertSee('getProductsList')
+            ->assertSee('Get list of products')
             ->assertSee('getClientsList')
             ->assertStatus(200);
 
@@ -128,7 +128,7 @@ class GeneratorTest extends TestCase
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
-            ->assertSee('getProductsList')
+            ->assertSee('Get list of products')
             ->assertSee('getClientsList')
             ->assertStatus(200);
     }
@@ -158,7 +158,7 @@ class GeneratorTest extends TestCase
             ->assertSee('L5 Swagger')
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
-            ->assertSee('getProductsList')
+            ->assertSee('Get list of products')
             ->assertDontSee('getClientsList')
             ->assertStatus(200);
     }
@@ -177,6 +177,9 @@ class GeneratorTest extends TestCase
         $cfg['scanOptions']['open_api_spec_version'] = '3.1.0';
         $cfg['scanOptions']['processors'] = [
             new CleanUnmerged,
+        ];
+        $cfg['scanOptions']['default_processors_configuration'] = [
+            'operationId' => ['hash' => false],
         ];
 
         config(['l5-swagger' => [
@@ -199,7 +202,8 @@ class GeneratorTest extends TestCase
             ->assertSee('3.1.0')
             ->assertSee('my-default-host.com')
             ->assertSee('getProjectsList')
-            ->assertSee('getProductsList')
+            ->assertSee('operationId')
+            ->assertSee("POST::/products::Tests\\\storage\\\annotations\\\OpenApi\\\Products\\\L5SwaggerAnnotationsExampleProducts::getProductsList")
             ->assertDontSee('getClientsList')
             ->assertStatus(200);
     }

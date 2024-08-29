@@ -7,7 +7,6 @@ class L5SwaggerAnnotationsExampleProducts
     /**
      * @OA\Post(
      *      path="/products",
-     *      operationId="getProductsList",
      *      tags={"Products"},
      *      summary="Get list of products",
      *      description="Returns list of products",
