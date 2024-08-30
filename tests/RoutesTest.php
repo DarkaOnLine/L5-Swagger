@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Http\Request;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
@@ -173,6 +174,39 @@ class RoutesTest extends TestCase
             ->assertSee(route('l5-swagger.default.docs', $jsonFile))
             ->assertSee(route('l5-swagger.default.oauth2_callback'))
             ->isOk();
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testUserCanAccessDocumentationInterfaceAndConfigureProxy(): void
+    {
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['proxy' => ['foo', 'bar']]),
+        ]]);
+
+        $config = $this->configFactory->documentationConfig();
+        $jsonFile = $config['paths']['docs_json'] ?? 'api-docs.json';
+
+        $this->get($config['routes']['api'])
+            ->assertSee(route('l5-swagger.default.docs', $jsonFile))
+            ->assertSee(route('l5-swagger.default.oauth2_callback'))
+            ->isOk();
+
+        $this->assertSame(['foo', 'bar'], Request::getTrustedProxies());
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['proxy' => 'baz']),
+        ]]);
+
+        $this->get($config['routes']['api'])
+            ->isOk();
+
+        $this->assertSame(['baz'], Request::getTrustedProxies());
     }
 
     /**
