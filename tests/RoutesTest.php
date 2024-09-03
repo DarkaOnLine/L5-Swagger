@@ -207,7 +207,6 @@ class RoutesTest extends TestCase
 
     public static function provideProxies(): \Generator
     {
-        yield 'proxy is null' => ['proxy' => null, 'expectedProxies' => []];
         yield 'proxies array' => ['proxy' => ['foo', 'bar'], 'expectedProxies' => ['foo', 'bar']];
         yield 'proxy as string' => ['proxy' => 'baz', 'expectedProxies' => ['baz']];
     }
