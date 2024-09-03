@@ -179,6 +179,8 @@ class RoutesTest extends TestCase
     }
 
     /**
+     * @dataProvider provideProxies
+     *
      * @throws L5SwaggerException
      */
     #[DataProvider('provideProxies')]
