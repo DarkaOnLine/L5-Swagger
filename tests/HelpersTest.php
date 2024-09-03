@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Support\Facades\Storage;
 use L5Swagger\Exceptions\L5SwaggerException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversFunction;
@@ -16,10 +17,40 @@ use PHPUnit\Framework\Attributes\TestDox;
 #[CoversFunction('swagger_ui_dist_path')]
 class HelpersTest extends TestCase
 {
-    public function testAssetFunctionThrowsExceptionIfFileDoesNotExists(): void
+    public function testAssetFunctionReturnsRoute(): void
+    {
+        $path = l5_swagger_asset('default', 'swagger-ui.js');
+
+        $this->assertStringContainsString('http://localhost/docs/asset/swagger-ui.js?v=', $path);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testGeneratesBasePathForAssetsThrowsExceptionIfFileIsNotAllowed(): void
     {
         $this->expectException(L5SwaggerException::class);
 
-        l5_swagger_asset('default', 'asdasd');
+        swagger_ui_dist_path('default', 'foo.bar');
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testGeneratesBasePathForAssets(): void
+    {
+        $path = swagger_ui_dist_path('default');
+
+        $this->assertStringContainsString('swagger-api/swagger-ui/dist', $path);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testGeneratesAssetPathForAssets(): void
+    {
+        $path = swagger_ui_dist_path('default', 'swagger-ui.js');
+
+        $this->assertStringContainsString('swagger-api/swagger-ui/dist/swagger-ui.js', $path);
     }
 }
