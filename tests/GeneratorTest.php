@@ -189,25 +189,16 @@ class GeneratorTest extends TestCase
     {
         $cfg = config('l5-swagger.documentations.default');
 
-        $cfg['scanOptions']['exclude'] = [
-            __DIR__.'/storage/annotations/OpenApi/Clients',
-        ];
-
+        $cfg['scanOptions']['exclude'] = [__DIR__.'/storage/annotations/OpenApi/Clients'];
         $cfg['scanOptions']['pattern'] = 'L5SwaggerAnnotationsExample*.*';
         $cfg['scanOptions']['analyser'] = new TokenAnalyser;
         $cfg['scanOptions']['open_api_spec_version'] = '3.1.0';
-        $cfg['scanOptions']['processors'] = [
-            new CleanUnmerged,
-        ];
-        $cfg['scanOptions']['default_processors_configuration'] = [
-            'operationId' => ['hash' => false],
-        ];
+        $cfg['scanOptions']['processors'] = [new CleanUnmerged];
+        $cfg['scanOptions']['default_processors_configuration'] = ['operationId' => ['hash' => false]];
 
         config(['l5-swagger' => [
             'default' => 'default',
-            'documentations' => [
-                'default' => $cfg,
-            ],
+            'documentations' => ['default' => $cfg],
             'defaults' => config('l5-swagger.defaults'),
         ]]);
 
