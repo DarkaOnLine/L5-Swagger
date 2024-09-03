@@ -280,9 +280,9 @@ class RoutesTest extends TestCase
     }
 
     /**
-     * @throws Exception
-     *
      * @return Generator&MockObject
+     *
+     * @throws Exception
      */
     private function mockGenerator(): Generator
     {
