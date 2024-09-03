@@ -5,24 +5,27 @@ namespace Tests;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Artisan;
+use L5Swagger\Console\GenerateDocsCommand;
 use L5Swagger\Exceptions\L5SwaggerException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 
 /**
- * @testdox Console commands
+ * @covers \L5Swagger\Console\GenerateDocsCommand
  */
+#[TestDox('Console commands')]
+#[CoversClass(GenerateDocsCommand::class)]
 class ConsoleTest extends TestCase
 {
     /**
-     * @test
-     *
      * @dataProvider provideGenerateCommands
-     *
-     * @param  string  $artisanCommand
      *
      * @throws L5SwaggerException
      * @throws FileNotFoundException
      */
-    public function canGenerate(string $artisanCommand): void
+    #[DataProvider('provideGenerateCommands')]
+    public function testCanGenerate(string $artisanCommand): void
     {
         $fileSystem = new Filesystem();
 
@@ -38,9 +41,6 @@ class ConsoleTest extends TestCase
         $this->assertStringContainsString('L5 Swagger', $fileContent);
     }
 
-    /**
-     * @return iterable
-     */
     public static function provideGenerateCommands(): iterable
     {
         yield 'default' => [
@@ -52,11 +52,9 @@ class ConsoleTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @throws L5SwaggerException
      */
-    public function canPublish(): void
+    public function testCanPublish(): void
     {
         $fileSystem = new Filesystem();
         Artisan::call('vendor:publish', ['--provider' => 'L5Swagger\L5SwaggerServiceProvider']);
