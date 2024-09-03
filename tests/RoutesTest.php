@@ -10,8 +10,10 @@ use L5Swagger\Http\Controllers\SwaggerAssetController;
 use L5Swagger\Http\Controllers\SwaggerController;
 use L5Swagger\Http\Middleware\Config;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\MockObject\Exception;
+use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @covers \L5Swagger\Http\Controllers\SwaggerController
@@ -179,12 +181,15 @@ class RoutesTest extends TestCase
     /**
      * @throws L5SwaggerException
      */
-    public function testUserCanAccessDocumentationInterfaceAndConfigureProxy(): void
-    {
+    #[DataProvider('provideProxies')]
+    public function testUserCanAccessDocumentationInterfaceAndConfigureProxy(
+        mixed $proxy,
+        array $expectedProxies
+    ): void {
         config(['l5-swagger' => [
             'default' => 'default',
             'documentations' => config('l5-swagger.documentations'),
-            'defaults' => array_merge(config('l5-swagger.defaults'), ['proxy' => ['foo', 'bar']]),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['proxy' => $proxy]),
         ]]);
 
         $config = $this->configFactory->documentationConfig();
@@ -195,18 +200,14 @@ class RoutesTest extends TestCase
             ->assertSee(route('l5-swagger.default.oauth2_callback'))
             ->isOk();
 
-        $this->assertSame(['foo', 'bar'], Request::getTrustedProxies());
+        $this->assertSame($expectedProxies, Request::getTrustedProxies());
+    }
 
-        config(['l5-swagger' => [
-            'default' => 'default',
-            'documentations' => config('l5-swagger.documentations'),
-            'defaults' => array_merge(config('l5-swagger.defaults'), ['proxy' => 'baz']),
-        ]]);
-
-        $this->get($config['routes']['api'])
-            ->isOk();
-
-        $this->assertSame(['baz'], Request::getTrustedProxies());
+    public static function provideProxies(): \Generator
+    {
+        yield 'proxies array' => ['proxy' => ['foo', 'bar'], 'expectedProxies' => ['foo', 'bar']];
+        yield 'proxy as string' => ['proxy' => 'baz', 'expectedProxies' => ['baz']];
+        yield 'proxy is null' => ['proxy' => null, 'expectedProxies' => []];
     }
 
     /**
@@ -273,13 +274,15 @@ class RoutesTest extends TestCase
         ]]);
 
         $mockGenerator = $this->mockGenerator();
-        $mockGenerator->expects($this->once())->method('generateDocs')->willThrowException(new \Exception);
+        $mockGenerator->expects($this->once())->method('generateDocs')->willThrowException(new L5SwaggerException());
 
         $this->get($jsonUrl)->assertNotFound();
     }
 
     /**
      * @throws Exception
+     *
+     * @return Generator&MockObject
      */
     private function mockGenerator(): Generator
     {
