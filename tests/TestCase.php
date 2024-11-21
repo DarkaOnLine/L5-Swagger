@@ -9,44 +9,41 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionObject;
 
 class TestCase extends OrchestraTestCase
 {
     /**
-     * @var ConfigFactory
+     * @var ConfigFactory|MockObject
      */
-    protected $configFactory;
+    protected ConfigFactory $configFactory;
+
+    protected array $defaultConfig;
 
     /**
-     * @var array
+     * @var Generator|MockObject
      */
-    protected $defaultConfig;
+    protected Generator $generator;
 
     /**
-     * @var Generator
+     * @var Filesystem|MockObject
      */
-    protected $generator;
-
-    /**
-     * @var MockObject|Filesystem
-     */
-    protected $fileSystem;
+    protected Filesystem $fileSystem;
 
     /**
      * @before
      *
-     * @return void
+     * @throws Exception
      */
+    #[Before]
     public function setUpFileSystem(): void
     {
         $this->fileSystem = $this->createMock(Filesystem::class);
     }
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         parent::setUp();
@@ -83,7 +80,7 @@ class TestCase extends OrchestraTestCase
 
     /**
      * @param  Application  $app
-     * @return array
+     * @return string[]
      */
     protected function getPackageProviders($app): array
     {
@@ -117,8 +114,6 @@ class TestCase extends OrchestraTestCase
     /**
      * Get path for json docs file.
      *
-     * @return string
-     *
      * @throws L5SwaggerException
      */
     protected function jsonDocsFile(): string
@@ -136,8 +131,6 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Get path for yaml docs file.
-     *
-     * @return string
      *
      * @throws L5SwaggerException
      */
@@ -194,9 +187,6 @@ class TestCase extends OrchestraTestCase
         $this->generator = $this->app->make(Generator::class);
     }
 
-    /**
-     * @return void
-     */
     protected function makeGeneratorWithMockedFileSystem(): void
     {
         $this->generator = $this->app->make(Generator::class);
@@ -208,10 +198,6 @@ class TestCase extends OrchestraTestCase
         $reflectionProperty->setValue($this->generator, $this->fileSystem);
     }
 
-    /**
-     * @param  string  $fileName
-     * @param  string  $type
-     */
     protected function setCustomDocsFileName(string $fileName, string $type = 'json'): void
     {
         $cfg = config('l5-swagger.documentations.default');
