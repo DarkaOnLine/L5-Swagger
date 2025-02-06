@@ -1,7 +1,7 @@
 #
 # Base install
 #
-FROM amd64/php:8.2-apache as base
+FROM php:8.2.27-apache as base
 
 LABEL vendor="L5 Swagger"
 
@@ -24,7 +24,7 @@ RUN apt-get update && apt-get install -y \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pecl install memcached
+# RUN pecl install memcached
 
 RUN pecl install -f xdebug \
     && docker-php-ext-enable xdebug
