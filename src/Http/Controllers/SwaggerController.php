@@ -40,7 +40,7 @@ class SwaggerController extends BaseController
         $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
         $config = $request->offsetGet('config');
-        $yamlFormat = ($config['paths']['format_to_use_for_docs'] === 'yaml');
+        $yamlFormat = (isset($config['paths']['format_to_use_for_docs']) && $config['paths']['format_to_use_for_docs'] === 'yaml');
 
         $filePath = sprintf(
             '%s/%s',
