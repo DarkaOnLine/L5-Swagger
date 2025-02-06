@@ -255,4 +255,15 @@ class TestCase extends OrchestraTestCase
             );
         }
     }
+
+    /**
+     * Delete the assets directory used by the application.
+     */
+    protected function deleteAssets(): void
+    {
+        $fileSystem = new Filesystem();
+        $destination = __DIR__.'/../vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist/';
+
+        $fileSystem->deleteDirectory($destination);
+    }
 }
