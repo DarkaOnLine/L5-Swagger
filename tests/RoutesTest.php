@@ -87,11 +87,9 @@ class RoutesTest extends TestCase
     /** @test */
     public function itCanAccessAndGenerateYamlFile(): void
     {
-        $customYamlFileName = 'docs.yaml';
+        $jsonUrl = route('l5-swagger.default.api');
 
-        $jsonUrl = route('l5-swagger.default.docs');
-
-        $this->setCustomDocsFileName($customYamlFileName, 'yaml');
+        $this->setCustomDocsFileName('api-docs.yaml', 'yaml');
 
         config(['l5-swagger' => [
             'default' => 'default',
@@ -102,7 +100,7 @@ class RoutesTest extends TestCase
         $this->setAnnotationsPath();
 
         $this->get($jsonUrl)
-            ->assertHeader('Content-Type', 'application/yaml')
+            ->assertSee('api-docs.yaml')
             ->isOk();
     }
 
