@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   l5-swagger-app:
     image: l5-swagger-app
