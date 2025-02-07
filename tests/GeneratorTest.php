@@ -195,7 +195,7 @@ class GeneratorTest extends TestCase
         $cfg['scanOptions']['pattern'] = 'L5SwaggerAnnotationsExample*.*';
         $cfg['scanOptions']['analyser'] = new ReflectionAnalyser([
             new AttributeAnnotationFactory(),
-            new DocBlockAnnotationFactory()
+            new DocBlockAnnotationFactory(),
         ]);
         $cfg['scanOptions']['open_api_spec_version'] = '3.1.0';
         $cfg['scanOptions']['processors'] = [new CleanUnmerged];
