@@ -234,19 +234,21 @@ class Generator
     protected function setProcessors(OpenApiGenerator $generator): void
     {
         $processorClasses = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
-        $processors = [];
+        $newPipeLine = [];
 
-        foreach ($generator->getProcessorPipeline() as $processor) {
-            $processors[] = $processor;
-            if ($processor instanceof \OpenApi\Processors\BuildPaths) {
-                foreach ($processorClasses as $customProcessor) {
-                    $processors[] = new $customProcessor();
+        $generator->getProcessorPipeline()->walk(
+            function (callable $pipe) use ($processorClasses, &$newPipeLine) {
+                $newPipeLine[] = $pipe;
+                if ($pipe instanceof \OpenApi\Processors\BuildPaths) {
+                    foreach ($processorClasses as $customProcessor) {
+                        $newPipeLine[] = new $customProcessor();
+                    }
                 }
             }
-        }
+        );
 
-        if (! empty($processors)) {
-            $generator->setProcessorPipeline(new Pipeline($processors));
+        if (! empty($newPipeLine)) {
+            $generator->setProcessorPipeline(new Pipeline($newPipeLine));
         }
     }
 
