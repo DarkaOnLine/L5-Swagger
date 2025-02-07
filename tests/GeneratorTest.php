@@ -7,7 +7,11 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
 use L5Swagger\L5SwaggerServiceProvider;
+use OpenApi\Analysers\AttributeAnnotationFactory;
+use OpenApi\Analysers\DocBlockAnnotationFactory;
+use OpenApi\Analysers\ReflectionAnalyser;
 use OpenApi\Analysers\TokenAnalyser;
+use OpenApi\Analysers\TokenScanner;
 use OpenApi\Processors\CleanUnmerged;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
@@ -191,7 +195,7 @@ class GeneratorTest extends TestCase
 
         $cfg['scanOptions']['exclude'] = [__DIR__.'/storage/annotations/OpenApi/Clients'];
         $cfg['scanOptions']['pattern'] = 'L5SwaggerAnnotationsExample*.*';
-        $cfg['scanOptions']['analyser'] = new TokenAnalyser;
+        $cfg['scanOptions']['analyser'] = new ReflectionAnalyser([new AttributeAnnotationFactory(), new DocBlockAnnotationFactory()]);
         $cfg['scanOptions']['open_api_spec_version'] = '3.1.0';
         $cfg['scanOptions']['processors'] = [new CleanUnmerged];
         $cfg['scanOptions']['default_processors_configuration'] = ['operationId' => ['hash' => false]];

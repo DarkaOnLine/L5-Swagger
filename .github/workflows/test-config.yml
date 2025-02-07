@@ -14,7 +14,7 @@ jobs:
       fail-fast: true
       matrix:
         php: [ '8.0', '8.1', '8.2', '8.3' ]
-        l5-swagger-flags:  ['latest', 'swagger-php-3', 'swagger-ui-3']
+        l5-swagger-flags:  ['latest']
 
     name: PHP ${{ matrix.php }} - ${{ matrix.l5-swagger-flags }}
 
@@ -39,14 +39,6 @@ jobs:
 
     - name: Install dependencies
       run: composer update --no-interaction --no-progress --prefer-dist --prefer-stable
-
-    - name: Require Swagger PHP 3.*
-      run: composer require 'zircote/swagger-php:3.*' --no-interaction --no-update
-      if: matrix.l5-swagger-flags == 'swagger-php-3'
-
-    - name: Require Swagger UI 3.*
-      run: composer require 'swagger-api/swagger-ui:3.*' --no-interaction --no-update
-      if: matrix.l5-swagger-flags == 'swagger-ui-3'
 
     - name: Prepare enviroment
       run: |
