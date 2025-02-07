@@ -193,7 +193,10 @@ class GeneratorTest extends TestCase
 
         $cfg['scanOptions']['exclude'] = [__DIR__.'/storage/annotations/OpenApi/Clients'];
         $cfg['scanOptions']['pattern'] = 'L5SwaggerAnnotationsExample*.*';
-        $cfg['scanOptions']['analyser'] = new ReflectionAnalyser([new AttributeAnnotationFactory(), new DocBlockAnnotationFactory()]);
+        $cfg['scanOptions']['analyser'] = new ReflectionAnalyser([
+            new AttributeAnnotationFactory(),
+            new DocBlockAnnotationFactory()
+        ]);
         $cfg['scanOptions']['open_api_spec_version'] = '3.1.0';
         $cfg['scanOptions']['processors'] = [new CleanUnmerged];
         $cfg['scanOptions']['default_processors_configuration'] = ['operationId' => ['hash' => false]];
