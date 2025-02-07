@@ -14,7 +14,7 @@ jobs:
       fail-fast: true
       matrix:
         php: [ '8.0', '8.1', '8.2', '8.3' ]
-        l5-swagger-flags:  ['latest']
+        l5-swagger-flags:  ['swagger-php-latest']
 
     name: PHP ${{ matrix.php }} - ${{ matrix.l5-swagger-flags }}
 
@@ -56,7 +56,7 @@ jobs:
         curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
         chmod +x ./cc-test-reporter
         ./cc-test-reporter before-build
-      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'latest'
+      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'swagger-php-latest'
 
     - name: Run PHP 8.0 test suite
       run: vendor/bin/phpunit --testdox -c phpunit-php80.xml
@@ -74,7 +74,7 @@ jobs:
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         ./cc-test-reporter after-build -t clover --exit-code 0
         bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ${{github.workspace}}/clover.xml
-      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'latest' && github.event_name != 'pull_request'
+      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'swagger-php-latest' && github.event_name != 'pull_request'
 
     - name: Publish coveralls report
       env:
@@ -82,4 +82,4 @@ jobs:
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         vendor/bin/php-coveralls --coverage_clover=clover.xml -v
-      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'latest'
+      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'swagger-php-latest'
