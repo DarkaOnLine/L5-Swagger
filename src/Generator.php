@@ -9,6 +9,8 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Server;
 use OpenApi\Generator as OpenApiGenerator;
+use OpenApi\Pipeline;
+use OpenApi\Processors\BuildPaths;
 use OpenApi\Util;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
@@ -235,17 +237,18 @@ class Generator
         $processorClasses = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
         $processors = [];
 
-        foreach ($generator->getProcessors() as $processor) {
+        $generator->getProcessorPipeline()->walk(function ($processor) use (&$processors, $processorClasses): void {
             $processors[] = $processor;
-            if ($processor instanceof \OpenApi\Processors\BuildPaths) {
+
+            if ($processor instanceof BuildPaths) {
                 foreach ($processorClasses as $customProcessor) {
                     $processors[] = new $customProcessor();
                 }
             }
-        }
+        });
 
-        if (! empty($processors)) {
-            $generator->setProcessors($processors);
+        if ([] !== $processors) {
+            $generator->setProcessorPipeline(new Pipeline($processors));
         }
     }
 
