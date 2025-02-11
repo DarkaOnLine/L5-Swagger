@@ -31,7 +31,7 @@ class SwaggerController extends BaseController
         ConfigFactory $configFactory
     ) {
         $this->generatorFactory = $generatorFactory;
-        $this->configFactory    = $configFactory;
+        $this->configFactory = $configFactory;
     }
 
     /**
