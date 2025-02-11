@@ -9,7 +9,6 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request as RequestFacade;
-use Illuminate\Support\Facades\Response as ResponseFacade;
 use L5Swagger\ConfigFactory;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\GeneratorFactory;
@@ -85,13 +84,13 @@ class SwaggerController extends BaseController
         $content = $fileSystem->get($filePath);
 
         if ($yamlFormat) {
-            return ResponseFacade::make($content, 200, [
+            return response($content, 200, [
                 'Content-Type' => 'application/yaml',
                 'Content-Disposition' => 'inline',
             ]);
         }
 
-        return ResponseFacade::make($content, 200, [
+        return response($content, 200, [
             'Content-Type' => 'application/json',
         ]);
     }
@@ -106,8 +105,9 @@ class SwaggerController extends BaseController
     {
         $documentation = $request->offsetGet('documentation');
         $config = $request->offsetGet('config');
+        $proxy = $config['proxy'];
 
-        if ($proxy = $config['proxy']) {
+        if ($proxy) {
             if (! is_array($proxy)) {
                 $proxy = [$proxy];
             }
@@ -126,7 +126,7 @@ class SwaggerController extends BaseController
         $useAbsolutePath = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
 
         // Need the / at the end to avoid CORS errors on Homestead systems.
-        return ResponseFacade::make(
+        return response(
             view('l5-swagger::index', [
                 'documentation' => $documentation,
                 'documentationTitle' => $config['api']['title'] ?? $documentation,
