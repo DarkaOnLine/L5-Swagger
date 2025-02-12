@@ -10,14 +10,16 @@ class Config
 {
     public function __construct(
         private readonly  ConfigFactory $configFactory
-    ) {}
+    ) {
+    }
 
     /**
      * Handles the incoming request by extracting documentation configuration and setting it on the request.
      *
-     * @param mixed $request The incoming HTTP request.
-     * @param Closure $next The next middleware in the pipeline.
+     * @param  mixed  $request  The incoming HTTP request.
+     * @param  Closure  $next  The next middleware in the pipeline.
      * @return mixed The processed HTTP response after passing through the next middleware.
+     *
      * @throws L5SwaggerException
      */
     public function handle(mixed $request, Closure $next): mixed

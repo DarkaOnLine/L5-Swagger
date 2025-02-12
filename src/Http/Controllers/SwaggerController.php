@@ -18,12 +18,13 @@ class SwaggerController extends BaseController
     public function __construct(
         private readonly GeneratorFactory $generatorFactory,
         private readonly ConfigFactory $configFactory
-    ) { }
+    ) {
+    }
 
     /**
      * Handles requests for API documentation and returns the corresponding file content.
      *
-     * @param Request $request The HTTP request containing parameters such as documentation and configuration.
+     * @param  Request  $request  The HTTP request containing parameters such as documentation and configuration.
      * @return Response The HTTP response containing the documentation file content with appropriate headers.
      *
      * @throws \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException If the documentation file does not exist.
@@ -84,7 +85,7 @@ class SwaggerController extends BaseController
     /**
      * Handles the API request and renders the Swagger documentation view.
      *
-     * @param Request $request The HTTP request containing necessary parameters such as documentation and configuration details.
+     * @param  Request  $request  The HTTP request containing necessary parameters such as documentation and configuration details.
      * @return Response The HTTP response rendering the Swagger documentation view.
      */
     public function api(Request $request): Response
@@ -131,7 +132,7 @@ class SwaggerController extends BaseController
     /**
      * Handles the OAuth2 callback and retrieves the required file for the redirect.
      *
-     * @param Request $request The HTTP request containing necessary parameters.
+     * @param  Request  $request  The HTTP request containing necessary parameters.
      * @return string The content of the OAuth2 redirect file.
      *
      * @throws FileNotFoundException
@@ -148,9 +149,8 @@ class SwaggerController extends BaseController
     /**
      * Generate the URL for accessing the documentation file based on the provided configuration.
      *
-     * @param string $documentation The name of the documentation instance.
-     * @param array $config The configuration settings for generating the documentation URL.
-     *
+     * @param  string  $documentation  The name of the documentation instance.
+     * @param  array  $config  The configuration settings for generating the documentation URL.
      * @return string The generated URL for the documentation file.
      */
     protected function generateDocumentationFileURL(string $documentation, array $config): string

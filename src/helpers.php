@@ -6,8 +6,8 @@ if (! function_exists('swagger_ui_dist_path')) {
     /**
      * Returns swagger-ui composer dist path.
      *
-     * @param string $documentation
-     * @param string|null $asset
+     * @param  string  $documentation
+     * @param  string|null  $asset
      * @return false|string
      *
      * @throws L5SwaggerException
