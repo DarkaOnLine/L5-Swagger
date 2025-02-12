@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [ '8.1', '8.2', '8.3' ]
+        php: [ '8.2', '8.3' ]
         l5-swagger-flags:  ['swagger-php-latest']
 
     name: PHP ${{ matrix.php }} - ${{ matrix.l5-swagger-flags }}
