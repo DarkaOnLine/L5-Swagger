@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request as RequestFacade;
-use Illuminate\Support\Facades\Response as ResponseFacade;
+use L5Swagger\ConfigFactory;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\GeneratorFactory;
 
@@ -20,9 +20,17 @@ class SwaggerController extends BaseController
      */
     protected $generatorFactory;
 
-    public function __construct(GeneratorFactory $generatorFactory)
-    {
+    /**
+     * @var ConfigFactory
+     */
+    protected $configFactory;
+
+    public function __construct(
+        GeneratorFactory $generatorFactory,
+        ConfigFactory $configFactory
+    ) {
         $this->generatorFactory = $generatorFactory;
+        $this->configFactory = $configFactory;
     }
 
     /**
@@ -76,13 +84,13 @@ class SwaggerController extends BaseController
         $content = $fileSystem->get($filePath);
 
         if ($yamlFormat) {
-            return ResponseFacade::make($content, 200, [
+            return response($content, 200, [
                 'Content-Type' => 'application/yaml',
                 'Content-Disposition' => 'inline',
             ]);
         }
 
-        return ResponseFacade::make($content, 200, [
+        return response($content, 200, [
             'Content-Type' => 'application/json',
         ]);
     }
@@ -97,8 +105,9 @@ class SwaggerController extends BaseController
     {
         $documentation = $request->offsetGet('documentation');
         $config = $request->offsetGet('config');
+        $proxy = $config['proxy'];
 
-        if ($proxy = $config['proxy']) {
+        if ($proxy) {
             if (! is_array($proxy)) {
                 $proxy = [$proxy];
             }
@@ -113,14 +122,17 @@ class SwaggerController extends BaseController
         }
 
         $urlToDocs = $this->generateDocumentationFileURL($documentation, $config);
+        $urlsToDocs = $this->getAllDocumentationUrls();
         $useAbsolutePath = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
 
         // Need the / at the end to avoid CORS errors on Homestead systems.
-        return ResponseFacade::make(
+        return response(
             view('l5-swagger::index', [
                 'documentation' => $documentation,
+                'documentationTitle' => $config['api']['title'] ?? $documentation,
                 'secure' => RequestFacade::secure(),
-                'urlToDocs' => $urlToDocs,
+                'urlToDocs' => $urlToDocs, // Is not used in the view, but still passed for backwards compatibility
+                'urlsToDocs' => $urlsToDocs,
                 'operationsSorter' => $config['operations_sort'],
                 'configUrl' => $config['additional_config_url'],
                 'validatorUrl' => $config['validator_url'],
@@ -172,5 +184,24 @@ class SwaggerController extends BaseController
             $fileUsedForDocs,
             $useAbsolutePath
         );
+    }
+
+    /**
+     * @return array<string, string> [title => url]
+     */
+    protected function getAllDocumentationUrls(): array
+    {
+        $documentations = array_keys(config('l5-swagger.documentations', []));
+
+        $urlsToDocs = [];
+
+        foreach ($documentations as $documentationName) {
+            $config = $this->configFactory->documentationConfig($documentationName);
+            $title = $config['api']['title'] ?? $documentationName;
+
+            $urlsToDocs[$title] = $this->generateDocumentationFileURL($documentationName, $config);
+        }
+
+        return $urlsToDocs;
     }
 }
