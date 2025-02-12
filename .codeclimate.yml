@@ -7,6 +7,9 @@ plugins:
     enabled: true
   sonar-php:
     enabled: true
+    config:
+      tests_patterns:
+        - test/**
 ratings:
   paths:
     - src/**
