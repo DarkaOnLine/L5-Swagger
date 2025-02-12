@@ -28,7 +28,7 @@ class GenerateDocsCommand extends Command
     protected $description = 'Regenerate docs';
 
     /**
-     * @param GeneratorFactory $generatorFactory
+     * @param  GeneratorFactory  $generatorFactory
      *
      * @throws L5SwaggerException
      */
@@ -58,9 +58,10 @@ class GenerateDocsCommand extends Command
     /**
      * Generates documentation using the specified generator factory.
      *
-     * @param GeneratorFactory $generatorFactory The factory used to create the documentation generator.
-     * @param string $documentation The name or identifier of the documentation to be generated.
+     * @param  GeneratorFactory  $generatorFactory  The factory used to create the documentation generator.
+     * @param  string  $documentation  The name or identifier of the documentation to be generated.
      * @return void
+     *
      * @throws L5SwaggerException
      */
     private function generateDocumentation(GeneratorFactory $generatorFactory, string $documentation): void

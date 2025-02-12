@@ -11,7 +11,8 @@ class SecurityDefinitions
     public function __construct(
         private readonly array $securitySchemesConfig = [],
         private readonly array $securityConfig = []
-    ) {}
+    ) {
+    }
 
     /**
      * Reads in the l5-swagger configuration and appends security settings to documentation.

@@ -61,13 +61,12 @@ class Generator
     /**
      * Constructor to initialize documentation generation settings and dependencies.
      *
-     * @param array $paths Array of paths including annotations, docs, excluded directories, and base path.
-     * @param array $constants Array of constants to be used during documentation generation.
-     * @param bool $yamlCopyRequired Determines if a YAML copy of the documentation is required.
-     * @param SecurityDefinitions $security Security definitions for the documentation.
-     * @param array $scanOptions Additional options for scanning files or directories.
-     * @param Filesystem|null $filesystem Filesystem instance, optional, defaults to a new Filesystem.
-     *
+     * @param  array  $paths  Array of paths including annotations, docs, excluded directories, and base path.
+     * @param  array  $constants  Array of constants to be used during documentation generation.
+     * @param  bool  $yamlCopyRequired  Determines if a YAML copy of the documentation is required.
+     * @param  SecurityDefinitions  $security  Security definitions for the documentation.
+     * @param  array  $scanOptions  Additional options for scanning files or directories.
+     * @param  Filesystem|null  $filesystem  Filesystem instance, optional, defaults to a new Filesystem.
      * @return void
      */
     public function __construct(
@@ -199,8 +198,7 @@ class Generator
     /**
      * Set the processors for the OpenAPI generator.
      *
-     * @param OpenApiGenerator $generator The OpenAPI generator instance to configure.
-     *
+     * @param  OpenApiGenerator  $generator  The OpenAPI generator instance to configure.
      * @return void
      */
     protected function setProcessors(OpenApiGenerator $generator): void
@@ -227,8 +225,7 @@ class Generator
     /**
      * Set the analyser for the OpenAPI generator based on scan options.
      *
-     * @param OpenApiGenerator $generator The OpenAPI generator instance.
-     *
+     * @param  OpenApiGenerator  $generator  The OpenAPI generator instance.
      * @return void
      */
     protected function setAnalyser(OpenApiGenerator $generator): void

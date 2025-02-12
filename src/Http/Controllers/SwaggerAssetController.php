@@ -14,12 +14,12 @@ use L5Swagger\Exceptions\L5SwaggerException;
  */
 class SwaggerAssetController extends BaseController
 {
-
     /**
      * Serves a specific documentation asset for the Swagger UI interface.
      *
-     * @param Request $request The incoming HTTP request, which includes parameters to locate the requested asset.
+     * @param  Request  $request  The incoming HTTP request, which includes parameters to locate the requested asset.
      * @return Response The HTTP response containing the requested asset content or a 404 error if the asset is not found.
+     *
      * @throws FileNotFoundException
      */
     public function index(Request $request): Response
