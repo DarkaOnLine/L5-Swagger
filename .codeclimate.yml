@@ -7,11 +7,6 @@ plugins:
       standard: "PSR1,PSR2"
   phpmd:
     enabled: true
-  sonar-php:
-    enabled: true
-    config:
-      tests_patterns:
-        - test/**
 ratings:
   paths:
     - src/**

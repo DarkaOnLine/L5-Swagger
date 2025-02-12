@@ -6,11 +6,11 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 
-readonly class SecurityDefinitions
+class SecurityDefinitions
 {
     public function __construct(
-        private array $schemasConfig = [],
-        private array $securityConfig = []
+        private readonly array $schemasConfig = [],
+        private readonly array $securityConfig = []
     ) {
     }
 
