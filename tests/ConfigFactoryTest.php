@@ -8,9 +8,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
-/**
- * @covers \L5Swagger\ConfigFactory
- */
 #[TestDox('Configuration factory')]
 #[CoversClass(ConfigFactory::class)]
 class ConfigFactoryTest extends TestCase
@@ -28,8 +25,6 @@ class ConfigFactoryTest extends TestCase
     }
 
     /**
-     * @dataProvider configDataProvider
-     *
      * @throws L5SwaggerException
      */
     #[DataProvider('configDataProvider')]

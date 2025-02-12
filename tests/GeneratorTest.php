@@ -10,15 +10,13 @@ use L5Swagger\L5SwaggerServiceProvider;
 use OpenApi\Analysers\AttributeAnnotationFactory;
 use OpenApi\Analysers\DocBlockAnnotationFactory;
 use OpenApi\Analysers\ReflectionAnalyser;
+use OpenApi\OpenApiException;
 use OpenApi\Processors\CleanUnmerged;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @covers \L5Swagger\Generator
- */
 #[TestDox('Generator')]
 #[CoversClass(GeneratorFactory::class)]
 #[CoversClass(Generator::class)]
@@ -185,7 +183,8 @@ class GeneratorTest extends TestCase
     }
 
     /**
-     * @throws L5SwaggerException 190/226
+     * @throws L5SwaggerException
+     * @throws OpenApiException
      */
     public function testCanGenerateWithScanOptions(): void
     {

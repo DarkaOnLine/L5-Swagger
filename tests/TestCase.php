@@ -16,26 +16,15 @@ use ReflectionObject;
 
 class TestCase extends OrchestraTestCase
 {
-    /**
-     * @var ConfigFactory|MockObject
-     */
-    protected ConfigFactory $configFactory;
+    protected ConfigFactory|MockObject $configFactory;
 
     protected array $defaultConfig;
 
-    /**
-     * @var Generator|MockObject
-     */
-    protected Generator $generator;
+    protected Generator|MockObject $generator;
+
+    protected Filesystem|MockObject $fileSystem;
 
     /**
-     * @var Filesystem|MockObject
-     */
-    protected Filesystem $fileSystem;
-
-    /**
-     * @before
-     *
      * @throws Exception
      */
     #[Before]
@@ -52,6 +41,22 @@ class TestCase extends OrchestraTestCase
         $this->makeGenerator();
 
         $this->copyAssets();
+    }
+
+    /**
+     * Make Config Factory.
+     */
+    protected function makeConfigFactory(): void
+    {
+        $this->configFactory = $this->app->make(ConfigFactory::class);
+    }
+
+    /**
+     * Make Generator.
+     */
+    protected function makeGenerator(): void
+    {
+        $this->generator = $this->app->make(Generator::class);
     }
 
     public function tearDown(): void
@@ -169,22 +174,6 @@ class TestCase extends OrchestraTestCase
         ]]);
 
         $this->makeGenerator();
-    }
-
-    /**
-     * Make Config Factory.
-     */
-    protected function makeConfigFactory(): void
-    {
-        $this->configFactory = $this->app->make(ConfigFactory::class);
-    }
-
-    /**
-     * Make Generator.
-     */
-    protected function makeGenerator(): void
-    {
-        $this->generator = $this->app->make(Generator::class);
     }
 
     protected function makeGeneratorWithMockedFileSystem(): void

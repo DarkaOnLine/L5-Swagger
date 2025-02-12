@@ -6,13 +6,13 @@ if (! function_exists('swagger_ui_dist_path')) {
     /**
      * Returns swagger-ui composer dist path.
      *
-     * @param  string  $documentation
-     * @param  null  $asset
-     * @return string
+     * @param string $documentation
+     * @param string|null $asset
+     * @return false|string
      *
      * @throws L5SwaggerException
      */
-    function swagger_ui_dist_path(string $documentation, $asset = null)
+    function swagger_ui_dist_path(string $documentation, string $asset = null): false|string
     {
         $allowedFiles = [
             'favicon-16x16.png',
@@ -55,7 +55,7 @@ if (! function_exists('l5_swagger_asset')) {
      *
      * @throws L5SwaggerException
      */
-    function l5_swagger_asset(string $documentation, $asset)
+    function l5_swagger_asset(string $documentation, string $asset): string
     {
         $file = swagger_ui_dist_path($documentation, $asset);
 

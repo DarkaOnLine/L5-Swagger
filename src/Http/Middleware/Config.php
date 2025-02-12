@@ -8,29 +8,19 @@ use L5Swagger\Exceptions\L5SwaggerException;
 
 class Config
 {
-    /**
-     * @var ConfigFactory
-     */
-    private $configFactory;
+    public function __construct(
+        private readonly  ConfigFactory $configFactory
+    ) {}
 
     /**
-     * Config constructor.
+     * Handles the incoming request by extracting documentation configuration and setting it on the request.
      *
-     * @param  ConfigFactory  $configFactory
-     */
-    public function __construct(ConfigFactory $configFactory)
-    {
-        $this->configFactory = $configFactory;
-    }
-
-    /**
-     * @param  $request
-     * @param  Closure  $next
-     * @return mixed
-     *
+     * @param mixed $request The incoming HTTP request.
+     * @param Closure $next The next middleware in the pipeline.
+     * @return mixed The processed HTTP response after passing through the next middleware.
      * @throws L5SwaggerException
      */
-    public function handle($request, Closure $next)
+    public function handle(mixed $request, Closure $next): mixed
     {
         $actions = $request->route()->getAction();
 

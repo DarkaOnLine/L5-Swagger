@@ -15,10 +15,6 @@ use PHPUnit\Framework\Attributes\TestDox;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
-/**
- * @covers \L5Swagger\Http\Controllers\SwaggerController
- * @covers \L5Swagger\Http\Controllers\SwaggerAssetController
- */
 #[TestDox('Routes')]
 #[CoversClass(SwaggerController::class)]
 #[CoversClass(SwaggerAssetController::class)]
@@ -161,8 +157,6 @@ class RoutesTest extends TestCase
     }
 
     /**
-     * @dataProvider provideProxies
-     *
      * @throws L5SwaggerException
      */
     #[DataProvider('provideProxies')]

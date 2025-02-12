@@ -6,22 +6,13 @@ use L5Swagger\Exceptions\L5SwaggerException;
 
 class GeneratorFactory
 {
-    /**
-     * @var ConfigFactory
-     */
-    private $configFactory;
-
-    public function __construct(ConfigFactory $configFactory)
-    {
-        $this->configFactory = $configFactory;
-    }
+    public function __construct(private readonly ConfigFactory $configFactory) {}
 
     /**
-     * Make Generator Instance.
+     * Creates and returns a new Generator instance based on the provided documentation configuration.
      *
-     * @param  string  $documentation
-     * @return Generator
-     *
+     * @param string $documentation The name or identifier of the documentation to generate.
+     * @return Generator The configured Generator instance.
      * @throws L5SwaggerException
      */
     public function make(string $documentation): Generator

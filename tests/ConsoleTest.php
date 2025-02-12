@@ -11,16 +11,11 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 
-/**
- * @covers \L5Swagger\Console\GenerateDocsCommand
- */
 #[TestDox('Console commands')]
 #[CoversClass(GenerateDocsCommand::class)]
 class ConsoleTest extends TestCase
 {
     /**
-     * @dataProvider provideGenerateCommands
-     *
      * @throws L5SwaggerException
      * @throws FileNotFoundException
      */

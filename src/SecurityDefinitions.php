@@ -8,27 +8,10 @@ use Illuminate\Support\Collection;
 
 class SecurityDefinitions
 {
-    /**
-     * @var array
-     */
-    protected $securitySchemesConfig;
-
-    /**
-     * @var array
-     */
-    protected $securityConfig;
-
-    /**
-     * SecurityDefinitions constructor.
-     *
-     * @param  array  $securitySchemesConfig
-     * @param  array  $securityConfig
-     */
-    public function __construct(array $securitySchemesConfig = [], array $securityConfig = [])
-    {
-        $this->securitySchemesConfig = $securitySchemesConfig;
-        $this->securityConfig = $securityConfig;
-    }
+    public function __construct(
+        private readonly array $securitySchemesConfig = [],
+        private readonly array $securityConfig = []
+    ) {}
 
     /**
      * Reads in the l5-swagger configuration and appends security settings to documentation.
@@ -122,7 +105,7 @@ class SecurityDefinitions
      * @param  $array
      * @return object
      */
-    protected function arrayToObject($array)
+    protected function arrayToObject($array): mixed
     {
         return json_decode(json_encode($array));
     }

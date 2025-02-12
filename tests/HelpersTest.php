@@ -7,9 +7,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\CoversFunction;
 use PHPUnit\Framework\Attributes\TestDox;
 
-/**
- * @covers L5SwaggerException
- */
 #[TestDox('Helpers')]
 #[CoversClass(L5SwaggerException::class)]
 #[CoversFunction('l5_swagger_asset')]
