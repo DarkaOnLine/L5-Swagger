@@ -6,11 +6,11 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
 
-class SecurityDefinitions
+readonly class SecurityDefinitions
 {
     public function __construct(
-        private readonly array $securitySchemesConfig = [],
-        private readonly array $securityConfig = []
+        private array $schemasConfig = [],
+        private array $securityConfig = []
     ) {
     }
 
@@ -29,8 +29,8 @@ class SecurityDefinitions
             json_decode($fileSystem->get($filename))
         );
 
-        if (is_array($this->securitySchemesConfig) && ! empty($this->securitySchemesConfig)) {
-            $documentation = $this->injectSecuritySchemes($documentation, $this->securitySchemesConfig);
+        if (is_array($this->schemasConfig) && ! empty($this->schemasConfig)) {
+            $documentation = $this->injectSecuritySchemes($documentation, $this->schemasConfig);
         }
 
         if (is_array($this->securityConfig) && ! empty($this->securityConfig)) {

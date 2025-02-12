@@ -9,7 +9,8 @@ class ConfigFactory
     /**
      * Retrieves and merges the configuration for the specified documentation.
      *
-     * @param  string|null  $documentation  The name of the documentation configuration to retrieve. If null, the default documentation configuration is used.
+     * @param  string|null  $documentation  The name of the documentation configuration to retrieve.
+     *                                      If null, the default documentation configuration is used.
      * @return array The merged configuration for the specified documentation.
      *
      * @throws L5SwaggerException If the specified documentation configuration is not found.

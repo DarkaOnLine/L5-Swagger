@@ -2,6 +2,7 @@
 
 namespace L5Swagger\Http\Controllers;
 
+use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
@@ -27,8 +28,8 @@ class SwaggerController extends BaseController
      * @param  Request  $request  The HTTP request containing parameters such as documentation and configuration.
      * @return Response The HTTP response containing the documentation file content with appropriate headers.
      *
-     * @throws \Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException If the documentation file does not exist.
-     * @throws \Exception If the documentation generation process fails.
+     * @throws FileNotFoundException If the documentation file does not exist.
+     * @throws Exception If the documentation generation process fails.
      */
     public function docs(Request $request): Response
     {
@@ -50,7 +51,7 @@ class SwaggerController extends BaseController
 
             try {
                 $generator->generateDocs();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error($e);
 
                 abort(
