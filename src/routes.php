@@ -8,6 +8,7 @@ use L5Swagger\Http\Middleware\Config as L5SwaggerConfig;
 Route::group(['namespace' => 'L5Swagger'], static function (Router $router) {
     $configFactory = resolve(ConfigFactory::class);
 
+    /** @var array<string,string> $documentations */
     $documentations = config('l5-swagger.documentations', []);
 
     foreach (array_keys($documentations) as $name) {

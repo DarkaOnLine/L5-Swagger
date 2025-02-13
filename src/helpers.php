@@ -8,11 +8,11 @@ if (! function_exists('swagger_ui_dist_path')) {
      *
      * @param  string  $documentation
      * @param  string|null  $asset
-     * @return false|string
+     * @return string
      *
      * @throws L5SwaggerException
      */
-    function swagger_ui_dist_path(string $documentation, string $asset = null): false|string
+    function swagger_ui_dist_path(string $documentation, string $asset = null): string
     {
         $allowedFiles = [
             'favicon-16x16.png',
@@ -34,14 +34,14 @@ if (! function_exists('swagger_ui_dist_path')) {
         );
 
         if (! $asset) {
-            return realpath($path);
+            return realpath($path) ?: '';
         }
 
         if (! in_array($asset, $allowedFiles, true)) {
             throw new L5SwaggerException(sprintf('(%s) - this L5 Swagger asset is not allowed', $asset));
         }
 
-        return realpath($path.$asset);
+        return realpath($path.$asset) ?: '';
     }
 }
 

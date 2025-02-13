@@ -184,6 +184,7 @@ class SwaggerController extends BaseController
      */
     protected function getAllDocumentationUrls(): array
     {
+        /** @var array<string> $documentations */
         $documentations = array_keys(config('l5-swagger.documentations', []));
 
         $urlsToDocs = [];

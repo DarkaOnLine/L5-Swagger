@@ -16,16 +16,16 @@ use ReflectionObject;
 
 class TestCase extends OrchestraTestCase
 {
-    protected ConfigFactory|MockObject $configFactory;
+    protected ConfigFactory $configFactory;
 
     /**
      * @var array<string,mixed>
      */
     protected array $defaultConfig;
 
-    protected Generator|MockObject $generator;
+    protected Generator $generator;
 
-    protected Filesystem|MockObject $fileSystem;
+    protected MockObject $fileSystem;
 
     /**
      * @throws Exception
@@ -234,7 +234,13 @@ class TestCase extends OrchestraTestCase
             );
         }
 
-        foreach (scandir($src) as $file) {
+        $filesAndDirectories = scandir($src);
+
+        if (!is_array($filesAndDirectories)) {
+            throw new \RuntimeException('Could not scan directory');
+        }
+
+        foreach ($filesAndDirectories as $file) {
             $filePath = $src.$file;
 
             if (! $fileSystem->isReadable($filePath) || $fileSystem->isDirectory($filePath)) {

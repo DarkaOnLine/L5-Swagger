@@ -37,6 +37,7 @@ class GenerateDocsCommand extends Command
         $all = $this->option('all');
 
         if ($all) {
+            /** @var array<string> $documentations */
             $documentations = array_keys(config('l5-swagger.documentations', []));
 
             foreach ($documentations as $documentation) {

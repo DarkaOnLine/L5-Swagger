@@ -334,7 +334,13 @@ class GeneratorTest extends TestCase
 
         $this->generator->generateDocs();
 
-        $objects = (new Parser())->parse(file_get_contents($this->yamlDocsFile()), Yaml::PARSE_OBJECT_FOR_MAP);
+        $content = file_get_contents($this->yamlDocsFile());
+
+        if (!\is_string($content)) {
+            $this->fail('File content is not string');
+        }
+
+        $objects = (new Parser())->parse($content, Yaml::PARSE_OBJECT_FOR_MAP);
 
         $actual = $objects->paths->{'/projects'}->get->security[0]->api_key_security_example;
         $this->assertIsArray($actual);

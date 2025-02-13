@@ -112,6 +112,6 @@ class SecurityDefinitions
      */
     protected function arrayToObject(mixed $array): mixed
     {
-        return json_decode(json_encode($array));
+        return json_decode(json_encode($array) ?: '');
     }
 }
