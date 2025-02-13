@@ -1,7 +1,7 @@
 parameters:
     level: 8
     paths:
-        - ./src
-        - ./tests/unit
+        - src
+        - tests/Unit
     ignoreErrors:
         - identifier: argument.templateType
