@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\Unit;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
@@ -158,7 +158,7 @@ class TestCase extends OrchestraTestCase
     protected function setAnnotationsPath(): void
     {
         $cfg = config('l5-swagger.documentations.default');
-        $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/OpenApi';
+        $cfg['paths']['annotations'] = __DIR__.'/../storage/annotations/OpenApi';
         $cfg['generate_always'] = true;
         $cfg['generate_yaml_copy'] = true;
 
@@ -216,12 +216,12 @@ class TestCase extends OrchestraTestCase
     protected function copyAssets(): void
     {
         $fileSystem = new Filesystem();
-        $src = __DIR__.'/../vendor/swagger-api/swagger-ui/dist/';
-        $destination = __DIR__.'/../vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist/';
+        $src = __DIR__.'/../../vendor/swagger-api/swagger-ui/dist/';
+        $destination = __DIR__.'/../../vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist/';
 
         if (! $fileSystem->isDirectory($destination)) {
             $base = realpath(
-                __DIR__.'/../vendor/orchestra/testbench-core'
+                __DIR__.'/../../vendor/orchestra/testbench-core'
             );
 
             $fileSystem->makeDirectory(
@@ -251,7 +251,7 @@ class TestCase extends OrchestraTestCase
     protected function deleteAssets(): void
     {
         $fileSystem = new Filesystem();
-        $destination = __DIR__.'/../vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist/';
+        $destination = __DIR__.'/../../vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist/';
 
         $fileSystem->deleteDirectory($destination);
     }

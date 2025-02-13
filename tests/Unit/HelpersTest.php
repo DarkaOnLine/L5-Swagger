@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\Unit;
 
 use L5Swagger\Exceptions\L5SwaggerException;
 use PHPUnit\Framework\Attributes\CoversClass;

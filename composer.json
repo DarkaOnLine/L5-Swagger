@@ -44,7 +44,8 @@
     "phpunit/phpunit": "^11.0",
     "mockery/mockery": "1.*",
     "orchestra/testbench": "^9.0 || ^8.0 || 7.* || ^6.15 || 5.*",
-    "php-coveralls/php-coveralls": "^2.0"
+    "php-coveralls/php-coveralls": "^2.0",
+    "phpstan/phpstan": "^2.1"
   },
   "extra": {
     "laravel": {
@@ -59,6 +60,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
-    "phpunit": "vendor/bin/phpunit --testdox"
+    "phpunit": "vendor/bin/phpunit --testdox",
+    "analyse": "vendor/bin/phpstan analyse --memory-limit=256M"
   }
 }

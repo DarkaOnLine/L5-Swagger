@@ -260,10 +260,6 @@ class Generator
     protected function populateServers(): self
     {
         if ($this->basePath !== null) {
-            if (! is_array($this->openApi->servers)) {
-                $this->openApi->servers = [];
-            }
-
             $this->openApi->servers[] = new Server(['url' => $this->basePath]);
         }
 

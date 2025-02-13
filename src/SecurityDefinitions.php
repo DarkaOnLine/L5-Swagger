@@ -29,11 +29,11 @@ class SecurityDefinitions
             json_decode($fileSystem->get($filename))
         );
 
-        if (is_array($this->schemasConfig) && ! empty($this->schemasConfig)) {
+        if (! empty($this->schemasConfig)) {
             $documentation = $this->injectSecuritySchemes($documentation, $this->schemasConfig);
         }
 
-        if (is_array($this->securityConfig) && ! empty($this->securityConfig)) {
+        if (! empty($this->securityConfig)) {
             $documentation = $this->injectSecurity($documentation, $this->securityConfig);
         }
 

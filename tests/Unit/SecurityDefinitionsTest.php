@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\Unit;
 
 use Illuminate\Filesystem\Filesystem;
 use L5Swagger\Exceptions\L5SwaggerException;
