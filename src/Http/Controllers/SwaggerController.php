@@ -178,7 +178,7 @@ class SwaggerController extends BaseController
      * Retrieves all available documentation URLs with their corresponding titles.
      *
      * @return array<string,string> An associative array where the keys are documentation titles
-     *               and the values are the corresponding URLs.
+     *                              and the values are the corresponding URLs.
      *
      * @throws L5SwaggerException
      */

@@ -157,9 +157,10 @@ class RoutesTest extends TestCase
     }
 
     /**
-     * @param array<string>|string $proxy
-     * @param array<string> $expectedProxies
+     * @param  array<string>|string  $proxy
+     * @param  array<string>  $expectedProxies
      * @return void
+     *
      * @throws L5SwaggerException
      */
     #[DataProvider('provideProxies')]

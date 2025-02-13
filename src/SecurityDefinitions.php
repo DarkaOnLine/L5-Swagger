@@ -9,8 +9,8 @@ use Illuminate\Support\Collection;
 class SecurityDefinitions
 {
     /**
-     * @param array<string,mixed> $schemasConfig
-     * @param array<string,mixed> $securityConfig
+     * @param  array<string,mixed>  $schemasConfig
+     * @param  array<string,mixed>  $securityConfig
      */
     public function __construct(
         private readonly array $schemasConfig = [],
@@ -107,7 +107,7 @@ class SecurityDefinitions
     /**
      * Converts an array to an object.
      *
-     * @param  $array<string, mixed>
+     * @param  $array<string,  mixed>
      * @return object
      */
     protected function arrayToObject(mixed $array): mixed

@@ -52,9 +52,10 @@ class SecurityDefinitionsTest extends TestCase
     }
 
     /**
-     * @param array<string,string> $securitySchemes
-     * @param array<string,string> $security
+     * @param  array<string,string>  $securitySchemes
+     * @param  array<string,string>  $security
      * @return void
+     *
      * @throws L5SwaggerException
      */
     #[DataProvider('provideConfigAndSchemes')]
