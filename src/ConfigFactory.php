@@ -7,12 +7,13 @@ use L5Swagger\Exceptions\L5SwaggerException;
 class ConfigFactory
 {
     /**
-     * Get documentation config.
+     * Retrieves and merges the configuration for the specified documentation.
      *
-     * @param  string|null  $documentation
-     * @return array
+     * @param  string|null  $documentation  The name of the documentation configuration to retrieve.
+     *                                      If null, the default documentation configuration is used.
+     * @return array<string, mixed> The merged configuration for the specified documentation.
      *
-     * @throws L5SwaggerException
+     * @throws L5SwaggerException If the specified documentation configuration is not found.
      */
     public function documentationConfig(?string $documentation = null): array
     {
@@ -30,6 +31,14 @@ class ConfigFactory
         return $this->mergeConfig($defaults, $documentations[$documentation]);
     }
 
+    /**
+     * Merges two configuration arrays recursively, with the values from the second array
+     * overriding those in the first array when keys overlap.
+     *
+     * @param  array<string, mixed>  $defaults  The default configuration array.
+     * @param  array<string, mixed>  $config  The configuration array to merge into the defaults.
+     * @return array<string, mixed> The merged configuration array.
+     */
     private function mergeConfig(array $defaults, array $config): array
     {
         $merged = $defaults;
@@ -49,7 +58,13 @@ class ConfigFactory
         return $merged;
     }
 
-    private function isAssociativeArray($value): bool
+    /**
+     * Determines whether a given value is an associative array.
+     *
+     * @param  mixed  $value  The value to be checked.
+     * @return bool True if the value is an associative array, false otherwise.
+     */
+    private function isAssociativeArray(mixed $value): bool
     {
         return is_array($value) && count(array_filter(array_keys($value), 'is_string')) > 0;
     }

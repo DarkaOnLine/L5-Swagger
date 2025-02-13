@@ -3,12 +3,15 @@
 namespace L5Swagger;
 
 use Exception;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Server;
 use OpenApi\Generator as OpenApiGenerator;
+use OpenApi\OpenApiException;
+use OpenApi\Pipeline;
 use OpenApi\Util;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
@@ -32,73 +35,51 @@ class Generator
     ];
 
     /**
-     * @var string|array
+     * @var string|array<string>
      */
-    protected $annotationsDir;
+    protected string|array $annotationsDir;
+
+    protected string $docDir;
+
+    protected string $docsFile;
+
+    protected string $yamlDocsFile;
 
     /**
-     * @var string
+     * @var array<string>
      */
-    protected $docDir;
+    protected array $excludedDirs;
 
     /**
-     * @var string
+     * @var array<string>
      */
-    protected $docsFile;
+    protected array $constants;
+
+    protected ?OpenApi $openApi;
+
+    protected bool $yamlCopyRequired;
+
+    protected ?string $basePath;
+
+    protected SecurityDefinitions $security;
 
     /**
-     * @var string
+     * @var array<string,mixed>
      */
-    protected $yamlDocsFile;
+    protected array $scanOptions;
+
+    protected Filesystem $fileSystem;
 
     /**
-     * @var array
-     */
-    protected $excludedDirs;
-
-    /**
-     * @var array
-     */
-    protected $constants;
-
-    /**
-     * @var OpenApi
-     */
-    protected $openApi;
-
-    /**
-     * @var bool
-     */
-    protected $yamlCopyRequired;
-
-    /**
-     * @var string
-     */
-    protected $basePath;
-
-    /**
-     * @var SecurityDefinitions
-     */
-    protected $security;
-
-    /**
-     * @var array
-     */
-    protected $scanOptions;
-
-    /**
-     * @var ?Filesystem
-     */
-    protected $fileSystem;
-
-    /**
-     * Generator constructor.
+     * Constructor to initialize documentation generation settings and dependencies.
      *
-     * @param  array  $paths
-     * @param  array  $constants
-     * @param  bool  $yamlCopyRequired
-     * @param  SecurityDefinitions  $security
-     * @param  array  $scanOptions
+     * @param  array<string,mixed>  $paths  Array of paths including annotations, docs, excluded directories, and base path.
+     * @param  array<string>  $constants  Array of constants to be used during documentation generation.
+     * @param  bool  $yamlCopyRequired  Determines if a YAML copy of the documentation is required.
+     * @param  SecurityDefinitions  $security  Security definitions for the documentation.
+     * @param  array<string>  $scanOptions  Additional options for scanning files or directories.
+     * @param  Filesystem|null  $filesystem  Filesystem instance, optional, defaults to a new Filesystem.
+     * @return void
      */
     public function __construct(
         array $paths,
@@ -123,7 +104,12 @@ class Generator
     }
 
     /**
+     * Generate necessary documentation files by scanning and processing the required data.
+     *
+     * @return void
+     *
      * @throws L5SwaggerException
+     * @throws Exception
      */
     public function generateDocs(): void
     {
@@ -136,11 +122,11 @@ class Generator
     }
 
     /**
-     * Check directory structure and permissions.
+     * Prepares the directory for storing documentation by ensuring it exists and is writable.
      *
-     * @return Generator
+     * @return self
      *
-     * @throws L5SwaggerException
+     * @throws L5SwaggerException If the directory is not writable or cannot be created.
      */
     protected function prepareDirectory(): self
     {
@@ -160,9 +146,9 @@ class Generator
     }
 
     /**
-     * Define constant which will be replaced.
+     * Define and set constants if not already defined.
      *
-     * @return Generator
+     * @return self
      */
     protected function defineConstants(): self
     {
@@ -176,9 +162,9 @@ class Generator
     }
 
     /**
-     * Scan directory and create Swagger.
+     * Scans files to generate documentation.
      *
-     * @return Generator
+     * @return self
      */
     protected function scanFilesForDocumentation(): self
     {
@@ -194,28 +180,23 @@ class Generator
     }
 
     /**
-     * Prepares generator for generating the documentation.
+     * Create and configure an instance of OpenApiGenerator.
      *
-     * @return OpenApiGenerator $generator
+     * @return OpenApiGenerator
      */
     protected function createOpenApiGenerator(): OpenApiGenerator
     {
         $generator = new OpenApiGenerator();
 
-        // Only from zircote/swagger-php 4
         if (! empty($this->scanOptions['default_processors_configuration'])
             && is_array($this->scanOptions['default_processors_configuration'])
-            && method_exists($generator, 'setConfig')
         ) {
             $generator->setConfig($this->scanOptions['default_processors_configuration']);
         }
 
-        // OpenApi spec version - only from zircote/swagger-php 4
-        if (method_exists($generator, 'setVersion')) {
-            $generator->setVersion(
-                $this->scanOptions['open_api_spec_version'] ?? self::OPEN_API_DEFAULT_SPEC_VERSION
-            );
-        }
+        $generator->setVersion(
+            $this->scanOptions['open_api_spec_version'] ?? self::OPEN_API_DEFAULT_SPEC_VERSION
+        );
 
         // Processors.
         $this->setProcessors($generator);
@@ -227,30 +208,36 @@ class Generator
     }
 
     /**
-     * @param  OpenApiGenerator  $generator
+     * Set the processors for the OpenAPI generator.
+     *
+     * @param  OpenApiGenerator  $generator  The OpenAPI generator instance to configure.
      * @return void
      */
     protected function setProcessors(OpenApiGenerator $generator): void
     {
         $processorClasses = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
-        $processors = [];
+        $newPipeLine = [];
 
-        foreach ($generator->getProcessors() as $processor) {
-            $processors[] = $processor;
-            if ($processor instanceof \OpenApi\Processors\BuildPaths) {
-                foreach ($processorClasses as $customProcessor) {
-                    $processors[] = new $customProcessor();
+        $generator->getProcessorPipeline()->walk(
+            function (callable $pipe) use ($processorClasses, &$newPipeLine) {
+                $newPipeLine[] = $pipe;
+                if ($pipe instanceof \OpenApi\Processors\BuildPaths) {
+                    foreach ($processorClasses as $customProcessor) {
+                        $newPipeLine[] = new $customProcessor();
+                    }
                 }
             }
-        }
+        );
 
-        if (! empty($processors)) {
-            $generator->setProcessors($processors);
+        if (! empty($newPipeLine)) {
+            $generator->setProcessorPipeline(new Pipeline($newPipeLine));
         }
     }
 
     /**
-     * @param  OpenApiGenerator  $generator
+     * Set the analyser for the OpenAPI generator based on scan options.
+     *
+     * @param  OpenApiGenerator  $generator  The OpenAPI generator instance.
      * @return void
      */
     protected function setAnalyser(OpenApiGenerator $generator): void
@@ -263,7 +250,7 @@ class Generator
     }
 
     /**
-     * Prepares finder for determining relevant files.
+     * Create and return a Finder instance configured for scanning directories.
      *
      * @return Finder
      */
@@ -278,17 +265,13 @@ class Generator
     }
 
     /**
-     * Generate servers section or basePath depending on Swagger version.
+     * Populate the servers list in the OpenAPI configuration using the base path.
      *
-     * @return Generator
+     * @return self
      */
     protected function populateServers(): self
     {
-        if ($this->basePath !== null) {
-            if (! is_array($this->openApi->servers)) {
-                $this->openApi->servers = [];
-            }
-
+        if ($this->basePath !== null && $this->openApi !== null) {
             $this->openApi->servers[] = new Server(['url' => $this->basePath]);
         }
 
@@ -296,15 +279,18 @@ class Generator
     }
 
     /**
-     * Save documentation as json file.
+     * Saves the JSON data and applies security measures to the file.
      *
-     * @return Generator
+     * @return self
      *
-     * @throws Exception
+     * @throws FileNotFoundException
+     * @throws OpenApiException
      */
     protected function saveJson(): self
     {
-        $this->openApi->saveAs($this->docsFile);
+        if ($this->openApi !== null) {
+            $this->openApi->saveAs($this->docsFile);
+        }
 
         $this->security->generate($this->docsFile);
 
@@ -312,7 +298,14 @@ class Generator
     }
 
     /**
-     * Save documentation as yaml file.
+     * Creates a YAML copy of the OpenAPI documentation if required.
+     *
+     * This method converts the JSON documentation file to YAML format and saves it
+     * to the specified file path when the YAML copy requirement is enabled.
+     *
+     * @return void
+     *
+     * @throws FileNotFoundException
      */
     protected function makeYamlCopy(): void
     {

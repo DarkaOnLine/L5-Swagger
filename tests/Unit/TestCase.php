@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\Unit;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
@@ -9,44 +9,33 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\L5SwaggerServiceProvider;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use PHPUnit\Framework\Attributes\Before;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionObject;
 
 class TestCase extends OrchestraTestCase
 {
-    /**
-     * @var ConfigFactory
-     */
-    protected $configFactory;
+    protected ConfigFactory $configFactory;
 
     /**
-     * @var array
+     * @var array<string,mixed>
      */
-    protected $defaultConfig;
+    protected array $defaultConfig;
+
+    protected Generator $generator;
+
+    protected MockObject $fileSystem;
 
     /**
-     * @var Generator
+     * @throws Exception
      */
-    protected $generator;
-
-    /**
-     * @var MockObject|Filesystem
-     */
-    protected $fileSystem;
-
-    /**
-     * @before
-     *
-     * @return void
-     */
+    #[Before]
     public function setUpFileSystem(): void
     {
         $this->fileSystem = $this->createMock(Filesystem::class);
     }
 
-    /**
-     * @return void
-     */
     public function setUp(): void
     {
         parent::setUp();
@@ -55,6 +44,30 @@ class TestCase extends OrchestraTestCase
         $this->makeGenerator();
 
         $this->copyAssets();
+    }
+
+    /**
+     * Make Config Factory.
+     */
+    protected function makeConfigFactory(): void
+    {
+        if (! $this->app instanceof Application) {
+            throw new \RuntimeException('Application is not set');
+        }
+
+        $this->configFactory = $this->app->make(ConfigFactory::class);
+    }
+
+    /**
+     * Make Generator.
+     */
+    protected function makeGenerator(): void
+    {
+        if (! $this->app instanceof Application) {
+            throw new \RuntimeException('Application is not set');
+        }
+
+        $this->generator = $this->app->make(Generator::class);
     }
 
     public function tearDown(): void
@@ -83,7 +96,7 @@ class TestCase extends OrchestraTestCase
 
     /**
      * @param  Application  $app
-     * @return array
+     * @return string[]
      */
     protected function getPackageProviders($app): array
     {
@@ -117,8 +130,6 @@ class TestCase extends OrchestraTestCase
     /**
      * Get path for json docs file.
      *
-     * @return string
-     *
      * @throws L5SwaggerException
      */
     protected function jsonDocsFile(): string
@@ -136,8 +147,6 @@ class TestCase extends OrchestraTestCase
 
     /**
      * Get path for yaml docs file.
-     *
-     * @return string
      *
      * @throws L5SwaggerException
      */
@@ -160,7 +169,7 @@ class TestCase extends OrchestraTestCase
     protected function setAnnotationsPath(): void
     {
         $cfg = config('l5-swagger.documentations.default');
-        $cfg['paths']['annotations'] = __DIR__.'/storage/annotations/OpenApi';
+        $cfg['paths']['annotations'] = __DIR__.'/../storage/annotations/OpenApi';
         $cfg['generate_always'] = true;
         $cfg['generate_yaml_copy'] = true;
 
@@ -178,27 +187,12 @@ class TestCase extends OrchestraTestCase
         $this->makeGenerator();
     }
 
-    /**
-     * Make Config Factory.
-     */
-    protected function makeConfigFactory(): void
-    {
-        $this->configFactory = $this->app->make(ConfigFactory::class);
-    }
-
-    /**
-     * Make Generator.
-     */
-    protected function makeGenerator(): void
-    {
-        $this->generator = $this->app->make(Generator::class);
-    }
-
-    /**
-     * @return void
-     */
     protected function makeGeneratorWithMockedFileSystem(): void
     {
+        if (! $this->app instanceof Application) {
+            throw new \RuntimeException('Application is not set');
+        }
+
         $this->generator = $this->app->make(Generator::class);
 
         $reflectionObject = new ReflectionObject($this->generator);
@@ -208,10 +202,6 @@ class TestCase extends OrchestraTestCase
         $reflectionProperty->setValue($this->generator, $this->fileSystem);
     }
 
-    /**
-     * @param  string  $fileName
-     * @param  string  $type
-     */
     protected function setCustomDocsFileName(string $fileName, string $type = 'json'): void
     {
         $cfg = config('l5-swagger.documentations.default');
@@ -241,12 +231,12 @@ class TestCase extends OrchestraTestCase
     protected function copyAssets(): void
     {
         $fileSystem = new Filesystem();
-        $src = __DIR__.'/../vendor/swagger-api/swagger-ui/dist/';
-        $destination = __DIR__.'/../vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist/';
+        $src = __DIR__.'/../../vendor/swagger-api/swagger-ui/dist/';
+        $destination = __DIR__.'/../../vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist/';
 
         if (! $fileSystem->isDirectory($destination)) {
             $base = realpath(
-                __DIR__.'/../vendor/orchestra/testbench-core'
+                __DIR__.'/../../vendor/orchestra/testbench-core'
             );
 
             $fileSystem->makeDirectory(
@@ -256,7 +246,13 @@ class TestCase extends OrchestraTestCase
             );
         }
 
-        foreach (scandir($src) as $file) {
+        $filesAndDirectories = scandir($src);
+
+        if (! is_array($filesAndDirectories)) {
+            throw new \RuntimeException('Could not scan directory');
+        }
+
+        foreach ($filesAndDirectories as $file) {
             $filePath = $src.$file;
 
             if (! $fileSystem->isReadable($filePath) || $fileSystem->isDirectory($filePath)) {
@@ -268,5 +264,16 @@ class TestCase extends OrchestraTestCase
                 $destination.$file
             );
         }
+    }
+
+    /**
+     * Delete the assets directory used by the application.
+     */
+    protected function deleteAssets(): void
+    {
+        $fileSystem = new Filesystem();
+        $destination = __DIR__.'/../../vendor/orchestra/testbench-core/laravel/vendor/swagger-api/swagger-ui/dist/';
+
+        $fileSystem->deleteDirectory($destination);
     }
 }

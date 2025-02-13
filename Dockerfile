@@ -24,8 +24,6 @@ RUN apt-get update && apt-get install -y \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# RUN pecl install memcached
-
 RUN pecl install -f xdebug \
     && docker-php-ext-enable xdebug
 

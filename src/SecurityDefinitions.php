@@ -9,25 +9,13 @@ use Illuminate\Support\Collection;
 class SecurityDefinitions
 {
     /**
-     * @var array
+     * @param  array<string,mixed>  $schemasConfig
+     * @param  array<string,mixed>  $securityConfig
      */
-    protected $securitySchemesConfig;
-
-    /**
-     * @var array
-     */
-    protected $securityConfig;
-
-    /**
-     * SecurityDefinitions constructor.
-     *
-     * @param  array  $securitySchemesConfig
-     * @param  array  $securityConfig
-     */
-    public function __construct(array $securitySchemesConfig = [], array $securityConfig = [])
-    {
-        $this->securitySchemesConfig = $securitySchemesConfig;
-        $this->securityConfig = $securityConfig;
+    public function __construct(
+        private readonly array $schemasConfig = [],
+        private readonly array $securityConfig = []
+    ) {
     }
 
     /**
@@ -45,11 +33,11 @@ class SecurityDefinitions
             json_decode($fileSystem->get($filename))
         );
 
-        if (is_array($this->securitySchemesConfig) && ! empty($this->securitySchemesConfig)) {
-            $documentation = $this->injectSecuritySchemes($documentation, $this->securitySchemesConfig);
+        if (! empty($this->schemasConfig)) {
+            $documentation = $this->injectSecuritySchemes($documentation, $this->schemasConfig);
         }
 
-        if (is_array($this->securityConfig) && ! empty($this->securityConfig)) {
+        if (! empty($this->securityConfig)) {
             $documentation = $this->injectSecurity($documentation, $this->securityConfig);
         }
 
@@ -62,9 +50,9 @@ class SecurityDefinitions
     /**
      * Inject security schemes settings.
      *
-     * @param  Collection  $documentation  The parse json
-     * @param  array  $config  The securityScheme settings from l5-swagger
-     * @return Collection
+     * @param  Collection<int|string, mixed>  $documentation  The parse json
+     * @param  array<string,mixed>  $config  The securityScheme settings from l5-swagger
+     * @return Collection<int|string, mixed>
      */
     protected function injectSecuritySchemes(Collection $documentation, array $config): Collection
     {
@@ -92,9 +80,9 @@ class SecurityDefinitions
     /**
      * Inject security settings.
      *
-     * @param  Collection  $documentation  The parse json
-     * @param  array  $config  The security settings from l5-swagger
-     * @return Collection
+     * @param  Collection<int|string, mixed>  $documentation  The parse json
+     * @param  array<string, mixed>  $config  The security settings from l5-swagger
+     * @return Collection<int|string, mixed>
      */
     protected function injectSecurity(Collection $documentation, array $config): Collection
     {
@@ -119,11 +107,11 @@ class SecurityDefinitions
     /**
      * Converts an array to an object.
      *
-     * @param  $array
+     * @param  $array<string,  mixed>
      * @return object
      */
-    protected function arrayToObject($array)
+    protected function arrayToObject(mixed $array): mixed
     {
-        return json_decode(json_encode($array));
+        return json_decode(json_encode($array) ?: '');
     }
 }
