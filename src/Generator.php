@@ -55,7 +55,7 @@ class Generator
      */
     protected array $constants;
 
-    protected OpenApi $openApi;
+    protected ?OpenApi $openApi;
 
     protected bool $yamlCopyRequired;
 
@@ -68,7 +68,7 @@ class Generator
      */
     protected array $scanOptions;
 
-    protected ?Filesystem $fileSystem;
+    protected Filesystem $fileSystem;
 
     /**
      * Constructor to initialize documentation generation settings and dependencies.
@@ -271,7 +271,7 @@ class Generator
      */
     protected function populateServers(): self
     {
-        if ($this->basePath !== null) {
+        if ($this->basePath !== null && $this->openApi !== null) {
             $this->openApi->servers[] = new Server(['url' => $this->basePath]);
         }
 
@@ -288,7 +288,9 @@ class Generator
      */
     protected function saveJson(): self
     {
-        $this->openApi->saveAs($this->docsFile);
+        if ($this->openApi !== null) {
+            $this->openApi->saveAs($this->docsFile);
+        }
 
         $this->security->generate($this->docsFile);
 

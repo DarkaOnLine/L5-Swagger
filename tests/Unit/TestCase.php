@@ -51,6 +51,10 @@ class TestCase extends OrchestraTestCase
      */
     protected function makeConfigFactory(): void
     {
+        if (!$this->app instanceof Application) {
+            throw new \RuntimeException('Application is not set');
+        }
+
         $this->configFactory = $this->app->make(ConfigFactory::class);
     }
 
@@ -59,6 +63,10 @@ class TestCase extends OrchestraTestCase
      */
     protected function makeGenerator(): void
     {
+        if (!$this->app instanceof Application) {
+            throw new \RuntimeException('Application is not set');
+        }
+
         $this->generator = $this->app->make(Generator::class);
     }
 
@@ -181,6 +189,10 @@ class TestCase extends OrchestraTestCase
 
     protected function makeGeneratorWithMockedFileSystem(): void
     {
+        if (!$this->app instanceof Application) {
+            throw new \RuntimeException('Application is not set');
+        }
+
         $this->generator = $this->app->make(Generator::class);
 
         $reflectionObject = new ReflectionObject($this->generator);
