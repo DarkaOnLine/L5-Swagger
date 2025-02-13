@@ -8,6 +8,10 @@ use Illuminate\Support\Collection;
 
 class SecurityDefinitions
 {
+    /**
+     * @param array<string,mixed> $schemasConfig
+     * @param array<string,mixed> $securityConfig
+     */
     public function __construct(
         private readonly array $schemasConfig = [],
         private readonly array $securityConfig = []
@@ -46,9 +50,9 @@ class SecurityDefinitions
     /**
      * Inject security schemes settings.
      *
-     * @param  Collection  $documentation  The parse json
-     * @param  array  $config  The securityScheme settings from l5-swagger
-     * @return Collection
+     * @param  Collection<int|string, mixed>  $documentation  The parse json
+     * @param  array<string,mixed>  $config  The securityScheme settings from l5-swagger
+     * @return Collection<int|string, mixed>
      */
     protected function injectSecuritySchemes(Collection $documentation, array $config): Collection
     {
@@ -76,9 +80,9 @@ class SecurityDefinitions
     /**
      * Inject security settings.
      *
-     * @param  Collection  $documentation  The parse json
-     * @param  array  $config  The security settings from l5-swagger
-     * @return Collection
+     * @param  Collection<int|string, mixed>  $documentation  The parse json
+     * @param  array<string, mixed>  $config  The security settings from l5-swagger
+     * @return Collection<int|string, mixed>
      */
     protected function injectSecurity(Collection $documentation, array $config): Collection
     {
@@ -103,10 +107,10 @@ class SecurityDefinitions
     /**
      * Converts an array to an object.
      *
-     * @param  $array
+     * @param  $array<string, mixed>
      * @return object
      */
-    protected function arrayToObject($array): mixed
+    protected function arrayToObject(mixed $array): mixed
     {
         return json_decode(json_encode($array));
     }

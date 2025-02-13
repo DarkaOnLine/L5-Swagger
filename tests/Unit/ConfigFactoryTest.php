@@ -25,6 +25,9 @@ class ConfigFactoryTest extends TestCase
     }
 
     /**
+     * @param array<string,mixed> $data
+     * @param array<string,mixed> $assert
+     * @return void
      * @throws L5SwaggerException
      */
     #[DataProvider('configDataProvider')]
@@ -52,7 +55,7 @@ class ConfigFactoryTest extends TestCase
         $this->assertArraySimilar($config, $assert);
     }
 
-    public static function configDataProvider(): \Iterator
+    public static function configDataProvider(): \Generator
     {
         yield 'V1 configuration' => [
             'data' => [
@@ -125,6 +128,9 @@ class ConfigFactoryTest extends TestCase
      *
      * Both arrays must have the same indexes with identical values
      * without respect to key ordering
+     *
+     * @param array<string|array,mixed> $expected
+     * @param array<string,mixed> $array
      */
     protected function assertArraySimilar(array $expected, array $array): void
     {

@@ -11,7 +11,7 @@ class ConfigFactory
      *
      * @param  string|null  $documentation  The name of the documentation configuration to retrieve.
      *                                      If null, the default documentation configuration is used.
-     * @return array The merged configuration for the specified documentation.
+     * @return array<string, mixed> The merged configuration for the specified documentation.
      *
      * @throws L5SwaggerException If the specified documentation configuration is not found.
      */
@@ -35,9 +35,9 @@ class ConfigFactory
      * Merges two configuration arrays recursively, with the values from the second array
      * overriding those in the first array when keys overlap.
      *
-     * @param  array  $defaults  The default configuration array.
-     * @param  array  $config  The configuration array to merge into the defaults.
-     * @return array The merged configuration array.
+     * @param  array<string, mixed>  $defaults  The default configuration array.
+     * @param  array<string, mixed>  $config  The configuration array to merge into the defaults.
+     * @return array<string, mixed> The merged configuration array.
      */
     private function mergeConfig(array $defaults, array $config): array
     {

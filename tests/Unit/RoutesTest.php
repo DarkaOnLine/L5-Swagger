@@ -157,11 +157,14 @@ class RoutesTest extends TestCase
     }
 
     /**
+     * @param array<string>|string $proxy
+     * @param array<string> $expectedProxies
+     * @return void
      * @throws L5SwaggerException
      */
     #[DataProvider('provideProxies')]
     public function testUserCanAccessDocumentationInterfaceAndConfigureProxy(
-        mixed $proxy,
+        array|string $proxy,
         array $expectedProxies
     ): void {
         config(['l5-swagger' => [

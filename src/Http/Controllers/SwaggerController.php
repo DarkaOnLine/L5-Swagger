@@ -151,7 +151,7 @@ class SwaggerController extends BaseController
      * Generate the URL for accessing the documentation file based on the provided configuration.
      *
      * @param  string  $documentation  The name of the documentation instance.
-     * @param  array  $config  The configuration settings for generating the documentation URL.
+     * @param  array<string,mixed>  $config  The configuration settings for generating the documentation URL.
      * @return string The generated URL for the documentation file.
      */
     protected function generateDocumentationFileURL(string $documentation, array $config): string
@@ -177,7 +177,7 @@ class SwaggerController extends BaseController
     /**
      * Retrieves all available documentation URLs with their corresponding titles.
      *
-     * @return array An associative array where the keys are documentation titles
+     * @return array<string,string> An associative array where the keys are documentation titles
      *               and the values are the corresponding URLs.
      *
      * @throws L5SwaggerException

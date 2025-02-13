@@ -64,7 +64,7 @@ class L5SwaggerServiceProvider extends ServiceProvider
      *
      * @codeCoverageIgnore
      *
-     * @return array
+     * @return array<string>
      */
     public function provides(): array
     {

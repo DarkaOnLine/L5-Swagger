@@ -52,6 +52,9 @@ class SecurityDefinitionsTest extends TestCase
     }
 
     /**
+     * @param array<string,string> $securitySchemes
+     * @param array<string,string> $security
+     * @return void
      * @throws L5SwaggerException
      */
     #[DataProvider('provideConfigAndSchemes')]
@@ -90,7 +93,7 @@ class SecurityDefinitionsTest extends TestCase
              ->isOk();
     }
 
-    public static function provideConfigAndSchemes(): iterable
+    public static function provideConfigAndSchemes(): \Generator
     {
         $securitySchemes = [
             'new_api_key_security' => [

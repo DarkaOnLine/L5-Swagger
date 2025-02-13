@@ -34,6 +34,9 @@ class Generator
         self::SCAN_OPTION_EXCLUDE,
     ];
 
+    /**
+     * @var string|array<string>
+     */
     protected string|array $annotationsDir;
 
     protected string $docDir;
@@ -42,8 +45,14 @@ class Generator
 
     protected string $yamlDocsFile;
 
+    /**
+     * @var array<string>
+     */
     protected array $excludedDirs;
 
+    /**
+     * @var array<string>
+     */
     protected array $constants;
 
     protected OpenApi $openApi;
@@ -54,6 +63,9 @@ class Generator
 
     protected SecurityDefinitions $security;
 
+    /**
+     * @var array<string,mixed>
+     */
     protected array $scanOptions;
 
     protected ?Filesystem $fileSystem;
@@ -61,12 +73,12 @@ class Generator
     /**
      * Constructor to initialize documentation generation settings and dependencies.
      *
-     * @param  array  $paths  Array of paths including annotations, docs, excluded directories, and base path.
-     * @param  array  $constants  Array of constants to be used during documentation generation.
-     * @param  bool  $yamlCopyRequired  Determines if a YAML copy of the documentation is required.
-     * @param  SecurityDefinitions  $security  Security definitions for the documentation.
-     * @param  array  $scanOptions  Additional options for scanning files or directories.
-     * @param  Filesystem|null  $filesystem  Filesystem instance, optional, defaults to a new Filesystem.
+     * @param  array<string,mixed> $paths  Array of paths including annotations, docs, excluded directories, and base path.
+     * @param  array<string> $constants  Array of constants to be used during documentation generation.
+     * @param  bool $yamlCopyRequired  Determines if a YAML copy of the documentation is required.
+     * @param  SecurityDefinitions $security  Security definitions for the documentation.
+     * @param  array<string> $scanOptions  Additional options for scanning files or directories.
+     * @param  Filesystem|null $filesystem  Filesystem instance, optional, defaults to a new Filesystem.
      * @return void
      */
     public function __construct(

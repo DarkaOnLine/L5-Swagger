@@ -36,7 +36,7 @@ class ConsoleTest extends TestCase
         $this->assertStringContainsString('L5 Swagger', $fileContent);
     }
 
-    public static function provideGenerateCommands(): iterable
+    public static function provideGenerateCommands(): \Generator
     {
         yield 'default' => [
             'artisanCommand' => 'l5-swagger:generate',

@@ -18,6 +18,9 @@ class TestCase extends OrchestraTestCase
 {
     protected ConfigFactory|MockObject $configFactory;
 
+    /**
+     * @var array<string,mixed>
+     */
     protected array $defaultConfig;
 
     protected Generator|MockObject $generator;
