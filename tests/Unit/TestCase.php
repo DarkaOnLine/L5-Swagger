@@ -236,7 +236,7 @@ class TestCase extends OrchestraTestCase
 
         $filesAndDirectories = scandir($src);
 
-        if (!is_array($filesAndDirectories)) {
+        if (! is_array($filesAndDirectories)) {
             throw new \RuntimeException('Could not scan directory');
         }
 

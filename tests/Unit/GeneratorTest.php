@@ -336,7 +336,7 @@ class GeneratorTest extends TestCase
 
         $content = file_get_contents($this->yamlDocsFile());
 
-        if (!\is_string($content)) {
+        if (! \is_string($content)) {
             $this->fail('File content is not string');
         }
 
