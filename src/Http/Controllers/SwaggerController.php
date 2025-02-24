@@ -2,6 +2,7 @@
 
 namespace L5Swagger\Http\Controllers;
 
+use Exception;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
@@ -15,35 +16,22 @@ use L5Swagger\GeneratorFactory;
 
 class SwaggerController extends BaseController
 {
-    /**
-     * @var GeneratorFactory
-     */
-    protected $generatorFactory;
-
-    /**
-     * @var ConfigFactory
-     */
-    protected $configFactory;
-
     public function __construct(
-        GeneratorFactory $generatorFactory,
-        ConfigFactory $configFactory
+        private readonly GeneratorFactory $generatorFactory,
+        private readonly ConfigFactory $configFactory
     ) {
-        $this->generatorFactory = $generatorFactory;
-        $this->configFactory = $configFactory;
     }
 
     /**
-     * Dump api-docs content endpoint. Supports dumping a json, or yaml file.
+     * Handles requests for API documentation and returns the corresponding file content.
      *
-     * @param  Request  $request
-     * @param  ?string  $file
-     * @return Response
+     * @param  Request  $request  The HTTP request containing parameters such as documentation and configuration.
+     * @return Response The HTTP response containing the documentation file content with appropriate headers.
      *
-     * @throws L5SwaggerException
-     * @throws FileNotFoundException
+     * @throws FileNotFoundException If the documentation file does not exist.
+     * @throws Exception If the documentation generation process fails.
      */
-    public function docs(Request $request)
+    public function docs(Request $request): Response
     {
         $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
@@ -63,7 +51,7 @@ class SwaggerController extends BaseController
 
             try {
                 $generator->generateDocs();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error($e);
 
                 abort(
@@ -96,12 +84,12 @@ class SwaggerController extends BaseController
     }
 
     /**
-     * Display Swagger API page.
+     * Handles the API request and renders the Swagger documentation view.
      *
-     * @param  Request  $request
-     * @return Response
+     * @param  Request  $request  The HTTP request containing necessary parameters such as documentation and configuration details.
+     * @return Response The HTTP response rendering the Swagger documentation view.
      */
-    public function api(Request $request)
+    public function api(Request $request): Response
     {
         $documentation = $request->offsetGet('documentation');
         $config = $request->offsetGet('config');
@@ -143,15 +131,15 @@ class SwaggerController extends BaseController
     }
 
     /**
-     * Display Oauth2 callback pages.
+     * Handles the OAuth2 callback and retrieves the required file for the redirect.
      *
-     * @param  Request  $request
-     * @return string
+     * @param  Request  $request  The HTTP request containing necessary parameters.
+     * @return string The content of the OAuth2 redirect file.
      *
-     * @throws L5SwaggerException
      * @throws FileNotFoundException
+     * @throws L5SwaggerException
      */
-    public function oauth2Callback(Request $request)
+    public function oauth2Callback(Request $request): string
     {
         $fileSystem = new Filesystem();
         $documentation = $request->offsetGet('documentation');
@@ -160,13 +148,13 @@ class SwaggerController extends BaseController
     }
 
     /**
-     * Generate URL for documentation file.
+     * Generate the URL for accessing the documentation file based on the provided configuration.
      *
-     * @param  string  $documentation
-     * @param  array  $config
-     * @return string
+     * @param  string  $documentation  The name of the documentation instance.
+     * @param  array<string,mixed>  $config  The configuration settings for generating the documentation URL.
+     * @return string The generated URL for the documentation file.
      */
-    protected function generateDocumentationFileURL(string $documentation, array $config)
+    protected function generateDocumentationFileURL(string $documentation, array $config): string
     {
         $fileUsedForDocs = $config['paths']['docs_json'] ?? 'api-docs.json';
 
@@ -187,10 +175,16 @@ class SwaggerController extends BaseController
     }
 
     /**
-     * @return array<string, string> [title => url]
+     * Retrieves all available documentation URLs with their corresponding titles.
+     *
+     * @return array<string,string> An associative array where the keys are documentation titles
+     *                              and the values are the corresponding URLs.
+     *
+     * @throws L5SwaggerException
      */
     protected function getAllDocumentationUrls(): array
     {
+        /** @var array<string> $documentations */
         $documentations = array_keys(config('l5-swagger.documentations', []));
 
         $urlsToDocs = [];

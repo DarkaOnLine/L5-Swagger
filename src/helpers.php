@@ -7,14 +7,14 @@ if (! function_exists('swagger_ui_dist_path')) {
      * Returns swagger-ui composer dist path.
      *
      * @param  string  $documentation
-     * @param  null  $asset
+     * @param  string|null  $asset
      * @return string
      *
      * @throws L5SwaggerException
      */
-    function swagger_ui_dist_path(string $documentation, $asset = null)
+    function swagger_ui_dist_path(string $documentation, string $asset = null): string
     {
-        $allowed_files = [
+        $allowedFiles = [
             'favicon-16x16.png',
             'favicon-32x32.png',
             'oauth2-redirect.html',
@@ -34,14 +34,14 @@ if (! function_exists('swagger_ui_dist_path')) {
         );
 
         if (! $asset) {
-            return realpath($path);
+            return realpath($path) ?: '';
         }
 
-        if (! in_array($asset, $allowed_files)) {
+        if (! in_array($asset, $allowedFiles, true)) {
             throw new L5SwaggerException(sprintf('(%s) - this L5 Swagger asset is not allowed', $asset));
         }
 
-        return realpath($path.$asset);
+        return realpath($path.$asset) ?: '';
     }
 }
 
@@ -55,7 +55,7 @@ if (! function_exists('l5_swagger_asset')) {
      *
      * @throws L5SwaggerException
      */
-    function l5_swagger_asset(string $documentation, $asset)
+    function l5_swagger_asset(string $documentation, string $asset): string
     {
         $file = swagger_ui_dist_path($documentation, $asset);
 

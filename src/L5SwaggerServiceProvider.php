@@ -12,7 +12,7 @@ class L5SwaggerServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $viewPath = __DIR__.'/../resources/views';
         $this->loadViewsFrom($viewPath, 'l5-swagger');
@@ -40,7 +40,7 @@ class L5SwaggerServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $configPath = __DIR__.'/../config/l5-swagger.php';
         $this->mergeConfigFrom($configPath, 'l5-swagger');
@@ -64,9 +64,9 @@ class L5SwaggerServiceProvider extends ServiceProvider
      *
      * @codeCoverageIgnore
      *
-     * @return array
+     * @return array<string>
      */
-    public function provides()
+    public function provides(): array
     {
         return [
             'command.l5-swagger.generate',

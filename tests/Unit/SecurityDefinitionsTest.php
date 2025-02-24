@@ -1,21 +1,22 @@
 <?php
 
-namespace Tests;
+namespace Tests\Unit;
 
 use Illuminate\Filesystem\Filesystem;
 use L5Swagger\Exceptions\L5SwaggerException;
+use L5Swagger\SecurityDefinitions;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
 
-/**
- * @testdox Security definition
- */
+#[TestDox('Security definition')]
+#[CoversClass(SecurityDefinitions::class)]
 class SecurityDefinitionsTest extends TestCase
 {
     /**
-     * @test
-     *
      * @throws L5SwaggerException
      */
-    public function itWillNotAddEmptySecurityItems(): void
+    public function testItWillNotAddEmptySecurityItems(): void
     {
         $fileSystem = new Filesystem();
 
@@ -51,16 +52,14 @@ class SecurityDefinitionsTest extends TestCase
     }
 
     /**
-     * @test
-     *
-     * @dataProvider provideConfigAndSchemes
-     *
-     * @param  array  $securitySchemes
-     * @param  array  $security
+     * @param  array<string,string>  $securitySchemes
+     * @param  array<string,string>  $security
+     * @return void
      *
      * @throws L5SwaggerException
      */
-    public function canGenerateApiJsonFileWithSecurityDefinition(
+    #[DataProvider('provideConfigAndSchemes')]
+    public function testCanGenerateApiJsonFileWithSecurityDefinition(
         array $securitySchemes,
         array $security
     ): void {
@@ -86,7 +85,7 @@ class SecurityDefinitionsTest extends TestCase
         $this->assertTrue($fileSystem->exists($this->jsonDocsFile()));
 
         $this->get(route('l5-swagger.default.docs'))
-             ->assertSee('new_api_key_securitye')
+             ->assertSee('new_api_key_security')
              ->assertSee('oauth2')  // From annotations
              ->assertSee('read:projects')
              ->assertSee('read:oauth2') // From annotations
@@ -95,13 +94,10 @@ class SecurityDefinitionsTest extends TestCase
              ->isOk();
     }
 
-    /**
-     * @return iterable
-     */
-    public static function provideConfigAndSchemes(): iterable
+    public static function provideConfigAndSchemes(): \Generator
     {
         $securitySchemes = [
-            'new_api_key_securitye' => [
+            'new_api_key_security' => [
                 'type' => 'apiKey',
                 'name' => 'api_key_name',
                 'in' => 'query',
@@ -109,7 +105,7 @@ class SecurityDefinitionsTest extends TestCase
         ];
 
         $security = [
-            'new_api_key_securitye' => [
+            'new_api_key_security' => [
                 'read:projects',
             ],
         ];

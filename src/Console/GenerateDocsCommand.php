@@ -28,18 +28,16 @@ class GenerateDocsCommand extends Command
     protected $description = 'Regenerate docs';
 
     /**
-     * Execute the console command.
-     *
      * @param  GeneratorFactory  $generatorFactory
-     * @return void
      *
      * @throws L5SwaggerException
      */
-    public function handle(GeneratorFactory $generatorFactory)
+    public function handle(GeneratorFactory $generatorFactory): void
     {
         $all = $this->option('all');
 
         if ($all) {
+            /** @var array<string> $documentations */
             $documentations = array_keys(config('l5-swagger.documentations', []));
 
             foreach ($documentations as $documentation) {
@@ -59,12 +57,15 @@ class GenerateDocsCommand extends Command
     }
 
     /**
-     * @param  GeneratorFactory  $generatorFactory
-     * @param  string  $documentation
+     * Generates documentation using the specified generator factory.
+     *
+     * @param  GeneratorFactory  $generatorFactory  The factory used to create the documentation generator.
+     * @param  string  $documentation  The name or identifier of the documentation to be generated.
+     * @return void
      *
      * @throws L5SwaggerException
      */
-    private function generateDocumentation(GeneratorFactory $generatorFactory, string $documentation)
+    private function generateDocumentation(GeneratorFactory $generatorFactory, string $documentation): void
     {
         $this->info('Regenerating docs '.$documentation);
 
