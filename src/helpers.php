@@ -12,7 +12,7 @@ if (! function_exists('swagger_ui_dist_path')) {
      *
      * @throws L5SwaggerException
      */
-    function swagger_ui_dist_path(string $documentation, string $asset = null): string
+    function swagger_ui_dist_path(string $documentation, ?string $asset = null): string
     {
         $allowedFiles = [
             'favicon-16x16.png',
