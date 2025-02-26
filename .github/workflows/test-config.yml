@@ -1,4 +1,7 @@
 name: Package tests
+permissions:
+  contents: read
+  pull-requests: write
 
 on:
   push:
