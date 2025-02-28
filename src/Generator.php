@@ -272,6 +272,13 @@ class Generator
     protected function populateServers(): self
     {
         if ($this->basePath !== null && $this->openApi !== null) {
+            if (
+                $this->openApi->servers === OpenApiGenerator::UNDEFINED // @phpstan-ignore-line
+                || is_array($this->openApi->servers) === false // @phpstan-ignore-line
+            ) {
+                $this->openApi->servers = [];
+            }
+
             $this->openApi->servers[] = new Server(['url' => $this->basePath]);
         }
 
