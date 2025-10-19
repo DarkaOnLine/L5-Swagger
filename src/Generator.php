@@ -246,6 +246,7 @@ class Generator
 
         if (! empty($analyser)) {
             $generator->setAnalyser($analyser);
+
             return;
         }
 
