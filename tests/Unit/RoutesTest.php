@@ -218,8 +218,7 @@ class RoutesTest extends TestCase
     public function testUserCanAccessOauth2Redirect(): void
     {
         $this->get(route('l5-swagger.default.oauth2_callback'))
-            ->assertSee('swaggerUIRedirectOauth2')
-            ->assertSee('oauth2.auth.code')
+            ->assertSee('oauth2-redirect.js')
             ->isOk();
     }
 

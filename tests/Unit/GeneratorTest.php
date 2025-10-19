@@ -8,7 +8,6 @@ use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
 use L5Swagger\L5SwaggerServiceProvider;
 use OpenApi\Analysers\AttributeAnnotationFactory;
-use OpenApi\Analysers\DocBlockAnnotationFactory;
 use OpenApi\Analysers\ReflectionAnalyser;
 use OpenApi\OpenApiException;
 use OpenApi\Processors\CleanUnmerged;
@@ -192,12 +191,7 @@ class GeneratorTest extends TestCase
 
         $cfg['scanOptions'] = [
             'exclude' => [__DIR__.'/../storage/annotations/OpenApi/Clients'],
-            'analyser' => new ReflectionAnalyser([
-                new AttributeAnnotationFactory(),
-                new DocBlockAnnotationFactory(),
-            ]),
             'open_api_spec_version' => '3.1.0',
-            'processors' => [new CleanUnmerged],
             'default_processors_configuration' => ['operationId' => ['hash' => false]],
         ];
 

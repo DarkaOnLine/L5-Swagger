@@ -37,8 +37,7 @@
     "zircote/swagger-php": "^5.0.0",
     "swagger-api/swagger-ui": ">=5.18.3",
     "symfony/yaml": "^5.0 || ^6.0 || ^7.0",
-    "ext-json": "*",
-    "doctrine/annotations": "^1.0 || ^2.0"
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^11.0",
