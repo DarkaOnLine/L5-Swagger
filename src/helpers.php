@@ -19,13 +19,9 @@ if (! function_exists('swagger_ui_dist_path')) {
             'favicon-32x32.png',
             'oauth2-redirect.html',
             'swagger-ui-bundle.js',
-            'swagger-ui-bundle.js.map',
             'swagger-ui-standalone-preset.js',
-            'swagger-ui-standalone-preset.js.map',
             'swagger-ui.css',
-            'swagger-ui.css.map',
             'swagger-ui.js',
-            'swagger-ui.js.map',
         ];
 
         $defaultPath = 'vendor/swagger-api/swagger-ui/dist/';
