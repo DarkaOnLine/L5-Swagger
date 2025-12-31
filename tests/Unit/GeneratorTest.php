@@ -12,7 +12,6 @@ use OpenApi\Analysers\DocBlockAnnotationFactory;
 use OpenApi\Analysers\ReflectionAnalyser;
 use OpenApi\OpenApiException;
 use OpenApi\Processors\AugmentParameters;
-use OpenApi\Processors\CleanUnmerged;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Yaml\Parser;
