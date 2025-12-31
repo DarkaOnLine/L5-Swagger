@@ -33,8 +33,8 @@
   },
   "require": {
     "php": "^8.2",
-    "laravel/framework": "^12.0 || ^11.0",
-    "zircote/swagger-php": "^5.0.0",
+    "laravel/framework": "^12.1 || ^11.44",
+    "zircote/swagger-php": "^5.5",
     "swagger-api/swagger-ui": ">=5.18.3",
     "symfony/yaml": "^5.0 || ^6.0 || ^7.0",
     "ext-json": "*"
