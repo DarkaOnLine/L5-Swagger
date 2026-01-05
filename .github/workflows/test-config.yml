@@ -54,13 +54,6 @@ jobs:
         sudo chown -R $USER:$USER vendor/orchestra/testbench-core/laravel/vendor/swagger-api
         chmod -R 777 vendor/orchestra/testbench-core/laravel/vendor/swagger-api
 
-    - name: Prepare code climate
-      run: |
-        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-        chmod +x ./cc-test-reporter
-        ./cc-test-reporter before-build
-      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'swagger-php-latest'
-
     - name: Run test suite
       run: composer run-script phpunit
 
@@ -73,7 +66,6 @@ jobs:
         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
-        ./cc-test-reporter after-build -t clover --exit-code 0
         bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ${{github.workspace}}/clover.xml
       if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'swagger-php-latest' && github.event_name != 'pull_request'
 
