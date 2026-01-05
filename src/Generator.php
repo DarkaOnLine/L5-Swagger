@@ -246,7 +246,14 @@ class Generator
 
         if (! empty($analyser)) {
             $generator->setAnalyser($analyser);
+
+            return;
         }
+
+        // Use AttributeAnnotationFactory for PHP 8.1+ native attributes
+        $generator->setAnalyser(new \OpenApi\Analysers\ReflectionAnalyser([
+            new \OpenApi\Analysers\AttributeAnnotationFactory(),
+        ]));
     }
 
     /**
