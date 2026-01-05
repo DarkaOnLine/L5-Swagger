@@ -62,12 +62,19 @@ jobs:
 
     - name: Publish code coverage
       env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ${{github.workspace}}/clover.xml
       if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'swagger-php-latest' && github.event_name != 'pull_request'
+
+
+    - name: Publish QltySh
+      uses: qltysh/qlty-action/coverage@v2
+      with:
+        token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
+        files: ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml
+      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'swagger-php-latest'
 
     - name: Publish coveralls report
       env:
