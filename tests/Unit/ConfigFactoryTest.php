@@ -138,7 +138,7 @@ class ConfigFactoryTest extends TestCase
         $this->assertSame([], array_diff_key($array, $expected));
 
         foreach ($expected as $key => $value) {
-            if (is_array($value)) {
+            if (is_array($value) && isset($array[$key])) {
                 $this->assertArraySimilar($value, $array[$key]);
                 continue;
             }
