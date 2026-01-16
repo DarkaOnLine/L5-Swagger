@@ -237,7 +237,7 @@ class Generator
     /**
      * Set the analyzer for the OpenAPI generator based on scan options.
      *
-     * @param OpenApiGenerator $generator The OpenAPI generator instance.
+     * @param  OpenApiGenerator  $generator  The OpenAPI generator instance.
      * @return void
      */
     protected function setAnalyser(OpenApiGenerator $generator): void
