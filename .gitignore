@@ -13,3 +13,5 @@ composer-extra-assets.lock
 bower.json
 package.json
 .phpunit.result.cache
+.claude/
+CLAUDE.md
