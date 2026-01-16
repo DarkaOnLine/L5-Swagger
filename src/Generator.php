@@ -12,7 +12,7 @@ use OpenApi\Annotations\Server;
 use OpenApi\Generator as OpenApiGenerator;
 use OpenApi\OpenApiException;
 use OpenApi\Pipeline;
-use OpenApi\Util;
+use OpenApi\SourceFinder;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Dumper as YamlDumper;
 use Symfony\Component\Yaml\Yaml;
@@ -235,9 +235,9 @@ class Generator
     }
 
     /**
-     * Set the analyser for the OpenAPI generator based on scan options.
+     * Set the analyzer for the OpenAPI generator based on scan options.
      *
-     * @param  OpenApiGenerator  $generator  The OpenAPI generator instance.
+     * @param OpenApiGenerator $generator The OpenAPI generator instance.
      * @return void
      */
     protected function setAnalyser(OpenApiGenerator $generator): void
@@ -263,12 +263,12 @@ class Generator
      */
     protected function createScanFinder(): Finder
     {
-        $pattern = Arr::get($this->scanOptions, self::SCAN_OPTION_PATTERN);
+        $pattern = Arr::get($this->scanOptions, self::SCAN_OPTION_PATTERN) ?: '*.php';
         $exclude = Arr::get($this->scanOptions, self::SCAN_OPTION_EXCLUDE);
 
         $exclude = ! empty($exclude) ? $exclude : $this->excludedDirs;
 
-        return Util::finder($this->annotationsDir, $exclude, $pattern);
+        return new SourceFinder($this->annotationsDir, $exclude, $pattern);
     }
 
     /**
