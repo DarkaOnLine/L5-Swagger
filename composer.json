@@ -32,7 +32,7 @@
     }
   },
   "require": {
-    "php": "^8.3",
+    "php": "^8.2",
     "laravel/framework": "^13.0 || ^12.1 || ^11.44",
     "zircote/swagger-php": "^6.0",
     "swagger-api/swagger-ui": ">=5.18.3",
