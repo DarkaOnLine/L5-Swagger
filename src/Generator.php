@@ -186,7 +186,8 @@ class Generator
      */
     protected function createOpenApiGenerator(): OpenApiGenerator
     {
-        $generator = new OpenApiGenerator();
+        $factory = $this->scanOptions['generator_factory'] ?? null;
+        $generator = $factory ? call_user_func($factory) : new OpenApiGenerator();
 
         if (! empty($this->scanOptions['default_processors_configuration'])
             && is_array($this->scanOptions['default_processors_configuration'])

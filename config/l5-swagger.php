@@ -103,6 +103,14 @@ return [
 
         'scanOptions' => [
             /**
+             * Optional callable that returns an OpenApi\Generator instance.
+             * Use this to provide a custom pre-configured generator.
+             *
+             * Example: 'generator_factory' => fn() => new \OpenApi\Generator(),
+             */
+            'generator_factory' => null,
+
+            /**
              * Configuration for default processors. Allows to pass processors configuration to swagger-php.
              *
              * @link https://zircote.github.io/swagger-php/reference/processors.html
