@@ -223,11 +223,9 @@ class Generator
 
         $normalizedConfigs = [];
         foreach ($processorConfigs as $config) {
-            if (is_array($config)) {
-                $normalizedConfigs[] = $config;
-            } else {
-                $normalizedConfigs[] = ['class' => $config, 'after' => \OpenApi\Processors\BuildPaths::class];
-            }
+            $normalizedConfigs[] = is_array($config)
+                ? $config
+                : ['class' => $config, 'after' => \OpenApi\Processors\BuildPaths::class];
         }
 
         $newPipeLine = [];
