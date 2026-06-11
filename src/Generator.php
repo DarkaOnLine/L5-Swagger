@@ -215,23 +215,36 @@ class Generator
      */
     protected function setProcessors(OpenApiGenerator $generator): void
     {
-        $processorClasses = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
-        $newPipeLine = [];
+        $processorConfigs = Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []);
 
+        if (empty($processorConfigs)) {
+            return;
+        }
+
+        $normalizedConfigs = [];
+        foreach ($processorConfigs as $config) {
+            if (is_array($config)) {
+                $normalizedConfigs[] = $config;
+            } else {
+                $normalizedConfigs[] = ['class' => $config, 'after' => \OpenApi\Processors\BuildPaths::class];
+            }
+        }
+
+        $newPipeLine = [];
         $generator->getProcessorPipeline()->walk(
-            function (callable $pipe) use ($processorClasses, &$newPipeLine) {
+            function (callable $pipe) use ($normalizedConfigs, &$newPipeLine) {
                 $newPipeLine[] = $pipe;
-                if ($pipe instanceof \OpenApi\Processors\BuildPaths) {
-                    foreach ($processorClasses as $customProcessor) {
-                        $newPipeLine[] = new $customProcessor();
+                foreach ($normalizedConfigs as $entry) {
+                    $after = $entry['after'];
+                    if ($pipe instanceof $after) {
+                        $processor = $entry['class'];
+                        $newPipeLine[] = is_string($processor) ? new $processor() : $processor;
                     }
                 }
             }
         );
 
-        if (! empty($newPipeLine)) {
-            $generator->setProcessorPipeline(new Pipeline($newPipeLine));
-        }
+        $generator->setProcessorPipeline(new Pipeline($newPipeLine));
     }
 
     /**

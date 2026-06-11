@@ -12,6 +12,7 @@ use OpenApi\Analysers\DocBlockAnnotationFactory;
 use OpenApi\Analysers\ReflectionAnalyser;
 use OpenApi\OpenApiException;
 use OpenApi\Processors\AugmentParameters;
+use OpenApi\Processors\AugmentSchemas;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Yaml\Parser;
@@ -222,6 +223,38 @@ class GeneratorTest extends TestCase
             ->assertSee('operationId')
             ->assertSee("POST::/products::Tests\\\storage\\\annotations\\\OpenApi\\\Products\\\L5SwaggerAnnotationsExampleProducts::getProductsList")
             ->assertDontSee('getClientsList')
+            ->assertStatus(200);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testCanGenerateWithProcessorPositioning(): void
+    {
+        $cfg = config('l5-swagger.documentations.default');
+
+        $cfg['scanOptions'] = [
+            'processors' => [
+                new AugmentParameters(),
+                ['class' => AugmentSchemas::class, 'after' => AugmentParameters::class],
+            ],
+            'default_processors_configuration' => ['operationId' => ['hash' => false]],
+        ];
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => ['default' => $cfg],
+            'defaults' => config('l5-swagger.defaults'),
+        ]]);
+
+        $this->setAnnotationsPath();
+
+        $this->generator->generateDocs();
+
+        $this->assertFileExists($this->jsonDocsFile());
+
+        $this->get(route('l5-swagger.default.docs'))
+            ->assertSee('L5 Swagger')
             ->assertStatus(200);
     }
 
