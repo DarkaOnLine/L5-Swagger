@@ -7,9 +7,12 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
 use L5Swagger\L5SwaggerServiceProvider;
+use L5Swagger\ConfigFactory;
+use L5Swagger\SecurityDefinitions;
 use OpenApi\Analysers\AttributeAnnotationFactory;
 use OpenApi\Analysers\DocBlockAnnotationFactory;
 use OpenApi\Analysers\ReflectionAnalyser;
+use OpenApi\Generator as OpenApiGenerator;
 use OpenApi\OpenApiException;
 use OpenApi\Processors\AugmentParameters;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -222,6 +225,55 @@ class GeneratorTest extends TestCase
             ->assertSee('operationId')
             ->assertSee("POST::/products::Tests\\\storage\\\annotations\\\OpenApi\\\Products\\\L5SwaggerAnnotationsExampleProducts::getProductsList")
             ->assertDontSee('getClientsList')
+            ->assertStatus(200);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testCanGenerateWithCustomGeneratorFactory(): void
+    {
+        $app = $this->app;
+
+        if (! $app instanceof \Illuminate\Foundation\Application) {
+            throw new \RuntimeException('Application is not set');
+        }
+
+        $this->setAnnotationsPath();
+
+        $customFactoryCalled = false;
+
+        $factory = new class($app->make(ConfigFactory::class)) extends GeneratorFactory {
+            protected function createGenerator(
+                array $paths,
+                array $constants,
+                bool $yamlCopyRequired,
+                SecurityDefinitions $security,
+                array $scanOptions
+            ): Generator {
+                return new class($paths, $constants, $yamlCopyRequired, $security, $scanOptions) extends Generator {
+                    protected function newOpenApiGenerator(): OpenApiGenerator
+                    {
+                        return new OpenApiGenerator();
+                    }
+                };
+            }
+        };
+
+        $app->bind(Generator::class, function () use ($factory, &$customFactoryCalled) {
+            $customFactoryCalled = true;
+
+            return $factory->make(config('l5-swagger.default'));
+        });
+
+        $generator = $app->make(Generator::class);
+        $generator->generateDocs();
+
+        $this->assertTrue($customFactoryCalled);
+        $this->assertFileExists($this->jsonDocsFile());
+
+        $this->get(route('l5-swagger.default.docs'))
+            ->assertSee('L5 Swagger')
             ->assertStatus(200);
     }
 

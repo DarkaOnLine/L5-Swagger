@@ -32,6 +32,27 @@ class GeneratorFactory
 
         $security = new SecurityDefinitions($secSchemesConfig, $secConfig);
 
+        return $this->createGenerator(
+            $paths,
+            $constants,
+            $yamlCopyRequired,
+            $security,
+            $scanOptions
+        );
+    }
+
+    /**
+     * @param  array<string,mixed>  $paths
+     * @param  array<string>  $constants
+     * @param  array<string,mixed>  $scanOptions
+     */
+    protected function createGenerator(
+        array $paths,
+        array $constants,
+        bool $yamlCopyRequired,
+        SecurityDefinitions $security,
+        array $scanOptions
+    ): Generator {
         return new Generator(
             $paths,
             $constants,
