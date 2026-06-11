@@ -103,10 +103,10 @@ return [
 
         'scanOptions' => [
             /**
-             * Optional callable that returns an OpenApi\Generator instance.
+             * Optional CustomGeneratorInterface implementation that creates an OpenApi\Generator instance.
              * Use this to provide a custom pre-configured generator.
              *
-             * Example: 'generator_factory' => fn() => new \OpenApi\Generator(),
+             * @see \L5Swagger\CustomGeneratorInterface
              */
             'generator_factory' => null,
 

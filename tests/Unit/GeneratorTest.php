@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Illuminate\Http\Request;
+use L5Swagger\CustomGeneratorInterface;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
@@ -233,13 +234,20 @@ class GeneratorTest extends TestCase
     {
         $cfg = config('l5-swagger.documentations.default');
 
-        $factoryCalled = false;
-        $cfg['scanOptions'] = [
-            'generator_factory' => function () use (&$factoryCalled) {
-                $factoryCalled = true;
+        $factory = new class implements CustomGeneratorInterface
+        {
+            public bool $called = false;
+
+            public function create(): OpenApiGenerator
+            {
+                $this->called = true;
 
                 return new OpenApiGenerator();
-            },
+            }
+        };
+
+        $cfg['scanOptions'] = [
+            'generator_factory' => $factory,
         ];
 
         config(['l5-swagger' => [
@@ -252,7 +260,7 @@ class GeneratorTest extends TestCase
 
         $this->generator->generateDocs();
 
-        $this->assertTrue($factoryCalled);
+        $this->assertTrue($factory->called);
         $this->assertFileExists($this->jsonDocsFile());
 
         $this->get(route('l5-swagger.default.docs'))
