@@ -8,7 +8,6 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
 use L5Swagger\L5SwaggerServiceProvider;
-use Tests\Unit\Fixtures\TestCustomGenerator;
 use OpenApi\Analysers\AttributeAnnotationFactory;
 use OpenApi\Analysers\DocBlockAnnotationFactory;
 use OpenApi\Analysers\ReflectionAnalyser;
@@ -18,6 +17,7 @@ use OpenApi\Processors\AugmentParameters;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Yaml\Parser;
+use Tests\Unit\Fixtures\TestCustomGenerator;
 use Symfony\Component\Yaml\Yaml;
 
 #[TestDox('Generator')]
