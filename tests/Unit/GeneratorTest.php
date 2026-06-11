@@ -3,11 +3,11 @@
 namespace Tests\Unit;
 
 use Illuminate\Http\Request;
+use L5Swagger\ConfigFactory;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
 use L5Swagger\L5SwaggerServiceProvider;
-use L5Swagger\ConfigFactory;
 use L5Swagger\SecurityDefinitions;
 use OpenApi\Analysers\AttributeAnnotationFactory;
 use OpenApi\Analysers\DocBlockAnnotationFactory;
@@ -243,7 +243,8 @@ class GeneratorTest extends TestCase
 
         $customFactoryCalled = false;
 
-        $factory = new class($app->make(ConfigFactory::class)) extends GeneratorFactory {
+        $factory = new class($app->make(ConfigFactory::class)) extends GeneratorFactory
+        {
             protected function createGenerator(
                 array $paths,
                 array $constants,
@@ -251,7 +252,8 @@ class GeneratorTest extends TestCase
                 SecurityDefinitions $security,
                 array $scanOptions
             ): Generator {
-                return new class($paths, $constants, $yamlCopyRequired, $security, $scanOptions) extends Generator {
+                return new class($paths, $constants, $yamlCopyRequired, $security, $scanOptions) extends Generator
+                {
                     protected function newOpenApiGenerator(): OpenApiGenerator
                     {
                         return new OpenApiGenerator();
