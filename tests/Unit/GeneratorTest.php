@@ -17,8 +17,8 @@ use OpenApi\Processors\AugmentParameters;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Yaml\Parser;
-use Tests\Unit\Fixtures\TestCustomGenerator;
 use Symfony\Component\Yaml\Yaml;
+use Tests\Unit\Fixtures\TestCustomGenerator;
 
 #[TestDox('Generator')]
 #[CoversClass(GeneratorFactory::class)]
