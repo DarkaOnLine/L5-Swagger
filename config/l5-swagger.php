@@ -105,6 +105,7 @@ return [
             /**
              * Optional CustomGeneratorInterface implementation that creates an OpenApi\Generator instance.
              * Use this to provide a custom pre-configured generator.
+             * Accepts an instance or a class name (FQCN) implementing the interface.
              *
              * @see \L5Swagger\CustomGeneratorInterface
              */

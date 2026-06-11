@@ -8,6 +8,7 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
 use L5Swagger\L5SwaggerServiceProvider;
+use Tests\Unit\Fixtures\TestCustomGenerator;
 use OpenApi\Analysers\AttributeAnnotationFactory;
 use OpenApi\Analysers\DocBlockAnnotationFactory;
 use OpenApi\Analysers\ReflectionAnalyser;
@@ -261,6 +262,34 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
 
         $this->assertTrue($factory->called);
+        $this->assertFileExists($this->jsonDocsFile());
+
+        $this->get(route('l5-swagger.default.docs'))
+            ->assertSee('L5 Swagger')
+            ->assertStatus(200);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testCanGenerateWithCustomGeneratorFactoryClassName(): void
+    {
+        $cfg = config('l5-swagger.documentations.default');
+
+        $cfg['scanOptions'] = [
+            'generator_factory' => TestCustomGenerator::class,
+        ];
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => ['default' => $cfg],
+            'defaults' => config('l5-swagger.defaults'),
+        ]]);
+
+        $this->setAnnotationsPath();
+
+        $this->generator->generateDocs();
+
         $this->assertFileExists($this->jsonDocsFile());
 
         $this->get(route('l5-swagger.default.docs'))
