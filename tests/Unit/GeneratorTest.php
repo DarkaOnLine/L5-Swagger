@@ -260,7 +260,7 @@ class GeneratorTest extends TestCase
             ->assertSee('L5 Swagger')
             ->assertStatus(200);
     }
-  
+
     /**
      * @throws L5SwaggerException
      */
