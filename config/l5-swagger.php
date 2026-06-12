@@ -103,6 +103,15 @@ return [
 
         'scanOptions' => [
             /**
+             * Optional CustomGeneratorInterface implementation that creates an OpenApi\Generator instance.
+             * Use this to provide a custom pre-configured generator.
+             * Accepts an instance or a class name (FQCN) implementing the interface.
+             *
+             * @see \L5Swagger\CustomGeneratorInterface
+             */
+            'generator_factory' => null,
+
+            /**
              * Configuration for default processors. Allows to pass processors configuration to swagger-php.
              *
              * @link https://zircote.github.io/swagger-php/reference/processors.html
