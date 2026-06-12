@@ -8,7 +8,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request as RequestFacade;
 use L5Swagger\ConfigFactory;
 use L5Swagger\Exceptions\L5SwaggerException;
@@ -48,7 +47,7 @@ class SwaggerController extends BaseController
 
         if ($config['generate_always']) {
             if (app()->environment('production')) {
-                Log::warning('L5-Swagger: generate_always is enabled in production, which may impact performance');
+                logger()->warning('L5-Swagger: generate_always is enabled in production, which may impact performance');
             }
 
             $generator = $this->generatorFactory->make($documentation);
@@ -56,7 +55,7 @@ class SwaggerController extends BaseController
             try {
                 $generator->generateDocs();
             } catch (Exception $e) {
-                Log::error($e);
+                logger()->error($e->getMessage(), ['exception' => $e]);
 
                 abort(
                     404,
@@ -116,10 +115,8 @@ class SwaggerController extends BaseController
         $configUrl = $config['additional_config_url'] ?? null;
 
         if ($configUrl !== null) {
-            $scheme = parse_url($configUrl, PHP_URL_SCHEME);
-
-            if (! in_array($scheme, ['http', 'https'], true)) {
-                Log::warning('L5-Swagger: additional_config_url has an invalid scheme and was ignored', [
+            if (! str_starts_with($configUrl, 'https://') && ! str_starts_with($configUrl, 'http://')) {
+                logger()->warning('L5-Swagger: additional_config_url has an invalid scheme and was ignored', [
                     'url' => $configUrl,
                 ]);
                 $configUrl = null;

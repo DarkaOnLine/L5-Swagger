@@ -33,7 +33,9 @@ if (! function_exists('swagger_ui_dist_path')) {
             $resolved = realpath($path);
 
             if ($resolved === false) {
-                throw new L5SwaggerException(sprintf('Swagger UI assets directory not found at: "%s"', $path));
+                throw new L5SwaggerException(
+                    sprintf('Swagger UI assets directory not found at: "%s"', e($path))
+                );
             }
 
             return $resolved;
@@ -43,13 +45,15 @@ if (! function_exists('swagger_ui_dist_path')) {
             throw new L5SwaggerException(sprintf('(%s) - this L5 Swagger asset is not allowed', $asset));
         }
 
-        $resolved = realpath($path.$asset);
+        $fullPath = $path.$asset;
 
-        if ($resolved === false) {
-            throw new L5SwaggerException(sprintf('Swagger UI asset not found at: "%s"', $path.$asset));
+        if (! file_exists($fullPath)) {
+            throw new L5SwaggerException(
+                sprintf('Swagger UI asset not found at: "%s"', e($fullPath))
+            );
         }
 
-        return $resolved;
+        return $fullPath;
     }
 }
 

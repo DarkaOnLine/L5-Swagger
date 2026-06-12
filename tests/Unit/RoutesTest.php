@@ -196,11 +196,19 @@ class RoutesTest extends TestCase
     /**
      * @throws L5SwaggerException
      */
-    public function testItCanServeAssets(): void
+    #[DataProvider('provideAssets')]
+    public function testItCanServeAssets(string $file, string $contentType): void
     {
-        $this->get(l5_swagger_asset('default', 'swagger-ui.css'))
-            ->assertSee('.swagger-ui')
+        $this->get(l5_swagger_asset('default', $file))
+            ->assertHeader('Content-Type', $contentType)
             ->isOk();
+    }
+
+    public static function provideAssets(): \Generator
+    {
+        yield 'css' => ['file' => 'swagger-ui.css', 'contentType' => 'text/css; charset=utf-8'];
+        yield 'js' => ['file' => 'swagger-ui-bundle.js', 'contentType' => 'application/javascript'];
+        yield 'png' => ['file' => 'favicon-32x32.png', 'contentType' => 'image/png'];
     }
 
     public function testItWillThrowExceptionForIncorrectAsset(): void
