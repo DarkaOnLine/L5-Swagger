@@ -47,6 +47,10 @@ class SwaggerController extends BaseController
         );
 
         if ($config['generate_always']) {
+            if (app()->environment('production')) {
+                Log::warning('L5-Swagger: generate_always is enabled in production, which may impact performance');
+            }
+
             $generator = $this->generatorFactory->make($documentation);
 
             try {
@@ -109,6 +113,19 @@ class SwaggerController extends BaseController
             );
         }
 
+        $configUrl = $config['additional_config_url'] ?? null;
+
+        if ($configUrl !== null) {
+            $scheme = parse_url($configUrl, PHP_URL_SCHEME);
+
+            if (! in_array($scheme, ['http', 'https'], true)) {
+                Log::warning('L5-Swagger: additional_config_url has an invalid scheme and was ignored', [
+                    'url' => $configUrl,
+                ]);
+                $configUrl = null;
+            }
+        }
+
         $urlToDocs = $this->generateDocumentationFileURL($documentation, $config);
         $urlsToDocs = $this->getAllDocumentationUrls();
         $useAbsolutePath = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
@@ -122,7 +139,7 @@ class SwaggerController extends BaseController
                 'urlToDocs' => $urlToDocs, // Is not used in the view, but still passed for backwards compatibility
                 'urlsToDocs' => $urlsToDocs,
                 'operationsSorter' => $config['operations_sort'],
-                'configUrl' => $config['additional_config_url'],
+                'configUrl' => $configUrl,
                 'validatorUrl' => $config['validator_url'],
                 'useAbsolutePath' => $useAbsolutePath,
             ]),

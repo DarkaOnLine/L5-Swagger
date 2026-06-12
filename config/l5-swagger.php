@@ -62,7 +62,12 @@ return [
             'oauth2_callback' => 'api/oauth2-callback',
 
             /*
-             * Middleware allows to prevent unexpected access to API documentation
+             * Middleware allows to prevent unexpected access to API documentation.
+             *
+             * WARNING: By default these are empty, meaning your API docs are publicly
+             * accessible. For production deployments, add authentication middleware
+             * to restrict access, e.g.:
+             *   'api' => ['auth:sanctum'],
              */
             'middleware' => [
                 'api' => [],
