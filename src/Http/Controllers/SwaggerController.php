@@ -8,7 +8,6 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request as RequestFacade;
 use L5Swagger\ConfigFactory;
 use L5Swagger\Exceptions\L5SwaggerException;
@@ -47,12 +46,16 @@ class SwaggerController extends BaseController
         );
 
         if ($config['generate_always']) {
+            if (app()->environment('production')) {
+                logger()->warning('L5-Swagger: generate_always is enabled in production, which may impact performance');
+            }
+
             $generator = $this->generatorFactory->make($documentation);
 
             try {
                 $generator->generateDocs();
             } catch (Exception $e) {
-                Log::error($e);
+                logger()->error($e->getMessage(), ['exception' => $e]);
 
                 abort(
                     404,
@@ -109,6 +112,17 @@ class SwaggerController extends BaseController
             );
         }
 
+        $configUrl = $config['additional_config_url'] ?? null;
+
+        if ($configUrl !== null) {
+            if (! str_starts_with($configUrl, 'https://') && ! str_starts_with($configUrl, 'http://')) {
+                logger()->warning('L5-Swagger: additional_config_url has an invalid scheme and was ignored', [
+                    'url' => $configUrl,
+                ]);
+                $configUrl = null;
+            }
+        }
+
         $urlToDocs = $this->generateDocumentationFileURL($documentation, $config);
         $urlsToDocs = $this->getAllDocumentationUrls();
         $useAbsolutePath = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
@@ -122,7 +136,7 @@ class SwaggerController extends BaseController
                 'urlToDocs' => $urlToDocs, // Is not used in the view, but still passed for backwards compatibility
                 'urlsToDocs' => $urlsToDocs,
                 'operationsSorter' => $config['operations_sort'],
-                'configUrl' => $config['additional_config_url'],
+                'configUrl' => $configUrl,
                 'validatorUrl' => $config['validator_url'],
                 'useAbsolutePath' => $useAbsolutePath,
             ]),

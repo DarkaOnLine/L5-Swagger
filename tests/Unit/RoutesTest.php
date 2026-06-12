@@ -2,7 +2,9 @@
 
 namespace Tests\Unit;
 
+use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
 use L5Swagger\GeneratorFactory;
@@ -194,11 +196,19 @@ class RoutesTest extends TestCase
     /**
      * @throws L5SwaggerException
      */
-    public function testItCanServeAssets(): void
+    #[DataProvider('provideAssets')]
+    public function testItCanServeAssets(string $file, string $contentType): void
     {
-        $this->get(l5_swagger_asset('default', 'swagger-ui.css'))
-            ->assertSee('.swagger-ui')
+        $this->get(l5_swagger_asset('default', $file))
+            ->assertHeader('Content-Type', $contentType)
             ->isOk();
+    }
+
+    public static function provideAssets(): \Generator
+    {
+        yield 'css' => ['file' => 'swagger-ui.css', 'contentType' => 'text/css; charset=utf-8'];
+        yield 'js' => ['file' => 'swagger-ui-bundle.js', 'contentType' => 'application/javascript'];
+        yield 'png' => ['file' => 'favicon-32x32.png', 'contentType' => 'image/png'];
     }
 
     public function testItWillThrowExceptionForIncorrectAsset(): void
@@ -257,6 +267,50 @@ class RoutesTest extends TestCase
         $mockGenerator->expects($this->once())->method('generateDocs')->willThrowException(new L5SwaggerException());
 
         $this->get($jsonUrl)->assertNotFound();
+    }
+
+    public function testItLogsWarningWhenGenerateAlwaysInProduction(): void
+    {
+        Log::shouldReceive('warning')
+            ->once()
+            ->with('L5-Swagger: generate_always is enabled in production, which may impact performance');
+
+        Log::shouldReceive('error')->andReturnSelf();
+
+        if (! $this->app instanceof Application) {
+            throw new \RuntimeException('Application is not set');
+        }
+
+        $this->app->detectEnvironment(fn () => 'production');
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), ['generate_always' => true]),
+        ]]);
+
+        $this->get(route('l5-swagger.default.docs'));
+    }
+
+    public function testItNullifiesConfigUrlWithInvalidScheme(): void
+    {
+        Log::shouldReceive('warning')
+            ->once()
+            ->with('L5-Swagger: additional_config_url has an invalid scheme and was ignored', [
+                'url' => 'javascript:alert(1)',
+            ]);
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => config('l5-swagger.documentations'),
+            'defaults' => array_merge(config('l5-swagger.defaults'), [
+                'additional_config_url' => 'javascript:alert(1)',
+            ]),
+        ]]);
+
+        $this->get(route('l5-swagger.default.api'))
+            ->assertDontSee('javascript:alert(1)')
+            ->assertStatus(200);
     }
 
     /**
