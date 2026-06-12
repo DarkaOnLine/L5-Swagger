@@ -433,6 +433,34 @@ class GeneratorTest extends TestCase
     /**
      * @throws L5SwaggerException
      */
+    public function testPopulateServersInitializesServersWhenUndefined(): void
+    {
+        $cfg = config('l5-swagger.documentations.default');
+        $cfg['paths']['annotations'] = __DIR__.'/../storage/annotations/OpenApiNoServer';
+        $cfg['paths']['base'] = 'https://test-server.url';
+        $cfg['generate_always'] = true;
+        $cfg['generate_yaml_copy'] = false;
+        $cfg['constants']['L5_SWAGGER_CONST_HOST'] = 'https://my-default-host.com';
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => ['default' => $cfg],
+            'defaults' => config('l5-swagger.defaults'),
+        ]]);
+
+        $this->makeGenerator();
+        $this->generator->generateDocs();
+
+        $this->assertFileExists($this->jsonDocsFile());
+
+        $this->get(route('l5-swagger.default.docs'))
+            ->assertSee('https://test-server.url')
+            ->assertStatus(200);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
     public function testCanAppropriateYamlType(): void
     {
         $this->setAnnotationsPath();
