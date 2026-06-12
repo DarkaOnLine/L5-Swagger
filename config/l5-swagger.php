@@ -144,13 +144,19 @@ return [
             'analysis' => null,
 
             /**
-             * Custom query path processors classes.
+             * Custom processors.
+             *
+             * Each entry can be:
+             * - A class name or instance (inserted after BuildPaths by default)
+             * - An array with 'class' and 'after' keys for precise positioning:
+             *   ['class' => MyProcessor::class, 'after' => SomeProcessor::class]
              *
              * @link https://github.com/zircote/swagger-php/tree/master/Examples/processors/schema-query-parameter
              * @see \OpenApi\scan
              */
             'processors' => [
-                // new \App\SwaggerProcessors\SchemaQueryParameter(),
+                // \App\SwaggerProcessors\SchemaQueryParameter::class,
+                // ['class' => \App\SwaggerProcessors\Custom::class, 'after' => \OpenApi\Processors\AugmentSchemas::class],
             ],
 
             /**
