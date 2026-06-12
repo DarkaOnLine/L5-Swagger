@@ -33,9 +33,9 @@ class SwaggerAssetController extends BaseController
             $path = swagger_ui_dist_path($documentation, $asset);
 
             $contentType = match (true) {
-                str_ends_with($asset, '.css') => 'text/css',
                 str_ends_with($asset, '.png') => 'image/png',
                 str_ends_with($asset, '.js') => 'application/javascript',
+                default => 'text/css',
             };
 
             return (new Response(
