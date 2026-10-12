@@ -287,7 +287,9 @@ class Generator
 
         $exclude = ! empty($exclude) ? $exclude : $this->excludedDirs;
 
-        return new SourceFinder($this->annotationsDir, $exclude, $pattern);
+        $directory = is_array($this->annotationsDir) ? array_values($this->annotationsDir) : $this->annotationsDir;
+
+        return new SourceFinder($directory, $exclude, $pattern);
     }
 
     /**

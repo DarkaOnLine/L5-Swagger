@@ -26,11 +26,24 @@ class HelpersTest extends TestCase
     public function testAssetFunctionThrowsExceptionIfFileNotFound(): void
     {
         $this->expectException(L5SwaggerException::class);
-        $this->expectExceptionMessage('Requested L5 Swagger asset file (swagger-ui.css) does not exists');
+        $this->expectExceptionMessage('Swagger UI asset not found at:');
 
         $this->deleteAssets();
 
         l5_swagger_asset('default', 'swagger-ui.css');
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testItThrowsExceptionWhenAssetsDirectoryNotFound(): void
+    {
+        config(['l5-swagger.documentations.default.paths.swagger_ui_assets_path' => 'nonexistent/path/']);
+
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('Swagger UI assets directory not found at:');
+
+        swagger_ui_dist_path('default');
     }
 
     /**
