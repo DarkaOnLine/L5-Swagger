@@ -32,13 +32,17 @@ class SwaggerAssetController extends BaseController
         try {
             $path = swagger_ui_dist_path($documentation, $asset);
 
+            $contentType = match (true) {
+                str_ends_with($asset, '.png') => 'image/png',
+                str_ends_with($asset, '.js') => 'application/javascript',
+                default => 'text/css',
+            };
+
             return (new Response(
                 $fileSystem->get($path),
                 200,
                 [
-                    'Content-Type' => (isset(pathinfo($asset)['extension']) && pathinfo($asset)['extension'] === 'css')
-                        ? 'text/css'
-                        : 'application/javascript',
+                    'Content-Type' => $contentType,
                 ]
             ))->setSharedMaxAge(31536000)
                 ->setMaxAge(31536000)
