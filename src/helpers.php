@@ -30,14 +30,30 @@ if (! function_exists('swagger_ui_dist_path')) {
         );
 
         if (! $asset) {
-            return realpath($path) ?: '';
+            $resolved = realpath($path);
+
+            if ($resolved === false) {
+                throw new L5SwaggerException(
+                    sprintf('Swagger UI assets directory not found at: "%s"', e($path))
+                );
+            }
+
+            return $resolved;
         }
 
         if (! in_array($asset, $allowedFiles, true)) {
             throw new L5SwaggerException(sprintf('(%s) - this L5 Swagger asset is not allowed', $asset));
         }
 
-        return realpath($path.$asset) ?: '';
+        $fullPath = $path.$asset;
+
+        if (! file_exists($fullPath)) {
+            throw new L5SwaggerException(
+                sprintf('Swagger UI asset not found at: "%s"', e($fullPath))
+            );
+        }
+
+        return $fullPath;
     }
 }
 
@@ -54,10 +70,6 @@ if (! function_exists('l5_swagger_asset')) {
     function l5_swagger_asset(string $documentation, string $asset): string
     {
         $file = swagger_ui_dist_path($documentation, $asset);
-
-        if (! file_exists($file)) {
-            throw new L5SwaggerException(sprintf('Requested L5 Swagger asset file (%s) does not exists', $asset));
-        }
 
         $useAbsolutePath = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
 
