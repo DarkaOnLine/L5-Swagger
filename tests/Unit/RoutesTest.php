@@ -153,7 +153,7 @@ class RoutesTest extends TestCase
         $jsonFile = $config['paths']['docs_json'] ?? 'api-docs.json';
 
         $this->get($config['routes']['api'])
-            ->assertSee(route('l5-swagger.default.docs', $jsonFile))
+            ->assertSee(json_encode(route('l5-swagger.default.docs', $jsonFile), JSON_THROW_ON_ERROR), false)
             ->assertSee(route('l5-swagger.default.oauth2_callback'))
             ->isOk();
     }
@@ -180,7 +180,7 @@ class RoutesTest extends TestCase
         $jsonFile = $config['paths']['docs_json'] ?? 'api-docs.json';
 
         $this->get($config['routes']['api'])
-            ->assertSee(route('l5-swagger.default.docs', $jsonFile))
+            ->assertSee(json_encode(route('l5-swagger.default.docs', $jsonFile), JSON_THROW_ON_ERROR), false)
             ->assertSee(route('l5-swagger.default.oauth2_callback'))
             ->isOk();
 
