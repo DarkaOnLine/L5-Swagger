@@ -225,6 +225,14 @@ class RoutesTest extends TestCase
             ->assertNotFound();
     }
 
+    public function testItReturns404WhenAllowedAssetIsMissing(): void
+    {
+        $this->deleteAssets();
+
+        $this->get(route('l5-swagger.default.asset', 'swagger-ui.css'))
+            ->assertNotFound();
+    }
+
     public function testUserCanAccessOauth2Redirect(): void
     {
         $this->get(route('l5-swagger.default.oauth2_callback'))
