@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Illuminate\Http\Request;
+use L5Swagger\CustomBuilderInterface;
 use L5Swagger\CustomGeneratorInterface;
 use L5Swagger\Exceptions\L5SwaggerException;
 use L5Swagger\Generator;
@@ -11,6 +12,8 @@ use L5Swagger\L5SwaggerServiceProvider;
 use OpenApi\Analysers\AttributeAnnotationFactory;
 use OpenApi\Analysers\DocBlockAnnotationFactory;
 use OpenApi\Analysers\ReflectionAnalyser;
+use OpenApi\Builder;
+use OpenApi\Builder\Mode;
 use OpenApi\Generator as OpenApiGenerator;
 use OpenApi\OpenApiException;
 use OpenApi\Processors\AugmentParameters;
@@ -19,6 +22,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
+use Tests\Unit\Fixtures\TestCustomBuilder;
 use Tests\Unit\Fixtures\TestCustomGenerator;
 
 #[TestDox('Generator')]
@@ -328,6 +332,156 @@ class GeneratorTest extends TestCase
         $this->get(route('l5-swagger.default.docs'))
             ->assertSee('L5 Swagger')
             ->assertStatus(200);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testCustomBuilderFactoryInClassicModeMatchesTheGenerator(): void
+    {
+        $this->setAnnotationsPath();
+        $this->generator->generateDocs();
+        $expected = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        $factory = new class implements CustomBuilderInterface
+        {
+            public bool $called = false;
+
+            public function create(): Builder
+            {
+                $this->called = true;
+
+                return new Builder();
+            }
+        };
+
+        $this->setScanOptions(['builder_factory' => $factory]);
+        $this->generator->generateDocs();
+
+        $this->assertTrue($factory->called);
+        $this->assertSame($expected, json_decode((string) file_get_contents($this->jsonDocsFile()), true));
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testCanGenerateWithCustomBuilderFactoryClassName(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['builder_factory' => TestCustomBuilder::class]);
+
+        $this->generator->generateDocs();
+
+        $this->assertFileExists($this->jsonDocsFile());
+
+        $this->get(route('l5-swagger.default.docs'))
+            ->assertSee('L5 Swagger')
+            ->assertStatus(200);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testCustomBuilderFactoryInClassicModeAddsTheBaseServer(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(
+            ['builder_factory' => TestCustomBuilder::class],
+            base: 'https://test-server.url'
+        );
+
+        $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        $this->assertContains(['url' => 'https://test-server.url'], $document['servers']);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testCustomBuilderFactoryInSpecMode(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(
+            ['builder_factory' => new class implements CustomBuilderInterface
+            {
+                public function create(): Builder
+                {
+                    return (new Builder())->setMode(Mode::SPEC);
+                }
+            }],
+            __DIR__.'/../storage/annotations/Spec',
+            'https://test-server.url',
+            ['securityDefinitions' => ['securitySchemes' => [
+                'api_key' => ['type' => 'apiKey', 'name' => 'api_key', 'in' => 'header'],
+            ]]]
+        );
+
+        $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        $this->assertSame('3.0.0', $document['openapi']);
+        $this->assertSame(['openapi', 'info', 'servers', 'paths', 'components'], array_keys($document));
+        $this->assertSame('apiKey', $document['components']['securitySchemes']['api_key']['type']);
+        $this->assertSame(
+            [['url' => 'http://my-default-host.com'], ['url' => 'https://test-server.url']],
+            $document['servers']
+        );
+        $this->assertSame('listProjects', $document['paths']['/projects']['get']['operationId']);
+        $this->assertFileExists($this->yamlDocsFile());
+    }
+
+    public function testCustomBuilderFactoryCannotBeCombinedWithGeneratorFactory(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions([
+            'builder_factory' => TestCustomBuilder::class,
+            'generator_factory' => TestCustomGenerator::class,
+        ]);
+
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('not both');
+
+        $this->generator->generateDocs();
+    }
+
+    public function testCustomBuilderFactoryMustImplementTheInterface(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['builder_factory' => TestCustomGenerator::class]);
+
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage(CustomBuilderInterface::class);
+
+        $this->generator->generateDocs();
+    }
+
+    /**
+     * Replace the default documentation's scan options, and optionally its paths and other settings, and rebuild the generator.
+     *
+     * @param  array<string,mixed>  $scanOptions
+     * @param  array<string,mixed>  $overrides
+     */
+    protected function setScanOptions(array $scanOptions, ?string $annotations = null, ?string $base = null, array $overrides = []): void
+    {
+        $cfg = array_replace(config('l5-swagger.documentations.default'), $overrides);
+        $cfg['scanOptions'] = $scanOptions;
+        if ($annotations !== null) {
+            $cfg['paths']['annotations'] = $annotations;
+        }
+        if ($base !== null) {
+            $cfg['paths']['base'] = $base;
+        }
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => ['default' => $cfg],
+            'defaults' => config('l5-swagger.defaults'),
+        ]]);
+
+        $this->makeGenerator();
     }
 
     /**

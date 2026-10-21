@@ -9,8 +9,12 @@ use Illuminate\Support\Arr;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Server;
+use OpenApi\Builder;
+use OpenApi\Builder\Result;
 use OpenApi\Generator as OpenApiGenerator;
 use OpenApi\OpenApiException;
+use OpenApi\Spec\Server as SpecServer;
+use OpenApi\Specification;
 use OpenApi\Utils\Pipeline;
 use OpenApi\Utils\SourceFinder;
 use Symfony\Component\Finder\Finder;
@@ -56,6 +60,11 @@ class Generator
     protected array $constants;
 
     protected ?OpenApi $openApi;
+
+    /**
+     * The build result, when generated through a `builder_factory`.
+     */
+    protected ?Result $result = null;
 
     protected bool $yamlCopyRequired;
 
@@ -168,6 +177,20 @@ class Generator
      */
     protected function scanFilesForDocumentation(): self
     {
+        $builder = $this->createOpenApiBuilder();
+
+        if ($builder !== null) {
+            $result = $builder->addSource($this->createScanFinder())->build();
+
+            // In classic mode the result holds the OpenApi annotation itself, not a copy: keeping a
+            // reference lets populateServers() add the base path to what the result later saves.
+            // Spec and hybrid mode have no annotation; the base path goes in through the Specification.
+            $this->openApi = $result->openApi();
+            $this->result = $result;
+
+            return $this;
+        }
+
         $generator = $this->createOpenApiGenerator();
         $finder = $this->createScanFinder();
 
@@ -213,6 +236,58 @@ class Generator
         $this->setAnalyser($generator);
 
         return $generator;
+    }
+
+    /**
+     * Create an OpenApi Builder if a `builder_factory` is configured.
+     *
+     * The factory owns the pipeline: mode, augmenters, resolver and any other contributors.
+     * The `processors`, `analyser`, `analysis` and `default_processors_configuration` scan
+     * options configure the classic generator and are not applied here.
+     *
+     * @return Builder|null
+     *
+     * @throws L5SwaggerException
+     */
+    protected function createOpenApiBuilder(): ?Builder
+    {
+        $factory = $this->scanOptions['builder_factory'] ?? null;
+
+        if ($factory === null) {
+            return null;
+        }
+
+        if (($this->scanOptions['generator_factory'] ?? null) !== null) {
+            throw new L5SwaggerException('Configure either `generator_factory` or `builder_factory`, not both');
+        }
+
+        if (is_string($factory) && is_subclass_of($factory, CustomBuilderInterface::class)) {
+            $factory = new $factory();
+        }
+
+        if (! $factory instanceof CustomBuilderInterface) {
+            throw new L5SwaggerException(
+                '`builder_factory` must be an instance or class name of '.CustomBuilderInterface::class
+            );
+        }
+
+        $builder = $factory->create()->setVersion(
+            $this->scanOptions['open_api_spec_version'] ?? self::OPEN_API_DEFAULT_SPEC_VERSION
+        );
+
+        if ($this->basePath !== null) {
+            if (! method_exists($builder, 'withSpecification')) { // @phpstan-ignore-line
+                throw new L5SwaggerException('A base path with `builder_factory` requires zircote/swagger-php 6.12 or later');
+            }
+
+            // Spec and hybrid mode only; classic mode gets the server in populateServers().
+            $basePath = $this->basePath;
+            $builder->withSpecification(
+                static fn (Specification $specification) => $specification->add(new SpecServer(url: $basePath))
+            );
+        }
+
+        return $builder;
     }
 
     /**
@@ -323,7 +398,10 @@ class Generator
      */
     protected function saveJson(): self
     {
-        if ($this->openApi !== null) {
+        if ($this->result !== null) {
+            // Any builder run, classic mode included: the result serialises the same annotation.
+            $this->result->saveAs($this->docsFile, 'json');
+        } elseif ($this->openApi !== null) {
             $this->openApi->saveAs($this->docsFile);
         }
 

@@ -117,6 +117,15 @@ return [
             'generator_factory' => null,
 
             /**
+             * Optional CustomBuilderInterface implementation that creates an OpenApi\Builder instance.
+             * Use this instead of `generator_factory` to generate through a pre-configured builder.
+             * Accepts an instance or a class name (FQCN) implementing the interface.
+             *
+             * @see \L5Swagger\CustomBuilderInterface
+             */
+            'builder_factory' => null,
+
+            /**
              * Configuration for default processors. Allows to pass processors configuration to swagger-php.
              *
              * @link https://zircote.github.io/swagger-php/reference/processors.html
