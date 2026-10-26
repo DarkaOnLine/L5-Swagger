@@ -1,0 +1,162 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "L5 OpenApi",
+        "description": "L5 Swagger OpenApi description",
+        "contact": {
+            "email": "darius@matulionis.lt"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0",
+        "x-logo": {
+            "url": "https://via.placeholder.com/190x90.png?text=L5-Swagger"
+        }
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "L5 Swagger OpenApi dynamic host server"
+        },
+        {
+            "url": "https://projects.dev/api/v1",
+            "description": "L5 Swagger OpenApi Server"
+        }
+    ],
+    "paths": {
+        "/clients": {
+            "get": {
+                "tags": [
+                    "Clients"
+                ],
+                "summary": "Get list of clients",
+                "description": "Returns list of clients",
+                "operationId": "getClientsList",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/projects": {
+            "get": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Get list of projects",
+                "description": "Returns list of projects",
+                "operationId": "getProjectsList",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key_security_example": []
+                    }
+                ]
+            }
+        },
+        "/projects/{id}": {
+            "get": {
+                "tags": [
+                    "Projects"
+                ],
+                "summary": "Get project information",
+                "description": "Returns project data",
+                "operationId": "getProjectById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Project id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "404": {
+                        "description": "Resource Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "oauth2_security_example": [
+                            "write:projects",
+                            "read:projects"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/products": {
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Get list of products",
+                "description": "Returns list of products",
+                "operationId": "c212925c5e784aa43d63b52155a8cf21",
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "Password Based": {
+                "type": "oauth2",
+                "description": "Use a global client_id / client_secret and your username / password combo to obtain a token",
+                "in": "header",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "/oauth/authorize",
+                        "tokenUrl": "/oauth/token",
+                        "refreshUrl": "/oauth/token/refresh",
+                        "scopes": {}
+                    }
+                },
+                "scheme": "https"
+            }
+        }
+    },
+    "security": [
+        {
+            "oauth2": [
+                "read:oauth2"
+            ]
+        }
+    ],
+    "tags": [
+        {
+            "name": "Clients",
+            "description": "Clients"
+        },
+        {
+            "name": "Projects",
+            "description": "Projects"
+        },
+        {
+            "name": "Products",
+            "description": "Products"
+        }
+    ]
+}

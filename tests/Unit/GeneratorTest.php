@@ -12,8 +12,11 @@ use L5Swagger\L5SwaggerServiceProvider;
 use OpenApi\Analysers\AttributeAnnotationFactory;
 use OpenApi\Analysers\DocBlockAnnotationFactory;
 use OpenApi\Analysers\ReflectionAnalyser;
+use OpenApi\Analysis;
+use OpenApi\Attributes as OA;
 use OpenApi\Builder;
 use OpenApi\Builder\Mode;
+use OpenApi\Context;
 use OpenApi\Generator as OpenApiGenerator;
 use OpenApi\OpenApiException;
 use OpenApi\Processors\AugmentParameters;
@@ -156,6 +159,55 @@ class GeneratorTest extends TestCase
             ->assertSee('Get list of products')
             ->assertSee('getClientsList')
             ->assertStatus(200);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testGeneratedDocumentMatchesTheSnapshot(): void
+    {
+        $this->setAnnotationsPath();
+
+        $this->generator->generateDocs();
+
+        $this->assertSame(
+            json_decode((string) file_get_contents(__DIR__.'/Fixtures/api-docs.json'), true),
+            json_decode((string) file_get_contents($this->jsonDocsFile()), true)
+        );
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testSwaggerPhpWarningIsThrown(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions([], __DIR__.'/../storage/annotations/Warning');
+
+        $this->expectException(\ErrorException::class);
+        $this->expectExceptionMessage('requires at least one');
+
+        $this->generator->generateDocs();
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testCanGenerateWithAnalysis(): void
+    {
+        $context = new Context();
+        $analysis = new Analysis([], $context);
+        $analysis->addAnnotation(new OA\Server(url: 'https://analysis.test', description: 'From the analysis'), $context);
+
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['analysis' => $analysis]);
+
+        $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        $this->assertContains(['url' => 'https://analysis.test', 'description' => 'From the analysis'], $document['servers']);
+        $this->assertArrayHasKey('/projects', $document['paths']);
     }
 
     /**
