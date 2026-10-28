@@ -153,6 +153,10 @@ return [
             /**
              * analysis: defaults to a new \OpenApi\Analysis .
              *
+             * Deprecated: when set, the documentation is generated through \OpenApi\Generator
+             * directly instead of \OpenApi\Builder. swagger-php 7 deprecates the generator,
+             * and swagger-php 8 removes it.
+             *
              * @see \OpenApi\scan
              */
             'analysis' => null,

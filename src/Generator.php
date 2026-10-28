@@ -62,7 +62,7 @@ class Generator
     protected ?OpenApi $openApi;
 
     /**
-     * The build result, when generated through a `builder_factory`.
+     * The build result, unless generated with an `analysis`.
      */
     protected ?Result $result = null;
 
@@ -179,25 +179,24 @@ class Generator
     {
         $builder = $this->createOpenApiBuilder();
 
-        if ($builder !== null) {
-            $result = $builder->addSource($this->createScanFinder())->build();
+        // Analysis.
+        $analysis = Arr::get($this->scanOptions, self::SCAN_OPTION_ANALYSIS);
 
-            // In classic mode the result holds the OpenApi annotation itself, not a copy: keeping a
-            // reference lets populateServers() add the base path to what the result later saves.
-            // Spec and hybrid mode have no annotation; the base path goes in through the Specification.
-            $this->openApi = $result->openApi();
-            $this->result = $result;
+        if ($builder === null && $analysis !== null) {
+            // The builder has no way to pass an analysis on to the generator.
+            $this->openApi = $this->createOpenApiGenerator()->generate($this->createScanFinder(), $analysis);
 
             return $this;
         }
 
-        $generator = $this->createOpenApiGenerator();
-        $finder = $this->createScanFinder();
+        $builder ??= $this->createDefaultBuilder();
+        $result = $builder->addSource($this->createScanFinder())->build();
 
-        // Analysis.
-        $analysis = Arr::get($this->scanOptions, self::SCAN_OPTION_ANALYSIS);
-
-        $this->openApi = $generator->generate($finder, $analysis);
+        // In classic mode the result holds the OpenApi annotation itself, not a copy: keeping a
+        // reference lets populateServers() add the base path to what the result later saves.
+        // Spec and hybrid mode have no annotation; the base path goes in through the Specification.
+        $this->openApi = $result->openApi();
+        $this->result = $result;
 
         return $this;
     }
@@ -288,6 +287,23 @@ class Generator
         }
 
         return $builder;
+    }
+
+    /**
+     * Create an OpenApi Builder in classic mode.
+     *
+     * The builder generates through L5's own generator, so every classic scan option applies
+     * as before. The generator the builder creates itself is not used: it logs to the build
+     * result, which would hide the warnings Laravel turns into exceptions.
+     *
+     * @return Builder
+     */
+    protected function createDefaultBuilder(): Builder
+    {
+        return (new Builder())
+            // Explicit: swagger-php 7 defaults to hybrid.
+            ->setMode(Builder\Mode::CLASSIC)
+            ->withGenerator(fn () => $this->createOpenApiGenerator());
     }
 
     /**
