@@ -403,7 +403,7 @@ class GeneratorTest extends TestCase
             {
                 $this->called = true;
 
-                return new Builder();
+                return (new Builder())->setMode(Builder\Mode::CLASSIC);
             }
         };
 
