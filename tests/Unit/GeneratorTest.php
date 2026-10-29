@@ -622,7 +622,8 @@ class GeneratorTest extends TestCase
         $this->setAnnotationsPath();
         $this->setScanOptions(
             [
-                'mode' => 'spec',
+                // The enum works as well as its value.
+                'mode' => Mode::SPEC,
                 'default_processors_configuration' => ['pathFilter' => ['paths' => ['#^/projects#']]],
             ],
             __DIR__.'/../storage/annotations/Spec'

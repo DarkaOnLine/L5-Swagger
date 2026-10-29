@@ -337,10 +337,14 @@ class Generator
             return $mode;
         }
 
-        return Mode::tryFrom($mode ?: Mode::CLASSIC->value)
-            ?? throw new L5SwaggerException(
+        return match ($mode ?: 'classic') {
+            'classic' => Mode::CLASSIC,
+            'hybrid' => Mode::HYBRID,
+            'spec' => Mode::SPEC,
+            default => throw new L5SwaggerException(
                 'The `mode` scan option must be one of `classic`, `hybrid` or `spec`, got `'.$mode.'`'
-            );
+            ),
+        };
     }
 
     /**
@@ -416,7 +420,7 @@ class Generator
         );
 
         $processors = [];
-        foreach (Arr::get($this->scanOptions, self::SCAN_OPTION_PROCESSORS, []) as $entry) {
+        foreach ($this->scanOptions[self::SCAN_OPTION_PROCESSORS] ?? [] as $entry) {
             $processor = is_array($entry) ? $entry['class'] : $entry;
             $processors[] = is_string($processor) ? new $processor() : $processor;
         }
@@ -454,9 +458,11 @@ class Generator
         foreach ($config as $key => $value) {
             if (is_string($key) && ($key === 'generator' || str_starts_with($key, 'generator.'))) {
                 $generator[$key] = $value;
-            } else {
-                $augmenters[$key] = $value;
+
+                continue;
             }
+
+            $augmenters[$key] = $value;
         }
 
         return [$generator, $augmenters];
