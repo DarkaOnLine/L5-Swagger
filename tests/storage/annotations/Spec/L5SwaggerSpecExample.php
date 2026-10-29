@@ -13,4 +13,10 @@ class L5SwaggerSpecExample
     public function list(): void
     {
     }
+
+    #[OA\Operation\Get(path: '/clients', operationId: 'listClients')]
+    #[OA\Response(response: 200, description: 'The clients')]
+    public function clients(): void
+    {
+    }
 }
