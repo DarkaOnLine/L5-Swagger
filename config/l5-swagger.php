@@ -121,7 +121,7 @@ return [
              *
              * @link https://zircote.github.io/swagger-php/guide/modes.html
              */
-            'mode' => env('L5_SWAGGER_MODE', 'classic'),
+            'mode' => env('L5_SWAGGER_SCAN_MODE', 'classic'),
 
             /**
              * Optional CustomGeneratorInterface implementation that creates an OpenApi\Generator instance.
