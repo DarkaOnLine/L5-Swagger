@@ -510,6 +510,165 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
     }
 
+    public function testHybridModeGeneratesClassicAttributes(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(
+            [
+                'mode' => 'hybrid',
+                'processors' => [
+                    // Hybrid has no BuildPaths to position after; the processor runs anyway.
+                    ['class' => new class
+                    {
+                        public function __invoke(Analysis $analysis): void
+                        {
+                            foreach ($analysis->getAnnotationsOfType(OA\Info::class) as $info) {
+                                $info->title = 'From the processor';
+                            }
+                        }
+                    }, 'after' => AugmentSchemas::class],
+                ],
+            ],
+            __DIR__.'/../storage/annotations/OpenApiNoServer',
+            'https://test-server.url'
+        );
+
+        $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        $this->assertSame('3.0.0', $document['openapi']);
+        $this->assertSame('From the processor', $document['info']['title']);
+        $this->assertSame([['url' => 'https://test-server.url']], $document['servers']);
+        $this->assertSame('ping', $document['paths']['/ping']['get']['operationId']);
+        $this->assertFileExists($this->yamlDocsFile());
+    }
+
+    public function testHybridModeUsesTheGeneratorFactory(): void
+    {
+        $factory = new class implements CustomGeneratorInterface
+        {
+            public bool $called = false;
+
+            public function create(): OpenApiGenerator
+            {
+                $this->called = true;
+
+                return new OpenApiGenerator();
+            }
+        };
+
+        $this->setAnnotationsPath();
+        $this->setScanOptions(
+            ['mode' => 'hybrid', 'generator_factory' => $factory],
+            __DIR__.'/../storage/annotations/OpenApiNoServer'
+        );
+
+        $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        $this->assertTrue($factory->called);
+        // The factory's generator runs without the classic processors.
+        $this->assertSame('ping', $document['paths']['/ping']['get']['operationId']);
+    }
+
+    public function testHybridModeSplitsTheProcessorsConfiguration(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(
+            [
+                'mode' => 'hybrid',
+                'default_processors_configuration' => [
+                    'generator' => ['ignoreOtherAttributes' => true],
+                    'pathFilter' => ['paths' => ['#^/projects#']],
+                ],
+            ],
+            // Hybrid reads spec attributes too.
+            __DIR__.'/../storage/annotations/Spec'
+        );
+
+        $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        // `generator` sent to the augmenters is an unknown key there, which throws.
+        $this->assertSame(['/projects'], array_keys($document['paths']));
+    }
+
+    public function testSpecModeGeneratesSpecAttributes(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(
+            ['mode' => 'spec', 'open_api_spec_version' => '3.1.0'],
+            __DIR__.'/../storage/annotations/Spec',
+            'https://test-server.url'
+        );
+
+        $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        $this->assertSame('3.1.0', $document['openapi']);
+        $this->assertSame(
+            [['url' => 'http://my-default-host.com'], ['url' => 'https://test-server.url']],
+            $document['servers']
+        );
+        $this->assertSame('listProjects', $document['paths']['/projects']['get']['operationId']);
+    }
+
+    public function testSpecModeConfiguresTheAugmenters(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(
+            [
+                // The enum works as well as its value.
+                'mode' => Mode::SPEC,
+                'default_processors_configuration' => ['pathFilter' => ['paths' => ['#^/projects#']]],
+            ],
+            __DIR__.'/../storage/annotations/Spec'
+        );
+
+        $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        $this->assertSame(['/projects'], array_keys($document['paths']));
+    }
+
+    public function testAnalysisRequiresClassicMode(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'hybrid', 'analysis' => new Analysis([], new Context())]);
+
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('`analysis`');
+
+        $this->generator->generateDocs();
+    }
+
+    public function testModeDoesNotApplyToBuilderFactory(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'spec', 'builder_factory' => TestCustomBuilder::class]);
+
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('set the mode on the builder');
+
+        $this->generator->generateDocs();
+    }
+
+    public function testUnknownModeThrows(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'reflection']);
+
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('`reflection`');
+
+        $this->generator->generateDocs();
+    }
+
     /**
      * Replace the default documentation's scan options, and optionally its paths and other settings, and rebuild the generator.
      *

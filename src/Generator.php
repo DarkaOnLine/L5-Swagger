@@ -10,8 +10,10 @@ use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Server;
 use OpenApi\Builder;
+use OpenApi\Builder\Mode;
 use OpenApi\Builder\Result;
 use OpenApi\Generator as OpenApiGenerator;
+use OpenApi\Loggers\DefaultLogger;
 use OpenApi\OpenApiException;
 use OpenApi\Spec\Server as SpecServer;
 use OpenApi\Specification;
@@ -30,6 +32,7 @@ class Generator
     protected const SCAN_OPTION_ANALYSER = 'analyser';
     protected const SCAN_OPTION_ANALYSIS = 'analysis';
     protected const SCAN_OPTION_EXCLUDE = 'exclude';
+    protected const SCAN_OPTION_MODE = 'mode';
 
     protected const AVAILABLE_SCAN_OPTIONS = [
         self::SCAN_OPTION_PATTERN,
@@ -183,6 +186,10 @@ class Generator
         $analysis = Arr::get($this->scanOptions, self::SCAN_OPTION_ANALYSIS);
 
         if ($builder === null && $analysis !== null) {
+            if ($this->getMode() !== Mode::CLASSIC) {
+                throw new L5SwaggerException('The `analysis` scan option requires the `classic` mode');
+            }
+
             // The builder has no way to pass an analysis on to the generator.
             $this->openApi = $this->createOpenApiGenerator()->generate($this->createScanFinder(), $analysis);
 
@@ -208,15 +215,7 @@ class Generator
      */
     protected function createOpenApiGenerator(): OpenApiGenerator
     {
-        $factory = $this->scanOptions['generator_factory'] ?? null;
-
-        if (is_string($factory) && is_subclass_of($factory, CustomGeneratorInterface::class)) {
-            $factory = new $factory();
-        }
-
-        $generator = $factory instanceof CustomGeneratorInterface
-            ? $factory->create()
-            : new OpenApiGenerator();
+        $generator = $this->createGeneratorInstance();
 
         if (! empty($this->scanOptions['default_processors_configuration'])
             && is_array($this->scanOptions['default_processors_configuration'])
@@ -235,6 +234,24 @@ class Generator
         $this->setAnalyser($generator);
 
         return $generator;
+    }
+
+    /**
+     * Create the generator from `generator_factory`, or a new one.
+     *
+     * @return OpenApiGenerator
+     */
+    protected function createGeneratorInstance(): OpenApiGenerator
+    {
+        $factory = $this->scanOptions['generator_factory'] ?? null;
+
+        if (is_string($factory) && is_subclass_of($factory, CustomGeneratorInterface::class)) {
+            $factory = new $factory();
+        }
+
+        return $factory instanceof CustomGeneratorInterface
+            ? $factory->create()
+            : new OpenApiGenerator();
     }
 
     /**
@@ -260,6 +277,10 @@ class Generator
             throw new L5SwaggerException('Configure either `generator_factory` or `builder_factory`, not both');
         }
 
+        if ($this->getMode() !== Mode::CLASSIC) {
+            throw new L5SwaggerException('The `mode` scan option does not apply to `builder_factory`; set the mode on the builder');
+        }
+
         if (is_string($factory) && is_subclass_of($factory, CustomBuilderInterface::class)) {
             $factory = new $factory();
         }
@@ -279,31 +300,172 @@ class Generator
                 throw new L5SwaggerException('A base path with `builder_factory` requires zircote/swagger-php 6.12 or later');
             }
 
-            // Spec and hybrid mode only; classic mode gets the server in populateServers().
-            $basePath = $this->basePath;
-            $builder->withSpecification(
-                static fn (Specification $specification) => $specification->add(new SpecServer(url: $basePath))
-            );
+            $this->addBasePathServer($builder);
         }
 
         return $builder;
     }
 
     /**
-     * Create an OpenApi Builder in classic mode.
+     * Add the base path as a server through the Specification.
      *
-     * The builder generates through L5's own generator, so every classic scan option applies
-     * as before. The generator the builder creates itself is not used: it logs to the build
-     * result, which would hide the warnings Laravel turns into exceptions.
+     * Spec and hybrid mode only; classic mode gets the server in populateServers().
+     *
+     * @param  Builder  $builder
+     * @return void
+     */
+    protected function addBasePathServer(Builder $builder): void
+    {
+        $basePath = $this->basePath;
+        $builder->withSpecification(
+            static fn (Specification $specification) => $specification->add(new SpecServer(url: $basePath))
+        );
+    }
+
+    /**
+     * The mode from the `mode` scan option, `classic` if not set.
+     *
+     * @return Mode
+     *
+     * @throws L5SwaggerException
+     */
+    protected function getMode(): Mode
+    {
+        $mode = $this->scanOptions[self::SCAN_OPTION_MODE] ?? null;
+
+        if ($mode instanceof Mode) {
+            return $mode;
+        }
+
+        return match ($mode ?: 'classic') {
+            'classic' => Mode::CLASSIC,
+            'hybrid' => Mode::HYBRID,
+            'spec' => Mode::SPEC,
+            default => throw new L5SwaggerException(
+                'The `mode` scan option must be one of `classic`, `hybrid` or `spec`, got `'.$mode.'`'
+            ),
+        };
+    }
+
+    /**
+     * Create an OpenApi Builder in the configured mode.
+     *
+     * In classic mode the builder generates through L5's own generator, so every classic scan
+     * option applies as before. The generator the builder creates itself is not used: it logs
+     * to the build result, which would hide the warnings Laravel turns into exceptions.
+     *
+     * Hybrid mode scans classic attributes and annotations through a generator without the
+     * classic processors; see createHybridGenerator(). Spec mode reads spec attributes only and
+     * uses no generator. In both, `default_processors_configuration` configures the augmenters,
+     * apart from the generator's own `generator.*` keys in hybrid mode.
      *
      * @return Builder
+     *
+     * @throws L5SwaggerException
      */
     protected function createDefaultBuilder(): Builder
     {
-        return (new Builder())
-            // Explicit: swagger-php 7 defaults to hybrid.
-            ->setMode(Builder\Mode::CLASSIC)
-            ->withGenerator(fn () => $this->createOpenApiGenerator());
+        $mode = $this->getMode();
+
+        if ($mode === Mode::CLASSIC) {
+            return (new Builder())
+                // Explicit: swagger-php 7 defaults to hybrid.
+                ->setMode(Mode::CLASSIC)
+                ->withGenerator(fn () => $this->createOpenApiGenerator());
+        }
+
+        $builder = (new Builder())
+            ->setMode($mode)
+            // The logger the generator uses in classic mode, so warnings still reach Laravel.
+            ->setLogger(new DefaultLogger())
+            ->setVersion($this->scanOptions['open_api_spec_version'] ?? self::OPEN_API_DEFAULT_SPEC_VERSION);
+
+        [$generatorConfig, $augmenterConfig] = $this->splitProcessorsConfiguration($mode);
+
+        if ($augmenterConfig !== []) {
+            $builder->withAugmenters(static fn (Pipeline $augmenters) => $augmenters->configure($augmenterConfig));
+        }
+
+        if ($mode === Mode::HYBRID) {
+            $builder->withGenerator(fn () => $this->createHybridGenerator($generatorConfig));
+        }
+
+        if ($this->basePath !== null) {
+            $this->addBasePathServer($builder);
+        }
+
+        return $builder;
+    }
+
+    /**
+     * Create the generator that scans classic attributes and annotations in hybrid mode.
+     *
+     * Hybrid mode runs no classic processors, so the pipeline holds the custom `processors`
+     * only, in the order configured. An `after` position has nothing to refer to there and
+     * is ignored.
+     *
+     * @param  array<string,mixed>  $config  The `generator.*` share of `default_processors_configuration`.
+     * @return OpenApiGenerator
+     */
+    protected function createHybridGenerator(array $config): OpenApiGenerator
+    {
+        $generator = $this->createGeneratorInstance();
+
+        if ($config !== []) {
+            $generator->setConfig($config);
+        }
+
+        $generator->setVersion(
+            $this->scanOptions['open_api_spec_version'] ?? self::OPEN_API_DEFAULT_SPEC_VERSION
+        );
+
+        $processors = [];
+        foreach ($this->scanOptions[self::SCAN_OPTION_PROCESSORS] ?? [] as $entry) {
+            $processor = is_array($entry) ? $entry['class'] : $entry;
+            $processors[] = is_string($processor) ? new $processor() : $processor;
+        }
+        $generator->setProcessorPipeline(new Pipeline($processors));
+
+        $this->setAnalyser($generator);
+
+        return $generator;
+    }
+
+    /**
+     * Split `default_processors_configuration` between the generator and the augmenters.
+     *
+     * Hybrid mode passes the `generator.*` keys to the generator and the rest to the
+     * augmenters; spec mode passes everything to the augmenters. The same routing as the
+     * `-c` option of swagger-php's command line.
+     *
+     * @param  Mode  $mode
+     * @return array{0: array<string,mixed>, 1: array<int|string,mixed>} generator, augmenters
+     */
+    protected function splitProcessorsConfiguration(Mode $mode): array
+    {
+        $config = $this->scanOptions['default_processors_configuration'] ?? [];
+
+        if (! is_array($config) || $config === []) {
+            return [[], []];
+        }
+
+        if ($mode === Mode::SPEC) {
+            return [[], $config];
+        }
+
+        $generator = [];
+        $augmenters = [];
+        foreach ($config as $key => $value) {
+            if (is_string($key) && ($key === 'generator' || str_starts_with($key, 'generator.'))) {
+                $generator[$key] = $value;
+
+                continue;
+            }
+
+            $augmenters[$key] = $value;
+        }
+
+        return [$generator, $augmenters];
     }
 
     /**
