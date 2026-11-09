@@ -158,5 +158,9 @@
             "name": "Products",
             "description": "Products"
         }
-    ]
+    ],
+    "externalDocs": {
+        "description": "Find out more about Swagger and OpenApi",
+        "url": "https://swagger.io"
+    }
 }
