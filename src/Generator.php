@@ -602,10 +602,10 @@ class Generator
     {
         if ($this->yamlCopyRequired) {
             $yamlDocs = (new YamlDumper(2))->dump(
-                json_decode($this->fileSystem->get($this->docsFile), true),
-                20,
-                0,
-                Yaml::DUMP_OBJECT_AS_MAP ^ Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE
+                // Decoded to objects, so an empty JSON object stays an empty map.
+                input: json_decode($this->fileSystem->get($this->docsFile)),
+                inline: 20,
+                flags: Yaml::DUMP_OBJECT_AS_MAP | Yaml::DUMP_EMPTY_ARRAY_AS_SEQUENCE
             );
 
             $this->fileSystem->put(

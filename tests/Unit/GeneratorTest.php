@@ -843,4 +843,26 @@ class GeneratorTest extends TestCase
         $actual = $objects->paths->{'/projects'}->get->security[0]->api_key_security_example;
         $this->assertIsArray($actual);
     }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testYamlCopyMatchesTheJsonDocument(): void
+    {
+        $this->setAnnotationsPath();
+
+        $this->generator->generateDocs();
+
+        $json = file_get_contents($this->jsonDocsFile());
+        $yaml = file_get_contents($this->yamlDocsFile());
+
+        if (! \is_string($json) || ! \is_string($yaml)) {
+            $this->fail('File content is not string');
+        }
+
+        $this->assertEquals(
+            json_decode($json, false, 512, JSON_THROW_ON_ERROR),
+            (new Parser())->parse($yaml, Yaml::PARSE_OBJECT_FOR_MAP)
+        );
+    }
 }
