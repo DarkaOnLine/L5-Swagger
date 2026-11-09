@@ -1,5 +1,6 @@
 <?php
 
+use L5Swagger\ConfigFactory;
 use L5Swagger\Exceptions\L5SwaggerException;
 
 if (! function_exists('swagger_ui_dist_path')) {
@@ -25,9 +26,8 @@ if (! function_exists('swagger_ui_dist_path')) {
         ];
 
         $defaultPath = 'vendor/swagger-api/swagger-ui/dist/';
-        $path = base_path(
-            config('l5-swagger.documentations.'.$documentation.'.paths.swagger_ui_assets_path', $defaultPath)
-        );
+        $paths = resolve(ConfigFactory::class)->documentationConfig($documentation)['paths'] ?? [];
+        $path = base_path($paths['swagger_ui_assets_path'] ?? $defaultPath);
 
         if (! $asset) {
             $resolved = realpath($path);
@@ -71,7 +71,8 @@ if (! function_exists('l5_swagger_asset')) {
     {
         $file = swagger_ui_dist_path($documentation, $asset);
 
-        $useAbsolutePath = config('l5-swagger.documentations.'.$documentation.'.paths.use_absolute_path', true);
+        $paths = resolve(ConfigFactory::class)->documentationConfig($documentation)['paths'] ?? [];
+        $useAbsolutePath = $paths['use_absolute_path'] ?? true;
 
         return route('l5-swagger.'.$documentation.'.asset', $asset, $useAbsolutePath).'?v='.md5_file($file);
     }

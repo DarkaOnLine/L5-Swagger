@@ -49,6 +49,33 @@ class HelpersTest extends TestCase
     /**
      * @throws L5SwaggerException
      */
+    public function testItReadsTheAssetsPathFromTheDefaults(): void
+    {
+        $this->forgetDocumentationPath('swagger_ui_assets_path');
+        config(['l5-swagger.defaults.paths.swagger_ui_assets_path' => 'nonexistent/path/']);
+
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('Swagger UI assets directory not found at:');
+
+        swagger_ui_dist_path('default');
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    public function testItReadsUseAbsolutePathFromTheDefaults(): void
+    {
+        $this->forgetDocumentationPath('use_absolute_path');
+        config(['l5-swagger.defaults.paths.use_absolute_path' => false]);
+
+        $path = l5_swagger_asset('default', 'swagger-ui.js');
+
+        $this->assertStringStartsWith('/docs/asset/swagger-ui.js?v=', $path);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
     public function testGeneratesBasePathForAssetsThrowsExceptionIfFileIsNotAllowed(): void
     {
         $this->expectException(L5SwaggerException::class);
@@ -74,5 +101,12 @@ class HelpersTest extends TestCase
         $path = swagger_ui_dist_path('default', 'swagger-ui.js');
 
         $this->assertStringContainsString('swagger-api/swagger-ui/dist/swagger-ui.js', $path);
+    }
+
+    private function forgetDocumentationPath(string $key): void
+    {
+        $paths = config('l5-swagger.documentations.default.paths');
+        unset($paths[$key]);
+        config(['l5-swagger.documentations.default.paths' => $paths]);
     }
 }
