@@ -27,6 +27,7 @@ use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
 use Tests\Unit\Fixtures\TestCustomBuilder;
 use Tests\Unit\Fixtures\TestCustomGenerator;
+use Tests\Unit\Fixtures\TestPlugin;
 
 #[TestDox('Generator')]
 #[CoversClass(GeneratorFactory::class)]
@@ -658,6 +659,54 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
     }
 
+    public function testPluginsConfigureTheBuilder(): void
+    {
+        $this->skipWithoutPlugins();
+        $this->setAnnotationsPath();
+        $this->setScanOptions(
+            [
+                'mode' => 'spec',
+                'plugins' => [
+                    TestPlugin::class,
+                    TestPlugin::class => ['url' => 'https://configured.test'],
+                ],
+            ],
+            __DIR__.'/../storage/annotations/Spec'
+        );
+
+        $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+        $urls = array_column($document['servers'], 'url');
+
+        $this->assertContains('https://plugin.test', $urls);
+        $this->assertContains('https://configured.test', $urls);
+    }
+
+    public function testPluginsRequireHybridOrSpecMode(): void
+    {
+        $this->skipWithoutPlugins();
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['plugins' => [TestPlugin::class]]);
+
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('requires the `hybrid` or `spec` mode');
+
+        $this->generator->generateDocs();
+    }
+
+    public function testPluginsDoNotApplyToBuilderFactory(): void
+    {
+        $this->skipWithoutPlugins();
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['plugins' => [TestPlugin::class], 'builder_factory' => TestCustomBuilder::class]);
+
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('add the plugins on the builder');
+
+        $this->generator->generateDocs();
+    }
+
     public function testUnknownModeThrows(): void
     {
         $this->setAnnotationsPath();
@@ -667,6 +716,13 @@ class GeneratorTest extends TestCase
         $this->expectExceptionMessage('`reflection`');
 
         $this->generator->generateDocs();
+    }
+
+    private function skipWithoutPlugins(): void
+    {
+        if (! method_exists(Builder::class, 'withPlugins')) { // @phpstan-ignore-line
+            $this->markTestSkipped('Plugins need zircote/swagger-php 7.3 or later');
+        }
     }
 
     /**

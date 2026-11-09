@@ -33,6 +33,7 @@ class Generator
     protected const SCAN_OPTION_ANALYSIS = 'analysis';
     protected const SCAN_OPTION_EXCLUDE = 'exclude';
     protected const SCAN_OPTION_MODE = 'mode';
+    protected const SCAN_OPTION_PLUGINS = 'plugins';
 
     protected const AVAILABLE_SCAN_OPTIONS = [
         self::SCAN_OPTION_PATTERN,
@@ -180,6 +181,9 @@ class Generator
      */
     protected function scanFilesForDocumentation(): self
     {
+        // Checked first, so a plugin is never left out without an error, whichever way the build goes.
+        $this->getPlugins();
+
         $builder = $this->createOpenApiBuilder();
 
         // Analysis.
@@ -348,6 +352,43 @@ class Generator
     }
 
     /**
+     * The plugins from the `plugins` scan option, in the order configured.
+     *
+     * Each entry is a plugin class name, a class name mapped to the plugin's settings, or a plugin
+     * instance. Plugins need swagger-php 7.3 or later, and do not run in classic mode.
+     *
+     * @return array<array-key,mixed>
+     *
+     * @throws L5SwaggerException
+     */
+    protected function getPlugins(): array
+    {
+        $plugins = $this->scanOptions[self::SCAN_OPTION_PLUGINS] ?? [];
+
+        if (! is_array($plugins)) {
+            throw new L5SwaggerException('The `plugins` scan option must be a list');
+        }
+
+        if ($plugins === []) {
+            return [];
+        }
+
+        if (! method_exists(Builder::class, 'withPlugins')) { // @phpstan-ignore-line
+            throw new L5SwaggerException('The `plugins` scan option requires zircote/swagger-php 7.3 or later');
+        }
+
+        if (($this->scanOptions['builder_factory'] ?? null) !== null) {
+            throw new L5SwaggerException('The `plugins` scan option does not apply to `builder_factory`; add the plugins on the builder');
+        }
+
+        if ($this->getMode() === Mode::CLASSIC) {
+            throw new L5SwaggerException('The `plugins` scan option requires the `hybrid` or `spec` mode');
+        }
+
+        return $plugins;
+    }
+
+    /**
      * Create an OpenApi Builder in the configured mode.
      *
      * In classic mode the builder generates through L5's own generator, so every classic scan
@@ -379,6 +420,12 @@ class Generator
             // The logger the generator uses in classic mode, so warnings still reach Laravel.
             ->setLogger(new DefaultLogger())
             ->setVersion($this->scanOptions['open_api_spec_version'] ?? self::OPEN_API_DEFAULT_SPEC_VERSION);
+
+        // Before the augmenters are configured, so the configuration reaches the augmenters a plugin adds.
+        $plugins = $this->getPlugins();
+        if ($plugins !== []) {
+            $builder->withPlugins($plugins);
+        }
 
         [$generatorConfig, $augmenterConfig] = $this->splitProcessorsConfiguration($mode);
 
