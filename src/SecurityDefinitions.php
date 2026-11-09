@@ -67,7 +67,7 @@ class SecurityDefinitions
         }
 
         foreach ($config as $key => $cfg) {
-            $securitySchemes->offsetSet($key, $this->arrayToObject($cfg));
+            $securitySchemes->offsetSet($key, $this->emptyScopesToObject($this->arrayToObject($cfg)));
         }
 
         $components->offsetSet('securitySchemes', $securitySchemes);
@@ -102,6 +102,32 @@ class SecurityDefinitions
         }
 
         return $documentation;
+    }
+
+    /**
+     * OpenAPI requires `scopes` to be a map, so an empty list is turned into an empty object.
+     *
+     * @param  mixed  $scheme  The security scheme converted by arrayToObject
+     */
+    protected function emptyScopesToObject(mixed $scheme): mixed
+    {
+        if (! is_object($scheme)) {
+            return $scheme;
+        }
+
+        if (isset($scheme->scopes) && $scheme->scopes === []) {
+            $scheme->scopes = new \stdClass();
+        }
+
+        if (isset($scheme->flows) && is_object($scheme->flows)) {
+            foreach ($scheme->flows as $flow) {
+                if (is_object($flow) && isset($flow->scopes) && $flow->scopes === []) {
+                    $flow->scopes = new \stdClass();
+                }
+            }
+        }
+
+        return $scheme;
     }
 
     /**

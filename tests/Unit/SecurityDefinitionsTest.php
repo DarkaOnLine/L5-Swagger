@@ -94,6 +94,85 @@ class SecurityDefinitionsTest extends TestCase
              ->isOk();
     }
 
+    /**
+     * @param  array<string,mixed>  $securitySchemes
+     * @param  array<string,mixed>  $expected
+     *
+     * @throws L5SwaggerException
+     */
+    #[DataProvider('provideOauth2Schemes')]
+    public function testItWillGenerateScopesAsMap(array $securitySchemes, array $expected): void
+    {
+        $this->setAnnotationsPath();
+
+        $config = config('l5-swagger.documentations.default');
+
+        $config['securityDefinitions']['securitySchemes'] = $securitySchemes;
+
+        config(['l5-swagger' => [
+            'default' => 'default',
+            'documentations' => [
+                'default' => $config,
+            ],
+            'defaults' => config('l5-swagger.defaults'),
+        ]]);
+
+        $json = json_decode($this->get(route('l5-swagger.default.docs'))->getContent(), false);
+
+        foreach ($expected as $name => $scopes) {
+            $scheme = $json->components->securitySchemes->{$name};
+            $actual = $scheme->flows->password->scopes ?? $scheme->scopes;
+
+            $this->assertEquals($scopes, $actual);
+            $this->assertSame(is_object($scopes), is_object($actual));
+        }
+    }
+
+    public static function provideOauth2Schemes(): \Generator
+    {
+        yield 'empty scopes in flow' => [
+            'securitySchemes' => [
+                'password_auth' => [
+                    'type' => 'oauth2',
+                    'flows' => [
+                        'password' => [
+                            'tokenUrl' => 'https://example.com/token',
+                            'scopes' => [],
+                        ],
+                    ],
+                ],
+            ],
+            'expected' => ['password_auth' => new \stdClass()],
+        ];
+
+        yield 'empty top level scopes' => [
+            'securitySchemes' => [
+                'legacy_auth' => [
+                    'type' => 'oauth2',
+                    'flow' => 'password',
+                    'tokenUrl' => 'https://example.com/token',
+                    'scopes' => [],
+                ],
+            ],
+            'expected' => ['legacy_auth' => new \stdClass()],
+        ];
+
+        yield 'non empty scopes in flow' => [
+            'securitySchemes' => [
+                'password_auth' => [
+                    'type' => 'oauth2',
+                    'flows' => [
+                        'password' => [
+                            'tokenUrl' => 'https://example.com/token',
+                            'scopes' => ['read' => 'Read access'],
+                        ],
+                    ],
+                ],
+            ],
+            'expected' => ['password_auth' => (object) ['read' => 'Read access']],
+        ];
+    }
+
     public static function provideConfigAndSchemes(): \Generator
     {
         $securitySchemes = [
