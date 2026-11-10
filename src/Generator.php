@@ -13,7 +13,6 @@ use OpenApi\Builder;
 use OpenApi\Builder\Mode;
 use OpenApi\Builder\Result;
 use OpenApi\Generator as OpenApiGenerator;
-use OpenApi\Loggers\DefaultLogger;
 use OpenApi\OpenApiException;
 use OpenApi\Spec\Server as SpecServer;
 use OpenApi\Specification;
@@ -258,6 +257,7 @@ class Generator
      * Create an OpenApi Builder if a `builder_factory` is configured.
      *
      * The factory owns the pipeline: mode, augmenters, resolver and any other contributors.
+     * The `mode` scan option does not apply, the factory sets the mode on its builder.
      * The `processors`, `analyser`, `analysis` and `default_processors_configuration` scan
      * options configure the classic generator and are not applied here.
      *
@@ -275,10 +275,6 @@ class Generator
 
         if (($this->scanOptions['generator_factory'] ?? null) !== null) {
             throw new L5SwaggerException('Configure either `generator_factory` or `builder_factory`, not both');
-        }
-
-        if ($this->getMode() !== Mode::CLASSIC) {
-            throw new L5SwaggerException('The `mode` scan option does not apply to `builder_factory`; set the mode on the builder');
         }
 
         if (is_string($factory) && is_subclass_of($factory, CustomBuilderInterface::class)) {
@@ -323,7 +319,7 @@ class Generator
     }
 
     /**
-     * The mode from the `mode` scan option, `classic` if not set.
+     * The mode from the `mode` scan option, `hybrid` if not set.
      *
      * @return Mode
      *
@@ -337,7 +333,7 @@ class Generator
             return $mode;
         }
 
-        return match ($mode ?: 'classic') {
+        return match ($mode ?: 'hybrid') {
             'classic' => Mode::CLASSIC,
             'hybrid' => Mode::HYBRID,
             'spec' => Mode::SPEC,
@@ -376,8 +372,8 @@ class Generator
 
         $builder = (new Builder())
             ->setMode($mode)
-            // The logger the generator uses in classic mode, so warnings still reach Laravel.
-            ->setLogger(new DefaultLogger())
+            // Warnings still reach Laravel as in classic mode; notices only go to its log.
+            ->setLogger(new BuildLogger())
             ->setVersion($this->scanOptions['open_api_spec_version'] ?? self::OPEN_API_DEFAULT_SPEC_VERSION);
 
         [$generatorConfig, $augmenterConfig] = $this->splitProcessorsConfiguration($mode);

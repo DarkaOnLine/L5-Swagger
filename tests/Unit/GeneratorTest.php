@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use L5Swagger\CustomBuilderInterface;
 use L5Swagger\CustomGeneratorInterface;
 use L5Swagger\Exceptions\L5SwaggerException;
@@ -167,6 +168,7 @@ class GeneratorTest extends TestCase
     public function testGeneratedDocumentMatchesTheSnapshot(): void
     {
         $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'classic']);
 
         $this->generator->generateDocs();
 
@@ -182,12 +184,39 @@ class GeneratorTest extends TestCase
     public function testSwaggerPhpWarningIsThrown(): void
     {
         $this->setAnnotationsPath();
-        $this->setScanOptions([], __DIR__.'/../storage/annotations/Warning');
+        $this->setScanOptions(['mode' => 'classic'], __DIR__.'/../storage/annotations/Warning');
 
         $this->expectException(\ErrorException::class);
         $this->expectExceptionMessage('requires at least one');
 
         $this->generator->generateDocs();
+    }
+
+    public function testSwaggerPhpWarningIsThrownInHybridMode(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'hybrid', 'default_processors_configuration' => ['noSuchAugmenter' => true]]);
+
+        $this->expectException(\ErrorException::class);
+        $this->expectExceptionMessage('noSuchAugmenter');
+
+        $this->generator->generateDocs();
+    }
+
+    public function testSwaggerPhpNoticeIsLoggedInHybridMode(): void
+    {
+        $log = Log::spy();
+
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'hybrid']);
+
+        $this->generator->generateDocs();
+
+        $this->assertFileExists($this->jsonDocsFile());
+        $log->shouldHaveReceived('log')
+            ->withArgs(static fn (string $level, string $message): bool => $level === 'notice'
+                && str_contains($message, 'unreferenced component'))
+            ->once();
     }
 
     /**
@@ -200,7 +229,7 @@ class GeneratorTest extends TestCase
         $analysis->addAnnotation(new OA\Server(url: 'https://analysis.test', description: 'From the analysis'), $context);
 
         $this->setAnnotationsPath();
-        $this->setScanOptions(['analysis' => $analysis]);
+        $this->setScanOptions(['mode' => 'classic', 'analysis' => $analysis]);
 
         $this->generator->generateDocs();
 
@@ -251,6 +280,7 @@ class GeneratorTest extends TestCase
         $cfg = config('l5-swagger.documentations.default');
 
         $cfg['scanOptions'] = [
+            'mode' => 'classic',
             'exclude' => [__DIR__.'/../storage/annotations/OpenApi/Clients'],
             'analyser' => new ReflectionAnalyser([
                 new AttributeAnnotationFactory(),
@@ -293,6 +323,7 @@ class GeneratorTest extends TestCase
         $cfg = config('l5-swagger.documentations.default');
 
         $cfg['scanOptions'] = [
+            'mode' => 'classic',
             'processors' => [
                 new AugmentParameters(),
                 ['class' => AugmentSchemas::class, 'after' => AugmentParameters::class],
@@ -392,6 +423,7 @@ class GeneratorTest extends TestCase
     public function testCustomBuilderFactoryInClassicModeMatchesTheGenerator(): void
     {
         $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'classic']);
         $this->generator->generateDocs();
         $expected = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
 
@@ -650,12 +682,14 @@ class GeneratorTest extends TestCase
     public function testModeDoesNotApplyToBuilderFactory(): void
     {
         $this->setAnnotationsPath();
+        // Spec mode would find no operations in the classic fixture; the factory's builder does.
         $this->setScanOptions(['mode' => 'spec', 'builder_factory' => TestCustomBuilder::class]);
 
-        $this->expectException(L5SwaggerException::class);
-        $this->expectExceptionMessage('set the mode on the builder');
-
         $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        $this->assertNotEmpty($document['paths']);
     }
 
     public function testUnknownModeThrows(): void

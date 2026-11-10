@@ -111,17 +111,18 @@ return [
              * The swagger-php mode: `classic`, `hybrid` or `spec`.
              *
              * - classic: classic attributes and docblock annotations, through the processors.
-             * - hybrid: classic attributes, docblock annotations and spec attributes, through the
-             *   augmenters. Custom `processors` run without the classic processors around them.
+             *   Deprecated by swagger-php 7 and removed in swagger-php 8.
+             * - hybrid (default): classic attributes, docblock annotations and spec attributes, through
+             *   the augmenters. Custom `processors` run without the classic processors around them.
              * - spec: spec attributes only. `processors`, `analyser` and `generator_factory` do not apply.
              *
              * In hybrid and spec mode `default_processors_configuration` takes augmenter keys,
              * apart from `generator.*` in hybrid mode. `analysis` requires classic mode, and
-             * `builder_factory` sets the mode on its builder instead.
+             * this option does not apply to `builder_factory`, which sets the mode on its builder.
              *
              * @link https://zircote.github.io/swagger-php/guide/modes.html
              */
-            'mode' => env('L5_SWAGGER_SCAN_MODE', 'classic'),
+            'mode' => env('L5_SWAGGER_SCAN_MODE', 'hybrid'),
 
             /**
              * Optional CustomGeneratorInterface implementation that creates an OpenApi\Generator instance.
