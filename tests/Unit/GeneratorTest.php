@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use L5Swagger\CustomBuilderInterface;
 use L5Swagger\CustomGeneratorInterface;
 use L5Swagger\Exceptions\L5SwaggerException;
@@ -188,6 +189,33 @@ class GeneratorTest extends TestCase
         $this->expectExceptionMessage('requires at least one');
 
         $this->generator->generateDocs();
+    }
+
+    public function testSwaggerPhpWarningIsThrownInHybridMode(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'hybrid', 'default_processors_configuration' => ['noSuchAugmenter' => true]]);
+
+        $this->expectException(\ErrorException::class);
+        $this->expectExceptionMessage('noSuchAugmenter');
+
+        $this->generator->generateDocs();
+    }
+
+    public function testSwaggerPhpNoticeIsLoggedInHybridMode(): void
+    {
+        $log = Log::spy();
+
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'hybrid']);
+
+        $this->generator->generateDocs();
+
+        $this->assertFileExists($this->jsonDocsFile());
+        $log->shouldHaveReceived('log')
+            ->withArgs(static fn (string $level, string $message): bool => $level === 'notice'
+                && str_contains($message, 'unreferenced component'))
+            ->once();
     }
 
     /**
