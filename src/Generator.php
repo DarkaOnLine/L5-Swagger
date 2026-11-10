@@ -13,7 +13,6 @@ use OpenApi\Builder;
 use OpenApi\Builder\Mode;
 use OpenApi\Builder\Result;
 use OpenApi\Generator as OpenApiGenerator;
-use OpenApi\Loggers\DefaultLogger;
 use OpenApi\OpenApiException;
 use OpenApi\Spec\Server as SpecServer;
 use OpenApi\Specification;
@@ -376,8 +375,8 @@ class Generator
 
         $builder = (new Builder())
             ->setMode($mode)
-            // The logger the generator uses in classic mode, so warnings still reach Laravel.
-            ->setLogger(new DefaultLogger())
+            // Warnings still reach Laravel as in classic mode; notices only go to its log.
+            ->setLogger(new BuildLogger())
             ->setVersion($this->scanOptions['open_api_spec_version'] ?? self::OPEN_API_DEFAULT_SPEC_VERSION);
 
         [$generatorConfig, $augmenterConfig] = $this->splitProcessorsConfiguration($mode);
