@@ -24,6 +24,7 @@ use OpenApi\OpenApiException;
 use OpenApi\Processors\AugmentParameters;
 use OpenApi\Processors\AugmentSchemas;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
 use Symfony\Component\Yaml\Parser;
 use Symfony\Component\Yaml\Yaml;
@@ -482,6 +483,32 @@ class GeneratorTest extends TestCase
         $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
 
         $this->assertContains(['url' => 'https://test-server.url'], $document['servers']);
+    }
+
+    /**
+     * @throws L5SwaggerException
+     */
+    #[DataProvider('provideClassicServerFixtures')]
+    public function testClassicModeAddsTheBaseServer(string $annotations, int $serverCount): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'classic'], $annotations, 'https://test-server.url');
+
+        $this->generator->generateDocs();
+
+        $document = json_decode((string) file_get_contents($this->jsonDocsFile()), true);
+
+        $this->assertCount($serverCount, $document['servers']);
+        $this->assertContains(['url' => 'https://test-server.url'], $document['servers']);
+    }
+
+    /**
+     * @return iterable<string,array{string,int}>
+     */
+    public static function provideClassicServerFixtures(): iterable
+    {
+        yield 'beside the declared servers' => [__DIR__.'/../storage/annotations/OpenApi', 3];
+        yield 'without declared servers' => [__DIR__.'/../storage/annotations/OpenApiNoServer', 1];
     }
 
     /**
