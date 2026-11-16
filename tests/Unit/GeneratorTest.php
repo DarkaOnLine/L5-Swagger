@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use L5Swagger\BuildLogger;
 use L5Swagger\CustomBuilderInterface;
 use L5Swagger\CustomGeneratorInterface;
 use L5Swagger\Exceptions\L5SwaggerException;
@@ -30,6 +31,7 @@ use Tests\Unit\Fixtures\TestCustomBuilder;
 use Tests\Unit\Fixtures\TestCustomGenerator;
 
 #[TestDox('Generator')]
+#[CoversClass(BuildLogger::class)]
 #[CoversClass(GeneratorFactory::class)]
 #[CoversClass(Generator::class)]
 #[CoversClass(L5SwaggerServiceProvider::class)]
