@@ -695,6 +695,17 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
     }
 
+    public function testPluginsMustBeAList(): void
+    {
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'hybrid', 'plugins' => TestPlugin::class]);
+
+        $this->expectException(L5SwaggerException::class);
+        $this->expectExceptionMessage('The `plugins` scan option must be a list');
+
+        $this->generator->generateDocs();
+    }
+
     public function testPluginsDoNotApplyToBuilderFactory(): void
     {
         $this->skipWithoutPlugins();
