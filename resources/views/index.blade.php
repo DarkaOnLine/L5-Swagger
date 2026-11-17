@@ -25,7 +25,7 @@
       background: #fafafa;
     }
     </style>
-    @if(config('l5-swagger.defaults.ui.display.dark_mode'))
+    @if($documentationConfig['ui']['display']['dark_mode'] ?? false)
         <style>
             body#dark-mode,
             #dark-mode .scheme-container {
@@ -116,7 +116,7 @@
     @endif
 </head>
 
-<body @if(config('l5-swagger.defaults.ui.display.dark_mode')) id="dark-mode" @endif>
+<body @if($documentationConfig['ui']['display']['dark_mode'] ?? false) id="dark-mode" @endif>
 <div id="swagger-ui"></div>
 
 <script src="{{ l5_swagger_asset($documentation, 'swagger-ui-bundle.js') }}"></script>
@@ -154,18 +154,18 @@
             ],
 
             layout: "StandaloneLayout",
-            docExpansion : @json(config('l5-swagger.defaults.ui.display.doc_expansion', 'none')),
+            docExpansion : @json($documentationConfig['ui']['display']['doc_expansion'] ?? 'none'),
             deepLinking: true,
-            filter: {!! config('l5-swagger.defaults.ui.display.filter') ? 'true' : 'false' !!},
-            persistAuthorization: @json((bool) config('l5-swagger.defaults.ui.authorization.persist_authorization')),
+            filter: {!! ($documentationConfig['ui']['display']['filter'] ?? false) ? 'true' : 'false' !!},
+            persistAuthorization: @json((bool) ($documentationConfig['ui']['authorization']['persist_authorization'] ?? false)),
 
         })
 
         window.ui = ui
 
-        @if(in_array('oauth2', array_column(config('l5-swagger.defaults.securityDefinitions.securitySchemes'), 'type')))
+        @if(in_array('oauth2', array_column($documentationConfig['securityDefinitions']['securitySchemes'] ?? [], 'type')))
         ui.initOAuth({
-            usePkceWithAuthorizationCodeGrant: @json((bool) config('l5-swagger.defaults.ui.authorization.oauth2.use_pkce_with_authorization_code_grant'))
+            usePkceWithAuthorizationCodeGrant: @json((bool) ($documentationConfig['ui']['authorization']['oauth2']['use_pkce_with_authorization_code_grant'] ?? false))
         })
         @endif
     }

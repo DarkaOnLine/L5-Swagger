@@ -9,11 +9,14 @@ L5 Swagger - OpenApi or Swagger Specification for your Laravel project made easy
 ==========
 
 ## Please visit [L5 Swagger Wiki](https://github.com/DarkaOnLine/L5-Swagger/wiki) for more information:
-- [Installation & Configuration](https://github.com/DarkaOnLine/L5-Swagger/wiki/Installation-&-Configuration)
-- [Change Log](https://github.com/DarkaOnLine/L5-Swagger/wiki/Change-Log)
-- [Migration Guides](https://github.com/DarkaOnLine/L5-Swagger/wiki/Migration-Guides)
-- [Using Swagger UI with Passport](https://github.com/DarkaOnLine/L5-Swagger/wiki/Using-Swagger-UI-with-Passport)
+- [Getting Started](https://github.com/DarkaOnLine/L5-Swagger/wiki/Getting-Started)
+- [Configuration](https://github.com/DarkaOnLine/L5-Swagger/wiki/Configuration)
+- [Examples](https://github.com/DarkaOnLine/L5-Swagger/wiki/Examples)
 - [Tips](https://github.com/DarkaOnLine/L5-Swagger/wiki/Tips)
+- [Using Swagger UI with Passport](https://github.com/DarkaOnLine/L5-Swagger/wiki/Using-Swagger-UI-with-Passport)
+- [Related Projects](https://github.com/DarkaOnLine/L5-Swagger/wiki/Related-Projects)
+- [Migration Guides](https://github.com/DarkaOnLine/L5-Swagger/wiki/Migration-Guides)
+- [Change Log](https://github.com/DarkaOnLine/L5-Swagger/releases)
 
 ## Support
 [![GuitHub Sponsor](https://img.shields.io/static/v1?label=Sponsor%20L5-Swagger&message=%E2%9D%A4&logo=GitHub)](https://github.com/sponsors/DarkaOnLine)

@@ -300,6 +300,29 @@ class RoutesTest extends TestCase
         $this->get(route('l5-swagger.default.docs'));
     }
 
+    public function testItReadsTheUiOptionsFromTheDocumentation(): void
+    {
+        config(['l5-swagger.defaults.ui.display.dark_mode' => false]);
+        config(['l5-swagger.documentations.default.ui.display.dark_mode' => true]);
+
+        $this->get(route('l5-swagger.default.api'))
+            ->assertSee('id="dark-mode"', false)
+            ->assertStatus(200);
+    }
+
+    public function testItEnablesPkceForAnOauth2SchemeFromTheDocumentation(): void
+    {
+        config(['l5-swagger.defaults.securityDefinitions.securitySchemes' => []]);
+        config(['l5-swagger.documentations.default.securityDefinitions.securitySchemes' => [
+            'passport' => ['type' => 'oauth2'],
+        ]]);
+        config(['l5-swagger.documentations.default.ui.authorization.oauth2.use_pkce_with_authorization_code_grant' => true]);
+
+        $this->get(route('l5-swagger.default.api'))
+            ->assertSee('usePkceWithAuthorizationCodeGrant: true', false)
+            ->assertStatus(200);
+    }
+
     public function testItNullifiesConfigUrlWithInvalidScheme(): void
     {
         Log::shouldReceive('warning')
