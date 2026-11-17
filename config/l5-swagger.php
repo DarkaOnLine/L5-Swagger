@@ -124,6 +124,20 @@ return [
             'mode' => env('L5_SWAGGER_SCAN_MODE', 'classic'),
 
             /**
+             * swagger-php plugins, in the order they configure the builder: a class name, or a class
+             * name mapped to the plugin's settings. Requires zircote/swagger-php 7.3 or later, and the
+             * `hybrid` or `spec` mode. With `builder_factory`, add the plugins on the builder instead.
+             *
+             * 'plugins' => [
+             *     \Vendor\Package\SomePlugin::class,
+             *     \Vendor\Package\OtherPlugin::class => ['setting' => 'value'],
+             * ],
+             *
+             * @link https://zircote.github.io/swagger-php/guide/extension-points.html#plugins
+             */
+            'plugins' => [],
+
+            /**
              * Optional CustomGeneratorInterface implementation that creates an OpenApi\Generator instance.
              * Use this to provide a custom pre-configured generator.
              * Accepts an instance or a class name (FQCN) implementing the interface.
