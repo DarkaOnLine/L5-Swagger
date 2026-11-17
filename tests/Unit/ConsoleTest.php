@@ -52,11 +52,26 @@ class ConsoleTest extends TestCase
     public function testCanPublish(): void
     {
         $fileSystem = new Filesystem();
-        Artisan::call('vendor:publish', ['--provider' => 'L5Swagger\L5SwaggerServiceProvider']);
+        $views = $this->configFactory->documentationConfig()['paths']['views'];
 
-        $config = $this->configFactory->documentationConfig();
+        // vendor:publish keeps files that are already there, and a published view or config
+        // replaces the package's own in every test that runs later, so none is left behind.
+        $this->deletePublished($views);
 
-        $this->assertTrue($fileSystem->exists(config_path('l5-swagger.php')));
-        $this->assertTrue($fileSystem->exists($config['paths']['views'].'/index.blade.php'));
+        try {
+            Artisan::call('vendor:publish', ['--provider' => 'L5Swagger\L5SwaggerServiceProvider']);
+
+            $this->assertTrue($fileSystem->exists(config_path('l5-swagger.php')));
+            $this->assertTrue($fileSystem->exists($views.'/index.blade.php'));
+        } finally {
+            $this->deletePublished($views);
+        }
+    }
+
+    private function deletePublished(string $views): void
+    {
+        $fileSystem = new Filesystem();
+        $fileSystem->delete(config_path('l5-swagger.php'));
+        $fileSystem->deleteDirectory($views);
     }
 }
