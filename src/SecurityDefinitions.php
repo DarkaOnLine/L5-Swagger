@@ -10,7 +10,7 @@ class SecurityDefinitions
 {
     /**
      * @param  array<string,mixed>  $schemasConfig
-     * @param  array<string,mixed>  $securityConfig
+     * @param  array<int|string,mixed>  $securityConfig
      */
     public function __construct(
         private readonly array $schemasConfig = [],
@@ -48,6 +48,29 @@ class SecurityDefinitions
     }
 
     /**
+     * The security scheme names the `security` setting refers to.
+     *
+     * The setting takes a list of requirements, each a map of scheme names to scopes, or a single
+     * such map.
+     *
+     * @return list<string>
+     */
+    public function referencedSchemes(): array
+    {
+        $schemes = [];
+
+        foreach ($this->securityConfig as $key => $cfg) {
+            if (is_string($key)) {
+                $schemes[] = $key;
+            } elseif (is_array($cfg)) {
+                $schemes = [...$schemes, ...array_filter(array_keys($cfg), 'is_string')];
+            }
+        }
+
+        return array_values(array_unique($schemes));
+    }
+
+    /**
      * Inject security schemes settings.
      *
      * @param  Collection<int|string, mixed>  $documentation  The parse json
@@ -81,7 +104,7 @@ class SecurityDefinitions
      * Inject security settings.
      *
      * @param  Collection<int|string, mixed>  $documentation  The parse json
-     * @param  array<string, mixed>  $config  The security settings from l5-swagger
+     * @param  array<int|string, mixed>  $config  The security settings from l5-swagger
      * @return Collection<int|string, mixed>
      */
     protected function injectSecurity(Collection $documentation, array $config): Collection

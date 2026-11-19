@@ -9,6 +9,7 @@ use Illuminate\Support\Arr;
 use L5Swagger\Exceptions\L5SwaggerException;
 use OpenApi\Annotations\OpenApi;
 use OpenApi\Annotations\Server;
+use OpenApi\Augmenter\Cleanup;
 use OpenApi\Builder;
 use OpenApi\Builder\Mode;
 use OpenApi\Builder\Result;
@@ -430,6 +431,16 @@ class Generator
 
         if ($augmenterConfig !== []) {
             $builder->withAugmenters(static fn (Pipeline $augmenters) => $augmenters->configure($augmenterConfig));
+        }
+
+        // The keep mark needs swagger-php 7.1; before that, Cleanup still removes these schemes.
+        $schemes = $this->security->referencedSchemes();
+        if ($schemes !== [] && method_exists(Cleanup::class, 'setMetaKey')) { // @phpstan-ignore-line
+            $builder->withAugmenters(static function (Pipeline $augmenters) use ($schemes): void {
+                if ($augmenters->get(Cleanup::class) !== null) {
+                    $augmenters->insert(new KeepSecuritySchemes($schemes), Cleanup::class);
+                }
+            });
         }
 
         if ($mode === Mode::HYBRID) {
