@@ -25,17 +25,17 @@ use Symfony\Component\Yaml\Yaml;
 
 class Generator
 {
-    public const OPEN_API_DEFAULT_SPEC_VERSION = '3.0.0';
+    public const string OPEN_API_DEFAULT_SPEC_VERSION = '3.0.0';
 
-    protected const SCAN_OPTION_PROCESSORS = 'processors';
-    protected const SCAN_OPTION_PATTERN = 'pattern';
-    protected const SCAN_OPTION_ANALYSER = 'analyser';
-    protected const SCAN_OPTION_ANALYSIS = 'analysis';
-    protected const SCAN_OPTION_EXCLUDE = 'exclude';
-    protected const SCAN_OPTION_MODE = 'mode';
-    protected const SCAN_OPTION_PLUGINS = 'plugins';
+    protected const string SCAN_OPTION_PROCESSORS = 'processors';
+    protected const string SCAN_OPTION_PATTERN = 'pattern';
+    protected const string SCAN_OPTION_ANALYSER = 'analyser';
+    protected const string SCAN_OPTION_ANALYSIS = 'analysis';
+    protected const string SCAN_OPTION_EXCLUDE = 'exclude';
+    protected const string SCAN_OPTION_MODE = 'mode';
+    protected const string SCAN_OPTION_PLUGINS = 'plugins';
 
-    protected const AVAILABLE_SCAN_OPTIONS = [
+    protected const array AVAILABLE_SCAN_OPTIONS = [
         self::SCAN_OPTION_PATTERN,
         self::SCAN_OPTION_ANALYSER,
         self::SCAN_OPTION_ANALYSIS,
