@@ -16,13 +16,18 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [ '8.2', '8.3' , '8.4' , '8.5' ]
-        l5-swagger-flags:  ['swagger-php-latest']
+        php: [ '8.3' , '8.4' , '8.5' ]
+        laravel: [ '12.1', '13.0' ]
+        dependencies: [ 'prefer-stable' ]
+        include:
+          - php: '8.3'
+            laravel: '12.1'
+            dependencies: 'prefer-lowest'
 
-    name: PHP ${{ matrix.php }} - ${{ matrix.l5-swagger-flags }}
+    name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }} - ${{ matrix.dependencies }}
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -33,15 +38,17 @@ jobs:
 
     - name: Cache Composer packages
       id: composer-cache
-      uses: actions/cache@v5
+      uses: actions/cache@v6
       with:
         path: vendor
-        key: ${{ runner.os }}-php-${{ matrix.php }}-${{ hashFiles('**/composer.lock') }}
+        key: ${{ runner.os }}-php-${{ matrix.php }}-${{ matrix.laravel }}-${{ matrix.dependencies }}-${{ hashFiles('**/composer.lock') }}
         restore-keys: |
           ${{ runner.os }}-php-
 
     - name: Install dependencies
-      run: composer update --no-interaction --no-progress --prefer-dist --prefer-stable
+      run: |
+        composer require "laravel/framework:^${{ matrix.laravel }}" --no-update --no-interaction
+        composer update --no-interaction --no-progress --prefer-dist --${{ matrix.dependencies }}
 
     - name: Prepare enviroment
       run: |
@@ -66,7 +73,7 @@ jobs:
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ${{github.workspace}}/clover.xml
-      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'swagger-php-latest' && github.event_name != 'pull_request'
+      if: matrix.php == '8.3' && matrix.laravel == '13.0' && matrix.dependencies == 'prefer-stable' && github.event_name != 'pull_request'
 
 
     - name: Publish QltySh
@@ -74,7 +81,7 @@ jobs:
       with:
         token: ${{ secrets.QLTY_COVERAGE_TOKEN }}
         files: ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml
-      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'swagger-php-latest'
+      if: matrix.php == '8.3' && matrix.laravel == '13.0' && matrix.dependencies == 'prefer-stable'
 
     - name: Publish coveralls report
       env:
@@ -82,4 +89,4 @@ jobs:
       run: |
         cp ${{github.workspace}}/tests/storage/logs/test-reports/clover.xml ${{github.workspace}}/clover.xml
         vendor/bin/php-coveralls --coverage_clover=clover.xml -v
-      if: matrix.php == '8.3' && matrix.l5-swagger-flags == 'swagger-php-latest'
+      if: matrix.php == '8.3' && matrix.laravel == '13.0' && matrix.dependencies == 'prefer-stable'

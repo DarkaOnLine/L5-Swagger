@@ -724,7 +724,6 @@ class GeneratorTest extends TestCase
 
     public function testPluginsConfigureTheBuilder(): void
     {
-        $this->skipWithoutPlugins();
         $this->setAnnotationsPath();
         $this->setScanOptions(
             [
@@ -748,7 +747,6 @@ class GeneratorTest extends TestCase
 
     public function testPluginsRequireHybridOrSpecMode(): void
     {
-        $this->skipWithoutPlugins();
         $this->setAnnotationsPath();
         $this->setScanOptions(['mode' => 'classic', 'plugins' => [TestPlugin::class]]);
 
@@ -771,7 +769,6 @@ class GeneratorTest extends TestCase
 
     public function testPluginsDoNotApplyToBuilderFactory(): void
     {
-        $this->skipWithoutPlugins();
         $this->setAnnotationsPath();
         $this->setScanOptions(['plugins' => [TestPlugin::class], 'builder_factory' => TestCustomBuilder::class]);
 
@@ -790,13 +787,6 @@ class GeneratorTest extends TestCase
         $this->expectExceptionMessage('`reflection`');
 
         $this->generator->generateDocs();
-    }
-
-    private function skipWithoutPlugins(): void
-    {
-        if (! method_exists(Builder::class, 'withPlugins')) { // @phpstan-ignore-line
-            $this->markTestSkipped('Plugins need zircote/swagger-php 7.3 or later');
-        }
     }
 
     /**
