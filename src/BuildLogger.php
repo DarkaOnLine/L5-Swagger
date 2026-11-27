@@ -8,9 +8,10 @@ use Psr\Log\LogLevel;
 /**
  * Reports what swagger-php logs while building in hybrid or spec mode.
  *
- * Warnings and errors are raised as PHP warnings, which Laravel turns into exceptions, as in
- * classic mode. Notices and info, such as unreferenced components being removed, go to Laravel's
- * log instead, so they do not stop the build. Debug messages are dropped.
+ * Errors are raised as PHP warnings, which Laravel turns into exceptions. An error means something
+ * was left out of the document. Warnings, notices and info go to Laravel's log instead, so they do
+ * not stop the build. The document is still valid, with a keyword adapted or omitted, such as `const`
+ * in OpenAPI 3.0, or an unreferenced component removed. Debug messages are ignored.
  */
 class BuildLogger extends AbstractLogger
 {
@@ -25,7 +26,7 @@ class BuildLogger extends AbstractLogger
             return;
         }
 
-        if (in_array($level, [LogLevel::NOTICE, LogLevel::INFO], true)) {
+        if (in_array($level, [LogLevel::WARNING, LogLevel::NOTICE, LogLevel::INFO], true)) {
             logger()->log($level, (string) $message, $context);
 
             return;
