@@ -126,7 +126,7 @@ return [
 
             /**
              * swagger-php plugins, in the order they configure the builder: a class name, or a class
-             * name mapped to the plugin's settings. Requires zircote/swagger-php 7.3 or later, and the
+             * name mapped to the plugin's settings. Requires the
              * `hybrid` or `spec` mode. With `builder_factory`, add the plugins on the builder instead.
              *
              * 'plugins' => [

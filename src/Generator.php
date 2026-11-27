@@ -297,10 +297,6 @@ class Generator
         );
 
         if ($this->basePath !== null) {
-            if (! method_exists($builder, 'withSpecification')) { // @phpstan-ignore-line
-                throw new L5SwaggerException('A base path with `builder_factory` requires zircote/swagger-php 6.12 or later');
-            }
-
             $this->addBasePathServer($builder);
         }
 
@@ -352,7 +348,7 @@ class Generator
      * The plugins from the `plugins` scan option, in the order configured.
      *
      * Each entry is a plugin class name, a class name mapped to the plugin's settings, or a plugin
-     * instance. Plugins need swagger-php 7.3 or later, and do not run in classic mode.
+     * instance. Plugins do not run in classic mode.
      *
      * @return array<array-key,mixed>
      *
@@ -368,10 +364,6 @@ class Generator
 
         if ($plugins === []) {
             return [];
-        }
-
-        if (! method_exists(Builder::class, 'withPlugins')) { // @phpstan-ignore-line
-            throw new L5SwaggerException('The `plugins` scan option requires zircote/swagger-php 7.3 or later');
         }
 
         if (($this->scanOptions['builder_factory'] ?? null) !== null) {
@@ -430,9 +422,8 @@ class Generator
             $builder->withAugmenters(static fn (Pipeline $augmenters) => $augmenters->configure($augmenterConfig));
         }
 
-        // The keep mark needs swagger-php 7.1; before that, Cleanup still removes these schemes.
         $schemes = $this->security->referencedSchemes();
-        if ($schemes !== [] && method_exists(Cleanup::class, 'setMetaKey')) { // @phpstan-ignore-line
+        if ($schemes !== []) {
             $builder->withAugmenters(static function (Pipeline $augmenters) use ($schemes): void {
                 if ($augmenters->get(Cleanup::class) !== null) {
                     $augmenters->insert(new KeepSecuritySchemes($schemes), Cleanup::class);

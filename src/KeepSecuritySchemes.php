@@ -13,7 +13,7 @@ use OpenApi\Utils\PipeInterface;
  *
  * SecurityDefinitions adds that setting to the saved documentation, after the build, so swagger-php's
  * `Cleanup` sees nothing referencing those schemes and removes them. This marks them to be kept
- * instead. Runs in hybrid and spec mode, before `Cleanup`, with swagger-php 7.1 or later.
+ * instead. Runs in hybrid and spec mode, before `Cleanup`.
  *
  * @implements PipeInterface<Specification>
  */

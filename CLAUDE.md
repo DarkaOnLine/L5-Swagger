@@ -68,8 +68,8 @@ Test fixtures live in `tests/storage/annotations/OpenApi/` with sample PHP attri
 
 - **StyleCI**: `preset: laravel` — enforced automatically
 - **PHPStan**: Level 8, analyzes `src/` and `tests/Unit/`, ignores `argument.templateType`
-- PHP 8.2+ required; uses constructor property promotion, union types, named arguments
-- Supports Laravel 11.44+, 12.1+, and 13.0+
+- PHP 8.3+ required; uses constructor property promotion, union types, named arguments
+- Supports Laravel 12.1+ and 13.0+ with swagger-php 7.3+
 
 ## Environment Variables
 
