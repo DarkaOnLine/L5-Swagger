@@ -35,13 +35,6 @@ class Generator
     protected const string SCAN_OPTION_MODE = 'mode';
     protected const string SCAN_OPTION_PLUGINS = 'plugins';
 
-    protected const array AVAILABLE_SCAN_OPTIONS = [
-        self::SCAN_OPTION_PATTERN,
-        self::SCAN_OPTION_ANALYSER,
-        self::SCAN_OPTION_ANALYSIS,
-        self::SCAN_OPTION_EXCLUDE,
-    ];
-
     /**
      * @var string|array<string>
      */
