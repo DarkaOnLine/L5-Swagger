@@ -399,7 +399,7 @@ class Generator
 
         $builder = (new Builder())
             ->setMode($mode)
-            // Warnings still reach Laravel as in classic mode; notices only go to its log.
+            // Errors stop the build; warnings and notices go to Laravel's log.
             ->setLogger(new BuildLogger())
             ->setVersion($this->scanOptions['open_api_spec_version'] ?? self::OPEN_API_DEFAULT_SPEC_VERSION);
 

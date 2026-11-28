@@ -196,7 +196,7 @@ class GeneratorTest extends TestCase
         $this->generator->generateDocs();
     }
 
-    public function testSwaggerPhpWarningIsThrownInHybridMode(): void
+    public function testSwaggerPhpErrorIsThrownInHybridMode(): void
     {
         $this->setAnnotationsPath();
         $this->setScanOptions(['mode' => 'hybrid', 'default_processors_configuration' => ['noSuchAugmenter' => true]]);
@@ -205,6 +205,23 @@ class GeneratorTest extends TestCase
         $this->expectExceptionMessage('noSuchAugmenter');
 
         $this->generator->generateDocs();
+    }
+
+    public function testSwaggerPhpWarningIsLoggedInHybridMode(): void
+    {
+        $log = Log::spy();
+
+        $this->setAnnotationsPath();
+        $this->setScanOptions(['mode' => 'hybrid'], __DIR__.'/../storage/annotations/HybridWarning');
+
+        $this->generator->generateDocs();
+
+        $this->assertFileExists($this->jsonDocsFile());
+        $log->shouldHaveReceived('log')
+            ->withArgs(static fn (string $level, string $message): bool => $level === 'warning'
+                && str_contains($message, 'const')
+                && str_contains($message, 'OpenAPI 3.0'))
+            ->once();
     }
 
     public function testSwaggerPhpNoticeIsLoggedInHybridMode(): void
